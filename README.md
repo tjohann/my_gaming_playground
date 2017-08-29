@@ -29,3 +29,7 @@ Examples
 hello_sdl:
 
 	simple SDL example to check if everthing is installed correctly
+
+first_window:
+
+	simple SDL example with something like a skeleton for base game	functionallity
