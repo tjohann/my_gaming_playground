@@ -65,9 +65,10 @@ render_main_window()
 
 
 int
-main(int argc, char *argv[])
+main(void)
 {
-	printf("Hello SDL ... try to build a SDL window\n");
+	printf("Hello SDL!\n");
+	printf("start to try to build a SDL window\n");
 
 	if (init_main_window() == -1) {
 		fprintf(stderr, "could not setup a SDL window");

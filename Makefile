@@ -4,7 +4,7 @@ MODULES = $(shell ls -d */ | cut -f1 -d'/')
 
 .PHONY: all
 all:
-	@echo Cheers
+	for dir in $(MODULES); do (cd $$dir && $(MAKE)); done
 
 .PHONY: clean
 clean:

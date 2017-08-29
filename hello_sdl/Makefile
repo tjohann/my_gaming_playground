@@ -5,7 +5,6 @@
 CC = gcc
 CFLAGS = -std=gnu11 -Wall -Wextra `pkg-config --cflags sdl2`
 
-
 PROG = hello_sdl
 OBJ = main.o
 
