@@ -30,8 +30,9 @@ int
 init_main_window()
 {
 	int err = SDL_Init(SDL_INIT_EVERYTHING);
-	if (err == -1) {
-		fprintf(stderr, "could not init SDL\n");
+	if (err < 0) {
+		fprintf(stderr, "could not init SDL (%s)\n",
+			SDL_GetError());
 		return -1;
 	}
 
@@ -40,13 +41,15 @@ init_main_window()
 				1024, 768,
 				SDL_WINDOW_SHOWN);
 	if (window == NULL) {
-		fprintf(stderr, "could not create main window\n");
+		fprintf(stderr, "could not create main window (%s)\n",
+			SDL_GetError());
 		return -1;
 	}
 
 	renderer = SDL_CreateRenderer(window, -1, 0);
 	if (renderer == NULL) {
-		fprintf(stderr, "could not create renderer\n");
+		fprintf(stderr, "could not create renderer (%s)\n",
+			SDL_GetError());
 		return -1;
 	}
 
@@ -56,8 +59,23 @@ init_main_window()
 int
 render_main_window()
 {
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	SDL_RenderClear(renderer);
+	/* set color R,G,B and alpha */
+	int err = SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	if (err < 0) {
+		fprintf(stderr, "could not set color (%s)\n",
+			SDL_GetError());
+		return -1;
+	}
+
+	/* clear rendering target with the drawing color */
+	err = SDL_RenderClear(renderer);
+	if (err < 0) {
+		fprintf(stderr, "could not set clear rendering target (%s)\n",
+			SDL_GetError());
+		return -1;
+	}
+
+	/* bring everthing to the window -> now we see the changes */
 	SDL_RenderPresent(renderer);
 
 	return 0;
@@ -67,19 +85,19 @@ render_main_window()
 int
 main(void)
 {
-	printf("Hello SDL!\n");
 	printf("start to try to build a SDL window\n");
 
 	if (init_main_window() == -1) {
-		fprintf(stderr, "could not setup a SDL window");
+		fprintf(stderr, "could not setup a SDL window\n");
 		exit(EXIT_FAILURE);
 	}
 
 	if (render_main_window() == -1) {
-		fprintf(stderr, "could not render main window");
+		fprintf(stderr, "could not render main window\n");
 		exit(EXIT_FAILURE);
 	}
 
+	printf("sleep for 5 seconds\n");
 	SDL_Delay(5000);
 	SDL_Quit();
 
