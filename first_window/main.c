@@ -20,12 +20,32 @@
 #include <SDL.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
-#define PROGNAME "my first SDL window"
+#define PROGNAME "my first game skeleton"
 
 SDL_Window *window;
 SDL_Renderer *renderer;
 
+/* the global running variable -> true still running, false quit */
+bool running = false;
+
+#define RENDER_ALL() do {			\
+		render_window();		\
+	} while (0)
+
+#define HANDLE_EVENTS() do {			\
+		handle_events();		\
+	} while (0)
+
+#define UPDATE_ALL() do {			\
+		/* do something */		\
+	} while (0)
+
+
+/*
+ * setup main window and renderer
+ */
 int
 init_main_window()
 {
@@ -53,35 +73,72 @@ init_main_window()
 		return -1;
 	}
 
-	return 0;
-}
-
-int
-render_main_window()
-{
-	/* set color R,G,B and alpha */
-	int err = SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	/* set color R,G,B and alpha -> in this case draw a black background */
+	err = SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	if (err < 0) {
 		fprintf(stderr, "could not set color (%s)\n",
 			SDL_GetError());
 		return -1;
 	}
 
-	/* clear rendering target with the drawing color */
-	err = SDL_RenderClear(renderer);
-	if (err < 0) {
-		fprintf(stderr, "could not set clear rendering target (%s)\n",
-			SDL_GetError());
-		return -1;
-	}
-
-	/* bring everthing to the window -> now we see the changes */
-	SDL_RenderPresent(renderer);
-
 	return 0;
 }
 
+/*
+ * render all parts
+ *
+ * note: dont react on errors -> only print them
+ */
+void
+render_window()
+{
+        /* clear rendering target to the drawing color */
+	int err = SDL_RenderClear(renderer);
+	if (err < 0)
+		fprintf(stderr, "could not set clear rendering target (%s)\n",
+			SDL_GetError());
 
+	/* bring everthing to the window -> now we see the changes */
+	SDL_RenderPresent(renderer);
+}
+
+/*
+ * cleanup all non system related parts -> SDL and co
+ */
+void
+cleanup_non_system(void)
+{
+	printf("cleanup all SDL related stuff\n");
+
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+}
+
+/*
+ *  handle all supported events
+ */
+void
+handle_events()
+{
+	SDL_Event e;
+	if (SDL_PollEvent(&e)) {
+		switch(e.type) {
+		case SDL_QUIT:
+			printf("an actual SDL_QUIT event occured\n");
+			running = false;
+			break;
+		default:
+			printf("an actual unsupported event occured %d\n",
+				e.type);
+			break;
+		}
+	}
+}
+
+
+/*
+ * -----------------------------------------------------------------------------
+ */
 int
 main(void)
 {
@@ -90,18 +147,18 @@ main(void)
 	if (init_main_window() == -1) {
 		fprintf(stderr, "could not setup a SDL window\n");
 		exit(EXIT_FAILURE);
+	} else {
+		running = true;
 	}
 
-	if (render_main_window() == -1) {
-		fprintf(stderr, "could not render main window\n");
-		exit(EXIT_FAILURE);
+	while (running) {
+		HANDLE_EVENTS();
+		UPDATE_ALL();
+		RENDER_ALL();
 	}
 
-	printf("sleep for 5 seconds\n");
-	SDL_Delay(5000);
+	cleanup_non_system();
 	SDL_Quit();
-
-	printf("seams everthing went fine\n");
 
 	exit(EXIT_SUCCESS);
 }

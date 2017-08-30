@@ -22,6 +22,7 @@ uninstall:
 
 clean:
 	rm -rf *~
+	rm -rf .*~
 	rm -rf *.o
 	rm -rf $(PROG)
 
