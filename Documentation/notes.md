@@ -14,3 +14,9 @@ Every SDL functions returns 0 on success or an negative error code (like pthread
 SDL_GetError() returns a string with an error string (like strerror).
 
 
+rectangles
+----------
+
+SDL_RenderCopy(renderer, texture, 0, 0); -> use the entire renderer for the texture
+
+
