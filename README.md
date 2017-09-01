@@ -33,3 +33,10 @@ hello_sdl:
 first_window:
 
 	simple SDL example with something like a skeleton for base game	functionallity
+
+reactangle:
+
+	simple SDL example which show the usage of source and target reactangles
+	to change the behaviour, click a mouse button
+
+Note: the bitmap is taken from http://www.widgetworx.com/projects/sl.html
