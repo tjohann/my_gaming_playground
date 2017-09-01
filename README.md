@@ -49,4 +49,6 @@ sprite_sheet:
            -h -> flip horizontal
            -v -> flip vertical
 
+sprite_sheet_2:
 
+	- same example like sprite_sheet, but uses a png instead of a bmp (alpha topic)

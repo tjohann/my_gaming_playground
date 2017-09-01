@@ -18,13 +18,14 @@
 */
 
 #include <SDL.h>
+#include <SDL_image.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
 
-#define PROGNAME "sprite sheet experiments (use bmp)"
-#define MY_BMP "animate.bmp"
+#define PROGNAME "my next sprite sheet experiments (use png)"
+#define MY_PNG "animate-alpha.png"
 
 SDL_Window *window;
 SDL_Renderer *renderer;
@@ -94,10 +95,10 @@ init_main_window()
 	}
 
 	/* only temporary */
-	SDL_Surface *tmp_surface = SDL_LoadBMP(MY_BMP);
+	SDL_Surface *tmp_surface = IMG_Load(MY_PNG);
 	if (tmp_surface == NULL) {
-		fprintf(stderr, "could not load bitmap %s (%s)\n",
-			MY_BMP, SDL_GetError());
+		fprintf(stderr, "could not load png %s (%s)\n",
+			MY_PNG, SDL_GetError());
 		return -1;
 	}
 
@@ -227,9 +228,9 @@ main(int argc, char *argv[])
 {
 	printf("start to try to build a SDL window\n");
 
-	printf("usage: ./sprite_sheet [-hv]  \n");
-	printf("       -h -> flip horizontal \n");
-	printf("       -v -> flip vertical   \n");
+	printf("usage: ./sprite_sheet_2 [-hv]  \n");
+	printf("       -h -> flip horizontal   \n");
+	printf("       -v -> flip vertical     \n");
 
 	int c;
 	while ((c = getopt(argc, argv, "hv")) != -1) {
