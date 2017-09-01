@@ -3,6 +3,8 @@ my playground regarding game developement
 
 Something like a summary around game development.
 
+Note: the bitmaps within the examples are taken from http://www.widgetworx.com/projects/sl.html (like in the book below).
+
 
 The book
 --------
@@ -32,11 +34,19 @@ hello_sdl:
 
 first_window:
 
-	- simple SDL example with something like a skeleton for base game	functionallity
+	- simple SDL example with something like a skeleton for base game functionallity
 
 rectangle:
 
 	- simple SDL example which show the usage of source and target rectangles
 	- to change the behaviour, click a mouse button
 
-Note: the bitmap is taken from http://www.widgetworx.com/projects/sl.html
+sprite_sheet:
+
+	- simple SDL example which show the usage of sprites
+
+	usage: ./sprite_sheet [-hv]
+           -h -> flip horizontal
+           -v -> flip vertical
+
+
