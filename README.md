@@ -38,12 +38,12 @@ first_window:
 
 rectangle:
 
-	- simple SDL example which show the usage of source and target rectangles
+	- simple SDL example which show the usage of source and target rectangles with an small rider bitmap
 	- to change the behaviour, click a mouse button
 
 sprite_sheet:
 
-	- simple SDL example which show the usage of sprites
+	- simple SDL example which show the usage of sprites with a small cat sprite sheet
 
 	usage: ./sprite_sheet [-hv]
            -h -> flip horizontal
