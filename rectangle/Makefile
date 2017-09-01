@@ -5,7 +5,7 @@
 CC = gcc
 CFLAGS = -std=gnu11 -Wall -Wextra `pkg-config --cflags sdl2`
 
-PROG = reactangle
+PROG = rectangle
 OBJ = main.o
 
 %.o: %.c
