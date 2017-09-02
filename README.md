@@ -1,7 +1,7 @@
 my playground regarding game developement
 =========================================
 
-Something like a summary around game development.
+Something like a summary around game development which should lead in a series of retro games (https://github.com/tjohann/crasonars/blob/master/Documentation/ideas.md).
 
 Note: the bitmaps within the examples are taken from http://www.widgetworx.com/projects/sl.html (like in the book below).
 
