@@ -27,9 +27,23 @@
 #include <stdbool.h>
 #include <unistd.h>
 
-#define VERSION_INFO "V0.0.1_TEST"
 
+/*
+ * setup main window
+ */
+SDL_Window *
+setup_main_window(char *name, int size_x, int size_y, unsigned char f);
+
+/*
+ * setup renderer
+ */
+SDL_Renderer *
+setup_renderer(SDL_Window *window, char *background);
+
+/*
+ * cleanup window, renderer and SDL_Quit
+ */
 void
-show_version(void);
+cleanup_main_window(SDL_Window *window, SDL_Renderer *renderer);
 
 #endif

@@ -21,10 +21,75 @@
 
 #define LIGGAME_EXPORT __attribute__ ((visibility ("default")))
 
+#define err_sdl_and_ret_null(err_txt) do {			\
+		fprintf(stderr, err_txt " (%s)\n",		\
+			SDL_GetError());			\
+		return NULL;					\
+	}							\
+	while(0)
+
+
+
+LIGGAME_EXPORT SDL_Window *
+setup_main_window(char *name, int size_x, int size_y, unsigned char f)
+{
+	int err = SDL_Init(SDL_INIT_EVERYTHING);
+	if (err < 0)
+		err_sdl_and_ret_null("could not init SDL");
+
+	/*
+	 * TODO: use flags
+	 */
+	uint32_t flags = 0;
+	switch(f) {
+
+	default:
+		printf("use default settings\n");
+		f = SDL_WINDOW_SHOWN;
+	}
+	SDL_Window *window = SDL_CreateWindow(name,
+					SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+					size_x, size_y,
+					flags);
+	if (window == NULL)
+		err_sdl_and_ret_null("could not create main window");
+
+	return window;
+}
+
+LIGGAME_EXPORT SDL_Renderer *
+setup_renderer(SDL_Window *window, char *background)
+{
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
+	if (renderer == NULL)
+		err_sdl_and_ret_null("could not create renderer");
+
+	/*
+	 * TODO: background color (red, green, blue ...)
+	 */
+	int err = SDL_SetRenderDrawColor(renderer, 0, 150, 0, 255);
+	if (err < 0)
+		err_sdl_and_ret_null("could not set color");
+
+	return renderer;
+}
+
 
 LIGGAME_EXPORT void
-show_version(void)
+cleanup_main_window(SDL_Window *window, SDL_Renderer *renderer)
 {
-	printf("actual version is %s\n", VERSION_INFO);
+	printf("cleanup all SDL related stuff\n");
+
+	if (renderer != NULL)
+		SDL_DestroyRenderer(renderer);
+	else
+		printf("renderer == NULL\n");
+
+	if (window != NULL)
+		SDL_DestroyWindow(window);
+	else
+		printf("window == NULL\n");
+
+	SDL_Quit();
 }
 
