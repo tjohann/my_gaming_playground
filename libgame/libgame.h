@@ -27,6 +27,14 @@
 #include <stdbool.h>
 #include <unistd.h>
 
+#define eprintf(format, ...) fprintf (stderr, format, ##__VA_ARGS__)
+
+typedef struct {
+	int x;
+	int y;
+	int h;
+	int w;
+} pos_t;
 
 /*
  * setup main window
@@ -45,5 +53,25 @@ setup_renderer(SDL_Window *window, char *background);
  */
 void
 cleanup_main_window(SDL_Window *window, SDL_Renderer *renderer);
+
+/*
+ * create a texture from file
+ */
+SDL_Texture *
+load_texture(char *file_name, SDL_Renderer *renderer);
+
+/*
+ * draw a texture
+ */
+void
+draw_texture(SDL_Texture *texture, SDL_Renderer *renderer,
+	     pos_t pos, SDL_RendererFlip flip);
+
+/*
+ * draw a frame
+ */
+void
+draw_frame_texture(SDL_Texture *texture, SDL_Renderer *renderer,
+		   pos_t pos, unsigned char frame, SDL_RendererFlip flip);
 
 #endif
