@@ -25,6 +25,13 @@ SDL stuff
 API-Docu of SDL -> https://wiki.libsdl.org/CategoryAPI
 
 
+Library
+-------
+
+libgame:
+	- some useful functions used in some examples
+
+
 Examples
 --------
 
@@ -52,3 +59,7 @@ sprite_sheet:
 sprite_sheet_2:
 
 	- same example like sprite_sheet, but uses a png instead of a bmp (alpha topic)
+
+lib_example:
+
+	- simple example using sprite-sheet and the functions provided my ./lib
