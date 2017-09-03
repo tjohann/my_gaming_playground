@@ -34,12 +34,6 @@
 	}							\
 	while(0)
 
-#define err_and_ret(err_txt, ret_val) do {			\
-		fprintf(stderr, err_txt "\n");			\
-		return ret_val;					\
-	}							\
-	while(0)
-
 
 LIGGAME_EXPORT SDL_Window *
 setup_main_window(char *name, int size_x, int size_y, unsigned char f)
@@ -72,7 +66,7 @@ setup_main_window(char *name, int size_x, int size_y, unsigned char f)
 LIGGAME_EXPORT SDL_Renderer *
 setup_renderer(SDL_Window *window, char *background)
 {
-	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	if (renderer == NULL)
 		err_sdl_and_ret("could not create renderer", NULL);
 
@@ -171,4 +165,33 @@ draw_frame_texture(SDL_Texture *texture, SDL_Renderer *renderer,
 	if (err < 0)
 		eprintf("could not set render texture (%s)\n",
 			SDL_GetError());
+}
+
+LIGGAME_EXPORT game_obj_t *
+init_game_object(int x, int y, int w, int h, SDL_Texture *texture)
+{
+	game_obj_t *t = malloc(sizeof(game_obj_t));
+	if (t == NULL)
+		err_and_ret("could not alloc mem", NULL);
+
+	t->pos.x = x;
+	t->pos.y = y;
+	t->pos.h = h;
+	t->pos.w = w;
+
+	t->frame = 0;
+
+	t->texture = texture;
+	t->flip = SDL_FLIP_NONE;
+
+	return t;
+}
+
+LIGGAME_EXPORT void
+free_game_object(game_obj_t *t)
+{
+	if (t != NULL)
+		free(t);
+	else
+		printf("game object == NULL\n");
 }

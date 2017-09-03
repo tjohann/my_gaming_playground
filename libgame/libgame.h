@@ -41,8 +41,15 @@ typedef struct {
 typedef struct {
 	uint32_t id;
 	pos_t pos;
+	unsigned char frame;
 	SDL_Texture *texture;
+	SDL_RendererFlip flip;
 } game_obj_t;
+
+
+/*
+ * --------------------------- other topics ------------------------------------
+ */
 
 /*
  * setup main window
@@ -61,6 +68,12 @@ setup_renderer(SDL_Window *window, char *background);
  */
 void
 cleanup_main_window(SDL_Window *window, SDL_Renderer *renderer);
+
+
+/*
+ * --------------------------- texture related ---------------------------------
+ */
+
 
 /*
  * create a texture from file
@@ -81,5 +94,22 @@ draw_texture(SDL_Texture *texture, SDL_Renderer *renderer,
 void
 draw_frame_texture(SDL_Texture *texture, SDL_Renderer *renderer,
 		   pos_t pos, unsigned char frame, SDL_RendererFlip flip);
+
+
+/*
+ * --------------------------- game object related -----------------------------
+ */
+
+/*
+ * create a game object
+ */
+game_obj_t *
+init_game_object(int x, int y, int w, int h, SDL_Texture *texture);
+
+/*
+ * free a game object
+ */
+void
+free_game_object(game_obj_t *t);
 
 #endif

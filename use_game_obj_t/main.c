@@ -35,15 +35,68 @@
 	} while (0)
 
 
-/* global parts */
+/* main window and renderer*/
 SDL_Window   *window;
 SDL_Renderer *renderer;
-SDL_Texture  *texture;
 
-unsigned char act_frame = 0;
-
-/* the global running variable -> true still running, false quit */
+/* the global state -> true still running, false quit */
 bool running = false;
+
+/* all game objects */
+#define MAX_NUM_OBJ 10
+game_obj_t *static_obj_array[MAX_NUM_OBJ];
+game_obj_t *moving_obj_array[MAX_NUM_OBJ];
+
+
+/*
+ * do all init stuff
+ */
+void
+init_game(void)
+{
+	window = setup_main_window(PROGNAME, 1024, 768, 0);
+	if (window == NULL)
+		exit(EXIT_FAILURE);
+
+	renderer = setup_renderer(window, NULL);
+	if (renderer == NULL)
+		exit(EXIT_FAILURE);
+}
+
+void
+init_game_objects(void)
+{
+	SDL_Texture *texture = load_texture(SPRITE_SHEET, renderer);
+	if (texture == NULL)
+		exit(EXIT_FAILURE);
+
+	/* static objects */
+	game_obj_t *t = init_game_object(0, 0, 128, 82, texture);
+	if (t == NULL)
+		exit(EXIT_FAILURE);
+	else
+		static_obj_array[0] = t;
+
+	t = init_game_object(100, 100, 128, 82, texture);
+	if (t == NULL)
+		exit(EXIT_FAILURE);
+	else
+		static_obj_array[1] = t;
+
+	/* flip this object */
+	static_obj_array[1]->flip = SDL_FLIP_HORIZONTAL;
+
+	static_obj_array[2] = NULL;
+
+	/* moving objects */
+	t = init_game_object(200, 200, 128, 82, texture);
+	if (t == NULL)
+		exit(EXIT_FAILURE);
+	else
+		moving_obj_array[0] = t;
+
+	moving_obj_array[1] = NULL;
+}
 
 /*
  * render all parts
@@ -57,9 +110,22 @@ render_window(void)
 		fprintf(stderr, "could not set clear rendering target (%s)\n",
 			SDL_GetError());
 
-	/*
-	 * do something
-	 */
+	for(int i = 0; i < MAX_NUM_OBJ; i++) {
+		if (static_obj_array[i] != NULL)
+			draw_texture(static_obj_array[i]->texture, renderer,
+				static_obj_array[i]->pos, static_obj_array[i]->flip);
+		else
+			break;
+	}
+
+	for(int i = 0; i < MAX_NUM_OBJ; i++) {
+		if (moving_obj_array[i] != NULL)
+			draw_frame_texture(moving_obj_array[i]->texture, renderer,
+					moving_obj_array[i]->pos, moving_obj_array[i]->frame,
+					moving_obj_array[i]->flip);
+		else
+			break;
+	}
 
 	/* bring everthing to the window -> now we see the changes */
 	SDL_RenderPresent(renderer);
@@ -71,7 +137,14 @@ render_window(void)
 void
 update_all(void)
 {
-	act_frame = (SDL_GetTicks() / 100) % 6;
+	unsigned char act_frame = (SDL_GetTicks() / 100) % 6;
+
+	for(int i = 0; i < MAX_NUM_OBJ; i++) {
+		if (moving_obj_array[i] != NULL)
+			moving_obj_array[i]->frame = act_frame;
+		else
+			break;
+	}
 }
 
 /*
@@ -102,18 +175,8 @@ handle_events(void)
 int
 main(void)
 {
-	window = setup_main_window(PROGNAME, 1024, 768, 0);
-	if (window == NULL)
-		exit(EXIT_FAILURE);
-
-	renderer = setup_renderer(window, NULL);
-	if (renderer == NULL)
-		exit(EXIT_FAILURE);
-
-	texture = load_texture(SPRITE_SHEET, renderer);
-	if (texture == NULL)
-		exit(EXIT_FAILURE);
-
+	init_game();
+	init_game_objects();
 
         /* init done */
 	running = true;
