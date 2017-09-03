@@ -29,12 +29,20 @@
 
 #define eprintf(format, ...) fprintf (stderr, format, ##__VA_ARGS__)
 
+
 typedef struct {
 	int x;
 	int y;
 	int h;
 	int w;
 } pos_t;
+
+/* this a object within the game */
+typedef struct {
+	uint32_t id;
+	pos_t pos;
+	SDL_Texture *texture;
+} game_obj_t;
 
 /*
  * setup main window

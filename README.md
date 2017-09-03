@@ -35,6 +35,8 @@ libgame:
 Examples
 --------
 
+Note: the order of the examples represents something like an complexity gradient.
+
 hello_sdl:
 
 	- simple SDL example to check if everthing is installed correctly
@@ -63,3 +65,7 @@ sprite_sheet_2:
 lib_example:
 
 	- simple example using sprite-sheet and the functions provided my ./lib
+
+use_game_obj_t:
+
+	- use game_obj_t as an object representation
