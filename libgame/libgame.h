@@ -46,6 +46,13 @@ typedef struct {
 	SDL_RendererFlip flip;
 } game_obj_t;
 
+typedef struct {
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+	uint8_t a;
+} color_t;
+
 
 /*
  * --------------------------- other topics ------------------------------------
@@ -61,7 +68,7 @@ setup_main_window(char *name, int size_x, int size_y, unsigned char f);
  * setup renderer
  */
 SDL_Renderer *
-setup_renderer(SDL_Window *window, char *background);
+setup_renderer(SDL_Window *window, color_t *b);
 
 /*
  * cleanup window, renderer and SDL_Quit
@@ -111,5 +118,6 @@ init_game_object(int x, int y, int w, int h, SDL_Texture *texture);
  */
 void
 free_game_object(game_obj_t *t);
+
 
 #endif

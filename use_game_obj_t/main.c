@@ -61,7 +61,13 @@ init_game(void)
 	if (window == NULL)
 		exit(EXIT_FAILURE);
 
-	renderer = setup_renderer(window, NULL);
+	color_t background;
+	background.r = 100;
+	background.g = 100;
+	background.b = 100;
+	background.a = 255;
+
+	renderer = setup_renderer(window, &background);
 	if (renderer == NULL)
 		exit(EXIT_FAILURE);
 }
