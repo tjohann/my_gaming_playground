@@ -51,6 +51,9 @@ game_obj_t *moving_obj_array[MAX_NUM_OBJ];
 const int SCREEN_WIDTH = 1024;
 const int SCREEN_HEIGHT = 768;
 
+/* frame rate */
+#define FPS 60
+
 /*
  * do all init stuff
  */
@@ -190,10 +193,19 @@ main(void)
         /* init done */
 	running = true;
 
+	uint32_t frame_start, frame_time;
+	uint32_t delay_time = 1000.0f / FPS;
 	while (running) {
+		frame_start = SDL_GetTicks();
+
 		HANDLE_EVENTS();
 		UPDATE_ALL();
 		RENDER_ALL();
+
+		frame_time = SDL_GetTicks() - frame_start;
+
+		if (frame_time < delay_time)
+			SDL_Delay(delay_time - frame_time);
 	}
 
 	cleanup_main_window(window, renderer);
