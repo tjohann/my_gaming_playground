@@ -1,2 +1,3 @@
 /libgame.a
-/libgame.o
+/helper.o
+/texture.o

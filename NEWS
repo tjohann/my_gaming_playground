@@ -1,0 +1,8 @@
+#
+# some news ... see also TODO for hints
+#
+
+
+2017-09-04 -> add AUTHORS, TODO and NEWS file
+	   -> split libgame.c in two files (helper.c and texture.c)
+	   -> add pixmap folder for our own pixmaps

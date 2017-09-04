@@ -4,17 +4,16 @@
 
 CC = gcc
 CFLAGS = -std=gnu11 -Wall -Wextra `pkg-config --cflags sdl2 SDL2_image`
-#LDLIBS = `pkg-config --libs sdl2 SDL2_image`
 LDLIBS =
 
 LIB = libgame.a
-OBJ = libgame.o
+OBJ = helper.o texture.o
 
 %.o: %.c
 	$(CC) -g -c -o $@ $< $(CFLAGS) $(LDLIBS)
 
 $(LIB): $(OBJ)
-	ar rcs $@ $<
+	ar rcs $@ $(OBJ)
 
 install: $(LIB)
 	install $(LIB) $(HOME)/lib/$(LIB)

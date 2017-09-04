@@ -47,6 +47,9 @@ bool running = false;
 game_obj_t *static_obj_array[MAX_NUM_OBJ];
 game_obj_t *moving_obj_array[MAX_NUM_OBJ];
 
+/* size of window */
+const int SCREEN_WIDTH = 1024;
+const int SCREEN_HEIGHT = 768;
 
 /*
  * do all init stuff
@@ -54,7 +57,7 @@ game_obj_t *moving_obj_array[MAX_NUM_OBJ];
 void
 init_game(void)
 {
-	window = setup_main_window(PROGNAME, 1024, 768, 0);
+	window = setup_main_window(PROGNAME, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
 	if (window == NULL)
 		exit(EXIT_FAILURE);
 
