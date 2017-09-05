@@ -4,7 +4,5 @@ TODO
 
 libgame:
 
-- implement function "init_game_object_from_file" which does load_texture() and init_game_object in one step
 - get size of an object (png) and of a sprite sheet
-- add size info to game_obj_t ... taken from function above
-- add function which gets a list of files (png) and return a game_obj_t *array[]
+- add function which gets a array of files (png) and return a game_obj_t *array[]

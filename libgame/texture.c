@@ -42,9 +42,8 @@ load_texture(char *file_name, SDL_Renderer *renderer)
 	return texture;
 }
 
-LIGGAME_EXPORT void
-draw_texture(SDL_Texture *texture, SDL_Renderer *renderer,
-	     pos_t pos, SDL_RendererFlip flip)
+void
+draw_texture(game_obj_t *obj, SDL_Renderer *renderer)
 {
 	SDL_Rect src_rect;
 	SDL_Rect dest_rect;
@@ -52,39 +51,38 @@ draw_texture(SDL_Texture *texture, SDL_Renderer *renderer,
 	src_rect.x = 0;
 	src_rect.y = 0;
 
-	src_rect.w = dest_rect.w = pos.w;
-	src_rect.h = dest_rect.h = pos.h;
+	src_rect.w = dest_rect.w = obj->size.w;
+	src_rect.h = dest_rect.h = obj->size.h;
 
-	dest_rect.x = pos.x;
-	dest_rect.y = pos.y;
+	dest_rect.x = obj->pos.x;
+	dest_rect.y = obj->pos.y;
 
-	int err = SDL_RenderCopyEx(renderer, texture,
+	int err = SDL_RenderCopyEx(renderer, obj->texture,
 				   &src_rect, &dest_rect,
-				   0, 0, flip);
+				   0, 0, obj->flip);
 	if (err < 0)
 		eprintf("could not set render texture (%s)\n",
 			SDL_GetError());
 }
 
-LIGGAME_EXPORT void
-draw_frame_texture(SDL_Texture *texture, SDL_Renderer *renderer,
-		   pos_t pos, unsigned char frame, SDL_RendererFlip flip)
+void
+draw_frame_texture(game_obj_t *obj, SDL_Renderer *renderer)
 {
 	SDL_Rect src_rect;
 	SDL_Rect dest_rect;
 
-	src_rect.x = pos.w  * frame;
+	src_rect.x = obj->size.w  * obj->frame;
 	src_rect.y = 0;
 
-	src_rect.w = dest_rect.w = pos.w;
-	src_rect.h = dest_rect.h = pos.h;
+	src_rect.w = dest_rect.w = obj->size.w;
+	src_rect.h = dest_rect.h = obj->size.h;
 
-	dest_rect.x = pos.x;
-	dest_rect.y = pos.y;
+	dest_rect.x = obj->pos.x;
+	dest_rect.y = obj->pos.y;
 
-	int err = SDL_RenderCopyEx(renderer, texture,
+	int err = SDL_RenderCopyEx(renderer, obj->texture,
 				   &src_rect, &dest_rect,
-				   0, 0, flip);
+				   0, 0, obj->flip);
 	if (err < 0)
 		eprintf("could not set render texture (%s)\n",
 			SDL_GetError());

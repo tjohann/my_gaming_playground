@@ -31,13 +31,33 @@ init_game_object(int x, int y, int w, int h, SDL_Texture *texture)
 
 	t->pos.x = x;
 	t->pos.y = y;
-	t->pos.h = h;
-	t->pos.w = w;
+	t->size.h = h;
+	t->size.w = w;
 
-	t->frame = 0;
+	/*
+	 * frame == -1 -> no sprite sheet
+	 * frame != -1 -> frame position within the sprite sheet
+	 */
+	t->frame = -1;
 
 	t->texture = texture;
 	t->flip = SDL_FLIP_NONE;
+
+	return t;
+}
+
+LIGGAME_EXPORT game_obj_t *
+init_game_object_from_file(char *filename, int x, int y, int w, int h,
+			SDL_Renderer *renderer)
+{
+	SDL_Texture *texture = load_texture(filename, renderer);
+	if (texture == NULL)
+		err_and_ret("could not load texture", NULL);
+
+	/* static objects */
+	game_obj_t *t = init_game_object(x, y, w, h, texture);
+	if (t == NULL)
+		err_and_ret("could not init game object", NULL);
 
 	return t;
 }
@@ -49,4 +69,19 @@ free_game_object(game_obj_t *t)
 		free(t);
 	else
 		printf("game object == NULL\n");
+}
+
+LIGGAME_EXPORT void
+draw_object(game_obj_t *obj, SDL_Renderer *renderer)
+{
+	if (obj->frame == -1)
+		draw_texture(obj, renderer);
+	else
+		draw_frame_texture(obj, renderer);
+}
+
+LIGGAME_EXPORT void
+set_object_frame(game_obj_t *obj, signed char frame)
+{
+	obj->frame = frame;
 }

@@ -3,6 +3,15 @@
 #
 
 
+2017-09-04 -> remove lib_example (use_game_obj_t is a better example)
+	   -> mark draw_texture and draw_frame_texture internal
+	   -> add draw_object as a replacement
+	   -> init game_obj_t.frame with -1 (means no sprite_sheet)
+	   -> add init_game_object_from_file function which does load_texture()
+	      and init_game_object in one step
+	   -> some rework of th draw_*_texture functions (make them aware of game_obj_t)
+	   -> add function set_object_frame which updates game_obj_t.frame content
+
 2017-09-04 -> add AUTHORS, TODO and NEWS file
 	   -> split libgame.c in two files (helper.c and texture.c)
 	   -> add pixmap folder for our own pixmaps

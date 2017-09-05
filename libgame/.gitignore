@@ -1,4 +1,5 @@
 /libgame.a
 /helper.o
+/vector_2d.o
 /texture.o
 /objects.o

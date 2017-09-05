@@ -33,16 +33,19 @@
 typedef struct {
 	int x;
 	int y;
+} pos_t;
+
+typedef struct {
 	int h;
 	int w;
-} pos_t;
+} spread_t;
 
 /* this a object within the game */
 typedef struct {
-	uint32_t id;
-	pos_t pos;
-	unsigned char frame;
-	SDL_Texture *texture;
+	pos_t            pos;
+	spread_t         size;
+	signed char      frame;
+	SDL_Texture      *texture;
 	SDL_RendererFlip flip;
 } game_obj_t;
 
@@ -88,20 +91,6 @@ cleanup_main_window(SDL_Window *window, SDL_Renderer *renderer);
 SDL_Texture *
 load_texture(char *file_name, SDL_Renderer *renderer);
 
-/*
- * draw a texture
- */
-void
-draw_texture(SDL_Texture *texture, SDL_Renderer *renderer,
-	     pos_t pos, SDL_RendererFlip flip);
-
-/*
- * draw a frame
- */
-void
-draw_frame_texture(SDL_Texture *texture, SDL_Renderer *renderer,
-		   pos_t pos, unsigned char frame, SDL_RendererFlip flip);
-
 
 /*
  * --------------------------- game object related -----------------------------
@@ -112,12 +101,34 @@ draw_frame_texture(SDL_Texture *texture, SDL_Renderer *renderer,
  */
 game_obj_t *
 init_game_object(int x, int y, int w, int h, SDL_Texture *texture);
+/* ... from file */
+game_obj_t *
+init_game_object_from_file(char *filename, int x, int y, int w, int h,
+			SDL_Renderer *renderer);
 
 /*
  * free a game object
  */
 void
 free_game_object(game_obj_t *t);
+
+/*
+ * draw a object based on obj content
+ */
+void
+draw_object(game_obj_t *obj, SDL_Renderer *renderer);
+
+/*
+ * set game_obj_t.frame with frame
+ */
+void
+set_object_frame(game_obj_t *obj, signed char frame);
+
+
+/*
+ * --------------------------- 2d vector related -------------------------------
+ */
+
 
 
 #endif

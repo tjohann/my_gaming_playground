@@ -19,7 +19,7 @@
 
 #include <libgame.h>
 
-#define PROGNAME "use use_game_obj_t for game objects"
+#define PROGNAME "use game_obj_t for game objects"
 #define SPRITE_SHEET "animate-alpha.png"
 
 #define RENDER_ALL() do {			\
@@ -78,6 +78,9 @@ init_game(void)
 void
 init_game_objects(void)
 {
+	memset(static_obj_array, 0, MAX_NUM_OBJ);
+	memset(moving_obj_array, 0, MAX_NUM_OBJ);
+
 	SDL_Texture *texture = load_texture(SPRITE_SHEET, renderer);
 	if (texture == NULL)
 		exit(EXIT_FAILURE);
@@ -111,6 +114,22 @@ init_game_objects(void)
 }
 
 /*
+ * cleanup all create game objects
+ */
+void
+cleanup_game_object(void)
+{
+	int i = 0;
+	while (static_obj_array[i])
+		free_game_object(static_obj_array[i++]);
+
+	i = 0;
+	while (moving_obj_array[i])
+		free_game_object(moving_obj_array[i++]);
+}
+
+
+/*
  * render all parts
  */
 void
@@ -122,22 +141,13 @@ render_window(void)
 		fprintf(stderr, "could not set clear rendering target (%s)\n",
 			SDL_GetError());
 
-	for(int i = 0; i < MAX_NUM_OBJ; i++) {
-		if (static_obj_array[i] != NULL)
-			draw_texture(static_obj_array[i]->texture, renderer,
-				static_obj_array[i]->pos, static_obj_array[i]->flip);
-		else
-			break;
-	}
+	int i = 0;
+	while (static_obj_array[i])
+		draw_object(static_obj_array[i++], renderer);
 
-	for(int i = 0; i < MAX_NUM_OBJ; i++) {
-		if (moving_obj_array[i] != NULL)
-			draw_frame_texture(moving_obj_array[i]->texture, renderer,
-					moving_obj_array[i]->pos, moving_obj_array[i]->frame,
-					moving_obj_array[i]->flip);
-		else
-			break;
-	}
+	i = 0;
+	while (moving_obj_array[i])
+		draw_object(moving_obj_array[i++], renderer);
 
 	/* bring everthing to the window -> now we see the changes */
 	SDL_RenderPresent(renderer);
@@ -151,12 +161,9 @@ update_all(void)
 {
 	unsigned char act_frame = (SDL_GetTicks() / 100) % 6;
 
-	for(int i = 0; i < MAX_NUM_OBJ; i++) {
-		if (moving_obj_array[i] != NULL)
-			moving_obj_array[i]->frame = act_frame;
-		else
-			break;
-	}
+	int i = 0;
+	while (moving_obj_array[i])
+		set_object_frame(moving_obj_array[i++], act_frame);
 }
 
 /*
@@ -208,6 +215,7 @@ main(void)
 			SDL_Delay(delay_time - frame_time);
 	}
 
+	cleanup_game_object();
 	cleanup_main_window(window, renderer);
 
 	exit(EXIT_SUCCESS);

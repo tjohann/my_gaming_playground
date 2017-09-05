@@ -32,8 +32,8 @@ libgame:
 	- some useful functions used in some examples
 
 
-Examples
---------
+Examples (stand alone)
+----------------------
 
 Note: the order of the examples represents something like an complexity gradient.
 
@@ -62,9 +62,9 @@ sprite_sheet_2:
 
 	- same example like sprite_sheet, but uses a png instead of a bmp (alpha topic)
 
-lib_example:
 
-	- simple example using sprite-sheet and the functions provided my ./lib
+Examples (using libgame)
+------------------------
 
 use_game_obj_t:
 
