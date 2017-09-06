@@ -54,8 +54,8 @@ draw_texture(game_obj_t *obj, SDL_Renderer *renderer)
 	src_rect.w = dest_rect.w = obj->size.w;
 	src_rect.h = dest_rect.h = obj->size.h;
 
-	dest_rect.x = obj->pos.x;
-	dest_rect.y = obj->pos.y;
+	dest_rect.x = (uint32_t) obj->pos.x;
+	dest_rect.y = (uint32_t) obj->pos.y;
 
 	int err = SDL_RenderCopyEx(renderer, obj->texture,
 				   &src_rect, &dest_rect,
@@ -77,8 +77,8 @@ draw_frame_texture(game_obj_t *obj, SDL_Renderer *renderer)
 	src_rect.w = dest_rect.w = obj->size.w;
 	src_rect.h = dest_rect.h = obj->size.h;
 
-	dest_rect.x = obj->pos.x;
-	dest_rect.y = obj->pos.y;
+	dest_rect.x = (uint32_t) obj->pos.x;
+	dest_rect.y = (uint32_t) obj->pos.y;
 
 	int err = SDL_RenderCopyEx(renderer, obj->texture,
 				   &src_rect, &dest_rect,

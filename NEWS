@@ -2,8 +2,10 @@
 # some news ... see also TODO for hints
 #
 
+2017-09-06 -> change pos_t of game_obj_t from int to float
+	   -> add velocity and acceleration to game_obj_t
 
-2017-09-04 -> remove lib_example (use_game_obj_t is a better example)
+2017-09-05 -> remove lib_example (use_game_obj_t is a better example)
 	   -> mark draw_texture and draw_frame_texture internal
 	   -> add draw_object as a replacement
 	   -> init game_obj_t.frame with -1 (means no sprite_sheet)

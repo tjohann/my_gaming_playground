@@ -31,9 +31,9 @@
 
 
 typedef struct {
-	int x;
-	int y;
-} pos_t;
+	float x;
+	float y;
+} vector2d_t;
 
 typedef struct {
 	int h;
@@ -42,9 +42,11 @@ typedef struct {
 
 /* this a object within the game */
 typedef struct {
-	pos_t            pos;
-	spread_t         size;
-	signed char      frame;
+	vector2d_t       pos;        /* position                  */
+	vector2d_t       velo;       /* velocity                  */
+	vector2d_t       accel;      /* acceleration              */
+	spread_t         size;       /* height and width          */
+	signed char      frame;      /* num frame of spreed sheet */
 	SDL_Texture      *texture;
 	SDL_RendererFlip flip;
 } game_obj_t;
@@ -53,7 +55,7 @@ typedef struct {
 	uint8_t r;
 	uint8_t g;
 	uint8_t b;
-	uint8_t a;
+	uint8_t a;   /* alpha */
 } color_t;
 
 
@@ -65,7 +67,7 @@ typedef struct {
  * setup main window
  */
 SDL_Window *
-setup_main_window(char *name, int size_x, int size_y, unsigned char f);
+setup_main_window(char *name, uint32_t size_x, uint32_t size_y, unsigned char f);
 
 /*
  * setup renderer
@@ -100,10 +102,12 @@ load_texture(char *file_name, SDL_Renderer *renderer);
  * create a game object
  */
 game_obj_t *
-init_game_object(int x, int y, int w, int h, SDL_Texture *texture);
+init_game_object(uint32_t x, uint32_t y, uint32_t w, uint32_t h,
+		SDL_Texture *texture);
 /* ... from file */
 game_obj_t *
-init_game_object_from_file(char *filename, int x, int y, int w, int h,
+init_game_object_from_file(char *filename,
+			uint32_t x, uint32_t y, uint32_t w, uint32_t h,
 			SDL_Renderer *renderer);
 
 /*

@@ -23,7 +23,8 @@
 
 
 LIGGAME_EXPORT game_obj_t *
-init_game_object(int x, int y, int w, int h, SDL_Texture *texture)
+init_game_object(uint32_t x, uint32_t y, uint32_t w, uint32_t h,
+		SDL_Texture *texture)
 {
 	game_obj_t *t = malloc(sizeof(game_obj_t));
 	if (t == NULL)
@@ -47,7 +48,8 @@ init_game_object(int x, int y, int w, int h, SDL_Texture *texture)
 }
 
 LIGGAME_EXPORT game_obj_t *
-init_game_object_from_file(char *filename, int x, int y, int w, int h,
+init_game_object_from_file(char *filename,
+			uint32_t x, uint32_t y, uint32_t w, uint32_t h,
 			SDL_Renderer *renderer)
 {
 	SDL_Texture *texture = load_texture(filename, renderer);

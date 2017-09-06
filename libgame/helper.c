@@ -22,7 +22,7 @@
 
 
 LIGGAME_EXPORT SDL_Window *
-setup_main_window(char *name, int size_x, int size_y, unsigned char f)
+setup_main_window(char *name, uint32_t size_x, uint32_t size_y, unsigned char f)
 {
 	int err = SDL_Init(SDL_INIT_EVERYTHING);
 	if (err < 0)
