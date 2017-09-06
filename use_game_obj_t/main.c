@@ -159,8 +159,12 @@ render_window(void)
 void
 update_all(void)
 {
-	unsigned char act_frame = (SDL_GetTicks() / 100) % 6;
+	/* static cat top left */
+	vector2d_t accel = {.x = 1, .y = 0};
+	set_object_accel(static_obj_array[0], &accel);
 
+	/* running cat stuff */
+	unsigned char act_frame = (SDL_GetTicks() / 100) % 6;
 	int i = 0;
 	while (moving_obj_array[i])
 		set_object_frame(moving_obj_array[i++], act_frame);

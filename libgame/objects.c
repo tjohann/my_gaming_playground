@@ -87,3 +87,13 @@ set_object_frame(game_obj_t *obj, signed char frame)
 {
 	obj->frame = frame;
 }
+
+LIGGAME_EXPORT void
+set_object_accel(game_obj_t *obj, vector2d_t *accel)
+{
+	obj->velo.x = accel->x;
+	obj->velo.y = accel->y;
+
+	add_vec(&obj->velo, accel);
+	add_vec(&obj->pos, &obj->velo);
+}

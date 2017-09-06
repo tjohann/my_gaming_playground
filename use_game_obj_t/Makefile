@@ -4,7 +4,7 @@
 
 CC = gcc
 CFLAGS = -std=gnu11 -Wall -Wextra `pkg-config --cflags sdl2 SDL2_image`
-LDLIBS = -I../libgame -L../libgame -lgame `pkg-config --libs sdl2 SDL2_image`
+LDLIBS = -I../libgame -L../libgame -lgame -lm `pkg-config --libs sdl2 SDL2_image`
 
 PROG = use_game_obj_t
 OBJ = main.o

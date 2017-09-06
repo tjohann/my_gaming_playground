@@ -128,11 +128,32 @@ draw_object(game_obj_t *obj, SDL_Renderer *renderer);
 void
 set_object_frame(game_obj_t *obj, signed char frame);
 
+/*
+ * set accel and calc velo/pos
+ */
+void
+set_object_accel(game_obj_t *obj, vector2d_t *accel);
 
 /*
  * --------------------------- 2d vector related -------------------------------
  */
 
+void
+add_vec(vector2d_t *a, vector2d_t *b);
 
+void
+sub_vec(vector2d_t *a, vector2d_t *b);
+
+void
+scal_mul_vec(vector2d_t *a, float b);
+
+void
+scal_div_vec(vector2d_t *a, float b);
+
+float
+lenght_vec(vector2d_t *a);
+
+void
+norm_vec(vector2d_t *a);
 
 #endif
