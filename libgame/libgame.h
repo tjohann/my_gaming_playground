@@ -135,6 +135,39 @@ void
 set_object_accel(game_obj_t *obj, vector2d_t *accel);
 
 /*
+ * get actual value(s) of pos
+ */
+vector2d_t *
+get_object_pos(game_obj_t *obj);
+uint32_t
+get_object_pos_x(game_obj_t *obj);
+uint32_t
+get_object_pos_y(game_obj_t *obj);
+
+/*
+ * clear value(s) of pos
+ */
+void
+clear_object_pos_x(game_obj_t *obj);
+void
+clear_object_pos_y(game_obj_t *obj);
+void
+clear_object_pos(game_obj_t *obj);
+
+/*
+ * get actual value(s) of pos
+ */
+void
+set_object_pos_x(game_obj_t *obj, uint32_t x);
+void
+set_object_pos_y(game_obj_t *obj, uint32_t y);
+void
+set_object_pos_x_y(game_obj_t *obj, uint32_t x, uint32_t y);
+void
+set_object_pos(game_obj_t *obj, vector2d_t *pos);
+
+
+/*
  * --------------------------- 2d vector related -------------------------------
  */
 

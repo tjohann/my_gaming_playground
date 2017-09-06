@@ -94,6 +94,70 @@ set_object_accel(game_obj_t *obj, vector2d_t *accel)
 	obj->velo.x = accel->x;
 	obj->velo.y = accel->y;
 
+	/* cal velo and new pos */
 	add_vec(&obj->velo, accel);
 	add_vec(&obj->pos, &obj->velo);
+}
+
+LIGGAME_EXPORT uint32_t
+get_object_pos_x(game_obj_t *obj)
+{
+	return ((uint32_t) obj->pos.x);
+}
+
+LIGGAME_EXPORT uint32_t
+get_object_pos_y(game_obj_t *obj)
+{
+	return ((uint32_t) obj->pos.y);
+}
+
+LIGGAME_EXPORT vector2d_t *
+get_object_pos(game_obj_t *obj)
+{
+	return &obj->pos;
+}
+
+LIGGAME_EXPORT void
+clear_object_pos_x(game_obj_t *obj)
+{
+	obj->pos.x = 0;
+}
+
+LIGGAME_EXPORT void
+clear_object_pos_y(game_obj_t *obj)
+{
+	obj->pos.y = 0;
+}
+
+LIGGAME_EXPORT void
+clear_object_pos(game_obj_t *obj)
+{
+	obj->pos.x = 0;
+	obj->pos.y = 0;
+}
+
+LIGGAME_EXPORT void
+set_object_pos_x(game_obj_t *obj, uint32_t x)
+{
+	obj->pos.x = x;
+}
+
+LIGGAME_EXPORT void
+set_object_pos_y(game_obj_t *obj, uint32_t y)
+{
+	obj->pos.y = y;
+}
+
+LIGGAME_EXPORT void
+set_object_pos_x_y(game_obj_t *obj, uint32_t x, uint32_t y)
+{
+	obj->pos.x = x;
+	obj->pos.y = y;
+}
+
+LIGGAME_EXPORT void
+set_object_pos(game_obj_t *obj, vector2d_t *pos)
+{
+	obj->pos.x = pos->x;
+	obj->pos.y = pos->y;
 }

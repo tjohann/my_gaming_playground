@@ -48,8 +48,8 @@ game_obj_t *static_obj_array[MAX_NUM_OBJ];
 game_obj_t *moving_obj_array[MAX_NUM_OBJ];
 
 /* size of window */
-const int SCREEN_WIDTH = 1024;
-const int SCREEN_HEIGHT = 768;
+const uint32_t SCREEN_WIDTH = 1024;
+const uint32_t SCREEN_HEIGHT = 768;
 
 /* frame rate */
 #define FPS 60
@@ -128,7 +128,6 @@ cleanup_game_object(void)
 		free_game_object(moving_obj_array[i++]);
 }
 
-
 /*
  * render all parts
  */
@@ -160,11 +159,24 @@ void
 update_all(void)
 {
 	/* static cat top left */
+	if (get_object_pos_x(static_obj_array[0]) > SCREEN_WIDTH)
+		clear_object_pos_x(static_obj_array[0]);
+
 	vector2d_t accel = {.x = 1, .y = 0};
 	set_object_accel(static_obj_array[0], &accel);
 
+
+        /* static cat in the middle */
+	if (get_object_pos_x(static_obj_array[1]) == 0)
+		set_object_pos_x(static_obj_array[1],SCREEN_WIDTH);
+
+	vector2d_t accel_2 = {.x = -1, .y = 0};
+	set_object_accel(static_obj_array[1], &accel_2);
+
+
 	/* running cat stuff */
 	unsigned char act_frame = (SDL_GetTicks() / 100) % 6;
+
 	int i = 0;
 	while (moving_obj_array[i])
 		set_object_frame(moving_obj_array[i++], act_frame);
