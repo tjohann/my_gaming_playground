@@ -68,4 +68,8 @@ Examples (using libgame)
 
 use_game_obj_t:
 
-	- use game_obj_t as an object representation
+	- use game_obj_t as an object representation and let some pixmaps run over the screen
+
+input_control:
+
+	- use joystick, mouse and keyboard to move an object over the screen

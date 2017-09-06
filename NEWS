@@ -5,6 +5,8 @@
 2017-09-06 -> change pos_t of game_obj_t from int to float
 	   -> add velocity and acceleration to game_obj_t
 	   -> add some common operations on vector_2d_t
+	   -> add some functions to set pos of game_obj_t
+	   -> add skeleton input_control (joystick/mouse/keyboard control of an object)
 
 2017-09-05 -> remove lib_example (use_game_obj_t is a better example)
 	   -> mark draw_texture and draw_frame_texture internal
