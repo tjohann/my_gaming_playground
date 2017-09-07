@@ -51,9 +51,6 @@ game_obj_t *moving_obj_array[MAX_NUM_OBJ];
 const uint32_t SCREEN_WIDTH = 1024;
 const uint32_t SCREEN_HEIGHT = 768;
 
-/* frame rate */
-#define FPS 60
-
 /*
  * do all init stuff
  */
@@ -229,6 +226,8 @@ main(void)
 
 		if (frame_time < delay_time)
 			SDL_Delay(delay_time - frame_time);
+		else
+			printf("underrun -> try to reduce FPS?\n");
 	}
 
 	cleanup_game_object();

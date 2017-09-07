@@ -20,7 +20,7 @@
 #include <libgame.h>
 
 #define PROGNAME "use joystick/mouse or keyboard to move a game object"
-#define SPRITE_SHEET "animate-alpha.png"
+#define SPRITE_SHEET "astronaut.png"
 
 #define RENDER_ALL() do {			\
 		render_window();		\
@@ -47,11 +47,8 @@ bool running = false;
 game_obj_t *obj_array[MAX_NUM_OBJ];
 
 /* size of window */
-const uint32_t SCREEN_WIDTH = 1024;
-const uint32_t SCREEN_HEIGHT = 768;
-
-/* frame rate */
-#define FPS 60
+const uint32_t SCREEN_WIDTH = 1280;
+const uint32_t SCREEN_HEIGHT = 720;
 
 /*
  * do all init stuff
@@ -84,22 +81,13 @@ init_game_objects(void)
 		exit(EXIT_FAILURE);
 
 	/* static objects */
-	game_obj_t *t = init_game_object(0, 0, 128, 82, texture);
+	game_obj_t *t = init_game_object(0, 0, 50, 60, texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
 	else
 		obj_array[0] = t;
 
-	t = init_game_object(100, 100, 128, 82, texture);
-	if (t == NULL)
-		exit(EXIT_FAILURE);
-	else
-		obj_array[1] = t;
-
-	/* flip this object */
-	obj_array[1]->flip = SDL_FLIP_HORIZONTAL;
-
-	obj_array[2] = NULL;
+	obj_array[1] = NULL;
 
 }
 
@@ -146,14 +134,6 @@ update_all(void)
 
 	vector2d_t accel = {.x = 1, .y = 0};
 	set_object_accel(obj_array[0], &accel);
-
-
-        /* static cat in the middle */
-	if (get_object_pos_x(obj_array[1]) == 0)
-		set_object_pos_x(obj_array[1],SCREEN_WIDTH);
-
-	vector2d_t accel_2 = {.x = -1, .y = 0};
-	set_object_accel(obj_array[1], &accel_2);
 }
 
 /*
@@ -203,6 +183,8 @@ main(void)
 
 		if (frame_time < delay_time)
 			SDL_Delay(delay_time - frame_time);
+		else
+			printf("underrun -> try to reduce FPS?\n");
 	}
 
 	cleanup_game_object();

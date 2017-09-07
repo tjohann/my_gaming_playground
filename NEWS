@@ -2,6 +2,11 @@
 # some news ... see also TODO for hints
 #
 
+
+2017-09-07 -> set correct size of screen and image for input_control example
+	      (the first example which should run on the tv)
+	   -> add first input parts for the joystick
+
 2017-09-06 -> change pos_t of game_obj_t from int to float
 	   -> add velocity and acceleration to game_obj_t
 	   -> add some common operations on vector_2d_t

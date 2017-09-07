@@ -29,6 +29,8 @@
 
 #define eprintf(format, ...) fprintf (stderr, format, ##__VA_ARGS__)
 
+/* frame rate */
+#define FPS 60
 
 typedef struct {
 	float x;
