@@ -19,3 +19,41 @@
 
 #include "libgame.h"
 #include "libgame_private.h"
+
+
+LIGGAME_EXPORT int
+init_joysticks(SDL_Joystick *joystick_array[])
+{
+	if (!SDL_WasInit(SDL_INIT_JOYSTICK))
+		SDL_InitSubSystem(SDL_INIT_JOYSTICK);
+	else
+		printf("SDL_INIT_JOYSTICK == true\n");
+
+	unsigned char n = SDL_NumJoysticks();
+	if (!n) {
+		printf("no joysticks connected\n");
+		return 0;
+	} else {
+		printf("found %d joysticks\n", n);
+	}
+
+	/* use only the first one */
+	SDL_Joystick *p = SDL_JoystickOpen(0);
+	if (p == NULL)
+		err_sdl_and_ret("could open joystick", -1);
+	else
+		joystick_array[0] = p;
+
+	/* some debug stuff */
+	printf("Opened Joystick 0\n");
+        printf("Name: %s\n", SDL_JoystickNameForIndex(0));
+        printf("Number of Axes: %d\n", SDL_JoystickNumAxes(p));
+        printf("Number of Buttons: %d\n", SDL_JoystickNumButtons(p));
+        printf("Number of Balls: %d\n", SDL_JoystickNumBalls(p));
+
+	int err = SDL_JoystickEventState(SDL_ENABLE);
+	if (err == -1)
+		err_sdl_and_ret("could not enable joystick events", -1);
+
+	return n;
+}

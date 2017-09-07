@@ -173,22 +173,37 @@ set_object_pos(game_obj_t *obj, vector2d_t *pos);
  * --------------------------- 2d vector related -------------------------------
  */
 
+/*
+ * base operations
+ */
 void
 add_vec(vector2d_t *a, vector2d_t *b);
-
 void
 sub_vec(vector2d_t *a, vector2d_t *b);
 
+/*
+ * scalar operations
+ */
 void
 scal_mul_vec(vector2d_t *a, float b);
-
 void
 scal_div_vec(vector2d_t *a, float b);
 
+/*
+ * others
+ */
 float
 lenght_vec(vector2d_t *a);
-
 void
 norm_vec(vector2d_t *a);
+
+
+/*
+ * --------------------------- input related -----------------------------------
+ */
+
+int
+init_joysticks(SDL_Joystick *joystick_array[]);
+
 
 #endif

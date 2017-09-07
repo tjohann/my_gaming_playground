@@ -46,6 +46,10 @@ bool running = false;
 #define MAX_NUM_OBJ 4
 game_obj_t *obj_array[MAX_NUM_OBJ];
 
+/* all joysticks */
+#define MAX_NUM_JOYSTICKS 2
+SDL_Joystick *joystick_array[MAX_NUM_JOYSTICKS];
+
 /* size of window */
 const uint32_t SCREEN_WIDTH = 1280;
 const uint32_t SCREEN_HEIGHT = 720;
@@ -69,6 +73,15 @@ init_game(void)
 	renderer = setup_renderer(window, &background);
 	if (renderer == NULL)
 		exit(EXIT_FAILURE);
+}
+
+void
+init_inputs(void)
+{
+	int err = init_joysticks(joystick_array);
+	if (err == -1)
+		exit(EXIT_FAILURE);
+
 }
 
 void
@@ -165,13 +178,16 @@ int
 main(void)
 {
 	init_game();
+	init_inputs();
 	init_game_objects();
 
         /* init done */
 	running = true;
 
 	uint32_t frame_start, frame_time;
-	uint32_t delay_time = 1000.0f / FPS;
+	unsigned char local_fps = FPS + 1; /* the first run never fits */
+	uint32_t delay_time = 1000.0f / local_fps;
+
 	while (running) {
 		frame_start = SDL_GetTicks();
 
@@ -181,10 +197,14 @@ main(void)
 
 		frame_time = SDL_GetTicks() - frame_start;
 
-		if (frame_time < delay_time)
+		if (frame_time < delay_time) {
 			SDL_Delay(delay_time - frame_time);
-		else
-			printf("underrun -> try to reduce FPS?\n");
+		} else {
+			printf("underrun -> try to reduce actual FPS %d\n",
+				local_fps);
+			local_fps--;
+			delay_time = 1000.0f / local_fps;
+		}
 	}
 
 	cleanup_game_object();
