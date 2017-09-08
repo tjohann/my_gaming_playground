@@ -37,19 +37,17 @@ init_joysticks(SDL_Joystick *joystick_array[])
 		printf("found %d joysticks\n", n);
 	}
 
-	/* use only the first one */
-	SDL_Joystick *p = SDL_JoystickOpen(0);
-	if (p == NULL)
-		err_sdl_and_ret("could open joystick", -1);
-	else
-		joystick_array[0] = p;
+	for (int i = 0; i < n; i++) {
+		SDL_Joystick *p = SDL_JoystickOpen(0);
+		if (p == NULL)
+			err_sdl_and_ret("could open joystick", -1);
+		else
+			joystick_array[0] = p;
 
-	/* some debug stuff */
-	printf("Opened Joystick 0\n");
-        printf("Name: %s\n", SDL_JoystickNameForIndex(0));
-        printf("Number of Axes: %d\n", SDL_JoystickNumAxes(p));
-        printf("Number of Buttons: %d\n", SDL_JoystickNumButtons(p));
-        printf("Number of Balls: %d\n", SDL_JoystickNumBalls(p));
+		printf("opened joystick %s\n", SDL_JoystickNameForIndex(i));
+		printf("axes: %d\tbuttons: %d\tballs: %d\n",
+			SDL_JoystickNumAxes(p), SDL_JoystickNumButtons(p), SDL_JoystickNumBalls(p));
+	}
 
 	int err = SDL_JoystickEventState(SDL_ENABLE);
 	if (err == -1)
