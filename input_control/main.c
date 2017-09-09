@@ -42,9 +42,8 @@ SDL_Renderer *renderer;
 /* the global state -> true still running, false quit */
 bool running = false;
 
-/* all game objects */
-#define MAX_NUM_OBJ 4
-game_obj_t *obj_array[MAX_NUM_OBJ];
+/* the player */
+game_obj_t *player;
 
 /* all joysticks */
 #define MAX_NUM_JOYSTICKS 2
@@ -87,21 +86,17 @@ init_inputs(void)
 void
 init_game_objects(void)
 {
-	memset(obj_array, 0, MAX_NUM_OBJ);
-
 	SDL_Texture *texture = load_texture(SPRITE_SHEET, renderer);
 	if (texture == NULL)
 		exit(EXIT_FAILURE);
 
 	/* static objects */
-	game_obj_t *t = init_game_object(0, 0, 50, 60, texture);
+	game_obj_t *t = init_game_object(SCREEN_WIDTH/2, SCREEN_HEIGHT/2,
+					 50, 60, texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
 	else
-		obj_array[0] = t;
-
-	obj_array[1] = NULL;
-
+		player = t;
 }
 
 /*
@@ -110,9 +105,7 @@ init_game_objects(void)
 void
 cleanup_game_object(void)
 {
-	int i = 0;
-	while (obj_array[i])
-		free_game_object(obj_array[i++]);
+	free_game_object(player);
 }
 
 /*
@@ -127,9 +120,7 @@ render_window(void)
 		fprintf(stderr, "could not set clear rendering target (%s)\n",
 			SDL_GetError());
 
-	int i = 0;
-	while (obj_array[i])
-		draw_object(obj_array[i++], renderer);
+	draw_object(player, renderer);
 
 	/* bring everthing to the window -> now we see the changes */
 	SDL_RenderPresent(renderer);
@@ -142,11 +133,11 @@ void
 update_all(void)
 {
 	/* static cat top left */
-	if (get_object_pos_x(obj_array[0]) > SCREEN_WIDTH)
-		clear_object_pos_x(obj_array[0]);
+	if (get_object_pos_x(player) > SCREEN_WIDTH)
+		clear_object_pos_x(player);
 
 	vector2d_t accel = {.x = 1, .y = 0};
-	set_object_accel(obj_array[0], &accel);
+	set_object_accel(player, &accel);
 }
 
 /*

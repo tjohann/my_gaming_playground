@@ -205,5 +205,7 @@ norm_vec(vector2d_t *a);
 int
 init_joysticks(SDL_Joystick *joystick_array[]);
 
+void
+free_joysticks(SDL_Joystick *joystick_array[]);
 
 #endif

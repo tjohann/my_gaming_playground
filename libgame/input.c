@@ -46,12 +46,21 @@ init_joysticks(SDL_Joystick *joystick_array[])
 
 		printf("opened joystick %s\n", SDL_JoystickNameForIndex(i));
 		printf("axes: %d\tbuttons: %d\tballs: %d\n",
-			SDL_JoystickNumAxes(p), SDL_JoystickNumButtons(p), SDL_JoystickNumBalls(p));
+		       SDL_JoystickNumAxes(p), SDL_JoystickNumButtons(p),
+		       SDL_JoystickNumBalls(p));
 	}
+
+	joystick_array[n] = NULL;
 
 	int err = SDL_JoystickEventState(SDL_ENABLE);
 	if (err == -1)
 		err_sdl_and_ret("could not enable joystick events", -1);
 
 	return n;
+}
+
+LIGGAME_EXPORT void
+free_joysticks(SDL_Joystick *joystick_array[])
+{
+
 }
