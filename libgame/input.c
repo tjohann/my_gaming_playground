@@ -45,7 +45,7 @@ init_joysticks(SDL_Joystick *joystick_array[])
 			joystick_array[0] = p;
 
 		printf("opened joystick %s\n", SDL_JoystickNameForIndex(i));
-		printf("axes: %d\tbuttons: %d\tballs: %d\n",
+		printf("axes: %d\nbuttons: %d\nballs: %d\n",
 		       SDL_JoystickNumAxes(p), SDL_JoystickNumButtons(p),
 		       SDL_JoystickNumBalls(p));
 	}
@@ -62,5 +62,7 @@ init_joysticks(SDL_Joystick *joystick_array[])
 LIGGAME_EXPORT void
 free_joysticks(SDL_Joystick *joystick_array[])
 {
-
+	int i = 0;
+	while(joystick_array[i] != NULL)
+		SDL_JoystickClose(joystick_array[i++]);
 }

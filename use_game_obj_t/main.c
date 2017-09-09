@@ -44,8 +44,8 @@ bool running = false;
 
 /* all game objects */
 #define MAX_NUM_OBJ 10
-game_obj_t *static_obj_array[MAX_NUM_OBJ];
-game_obj_t *moving_obj_array[MAX_NUM_OBJ];
+game_obj_t *static_obj_array[MAX_NUM_OBJ + 1];
+game_obj_t *moving_obj_array[MAX_NUM_OBJ + 1];
 
 /* size of window */
 const uint32_t SCREEN_WIDTH = 1024;

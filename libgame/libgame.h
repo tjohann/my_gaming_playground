@@ -32,6 +32,9 @@
 /* frame rate */
 #define FPS 60
 
+/* deadzone for the joystick */
+#define JOYSTICK_DEADZONE 10000
+
 typedef struct {
 	float x;
 	float y;

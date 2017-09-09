@@ -47,7 +47,7 @@ game_obj_t *player;
 
 /* all joysticks */
 #define MAX_NUM_JOYSTICKS 2
-SDL_Joystick *joystick_array[MAX_NUM_JOYSTICKS];
+SDL_Joystick *joystick_array[MAX_NUM_JOYSTICKS + 1];
 
 /* size of window */
 const uint32_t SCREEN_WIDTH = 1280;
@@ -106,6 +106,7 @@ void
 cleanup_game_object(void)
 {
 	free_game_object(player);
+	free_joysticks(joystick_array);
 }
 
 /*
@@ -152,6 +153,33 @@ handle_events(void)
 		case SDL_QUIT:
 			printf("an actual SDL_QUIT event occured\n");
 			running = false;
+			break;
+		case SDL_JOYAXISMOTION:
+			printf("SDL_JOYAXISMOTION of: %d\n", e.jaxis.which);
+			int value = e.jaxis.value;
+			int axis  = e.jaxis.axis;
+			printf("value: %d\n", value);
+			printf("axis: %d\n", axis);
+
+			if (axis == 0) {
+				if (value > JOYSTICK_DEADZONE)
+					printf("right\n");
+				else if (value < -JOYSTICK_DEADZONE)
+					printf("left\n");
+				else
+					printf("middle\n");
+			} else {
+				if (value > JOYSTICK_DEADZONE)
+					printf("down\n");
+				else if (value < -JOYSTICK_DEADZONE)
+					printf("top\n");
+				else
+					printf("middle\n");
+			}
+
+			break;
+		case SDL_JOYBUTTONDOWN:
+			printf("SDL_JOYBUTTONDOWN\n");
 			break;
 		default:
 			printf("an actual unsupported event occured %d\n",

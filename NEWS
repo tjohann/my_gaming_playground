@@ -3,6 +3,8 @@
 #
 
 
+2017-09-09 -> add first joystick event handling
+
 2017-09-08 -> fix joystick initialisation
 
 2017-09-07 -> set correct size of screen and image for input_control example
