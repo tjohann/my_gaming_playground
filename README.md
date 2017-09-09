@@ -73,4 +73,4 @@ use_game_obj_t:
 input_control:
 
 	- use joystick, mouse and keyboard to move an object over the screen
-	- first example which should also work on our tv (1280x720 size, 50 fps and astronaut of 50x60)
+	- first example which should also work on our tv (1280x720 size and an astronaut of 50x60)

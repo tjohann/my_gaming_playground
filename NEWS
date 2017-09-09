@@ -3,7 +3,7 @@
 #
 
 
-2017-09-09 -> add first joystick event handling
+2017-09-09 -> add control of the astronaut via joystick
 
 2017-09-08 -> fix joystick initialisation
 

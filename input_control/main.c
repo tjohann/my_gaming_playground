@@ -42,8 +42,9 @@ SDL_Renderer *renderer;
 /* the global state -> true still running, false quit */
 bool running = false;
 
-/* the player */
+/* the player parts */
 game_obj_t *player;
+vector2d_t accel = {.x = 0, .y = 0};
 
 /* all joysticks */
 #define MAX_NUM_JOYSTICKS 2
@@ -133,11 +134,18 @@ render_window(void)
 void
 update_all(void)
 {
-	/* static cat top left */
-	if (get_object_pos_x(player) > SCREEN_WIDTH)
-		clear_object_pos_x(player);
+	uint32_t x = get_object_pos_x(player);
+	if (x > SCREEN_WIDTH)
+		set_object_pos_x(player, 0);
+	if (x == 0)
+		set_object_pos_x(player, SCREEN_WIDTH);
 
-	vector2d_t accel = {.x = 1, .y = 0};
+	uint32_t y = get_object_pos_y(player);
+	if (y > SCREEN_HEIGHT)
+		set_object_pos_y(player, 0);
+	if (y == 0)
+		set_object_pos_y(player, SCREEN_HEIGHT);
+
 	set_object_accel(player, &accel);
 }
 
@@ -162,19 +170,27 @@ handle_events(void)
 			printf("axis: %d\n", axis);
 
 			if (axis == 0) {
-				if (value > JOYSTICK_DEADZONE)
+				if (value > JOYSTICK_DEADZONE) {
 					printf("right\n");
-				else if (value < -JOYSTICK_DEADZONE)
+					accel.x = 1;
+				} else if (value < -JOYSTICK_DEADZONE) {
 					printf("left\n");
-				else
+					accel.x = -1;
+				} else {
 					printf("middle\n");
+					accel.x = 0;
+				}
 			} else {
-				if (value > JOYSTICK_DEADZONE)
+				if (value > JOYSTICK_DEADZONE) {
 					printf("down\n");
-				else if (value < -JOYSTICK_DEADZONE)
+					accel.y = 1;
+				} else if (value < -JOYSTICK_DEADZONE) {
 					printf("top\n");
-				else
+					accel.y = -1;
+				} else {
 					printf("middle\n");
+					accel.y = 0;
+				}
 			}
 
 			break;
