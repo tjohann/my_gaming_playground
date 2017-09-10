@@ -137,13 +137,13 @@ update_all(void)
 	uint32_t x = get_object_pos_x(player);
 	if (x > SCREEN_WIDTH)
 		set_object_pos_x(player, 0);
-	if (x == 0)
+	else if (x == 0)
 		set_object_pos_x(player, SCREEN_WIDTH);
 
 	uint32_t y = get_object_pos_y(player);
 	if (y > SCREEN_HEIGHT)
 		set_object_pos_y(player, 0);
-	if (y == 0)
+	else if (y == 0)
 		set_object_pos_y(player, SCREEN_HEIGHT);
 
 	set_object_accel(player, &accel);
@@ -164,38 +164,10 @@ handle_events(void)
 			break;
 		case SDL_JOYAXISMOTION:
 			printf("SDL_JOYAXISMOTION of: %d\n", e.jaxis.which);
-			int value = e.jaxis.value;
-			int axis  = e.jaxis.axis;
-			printf("value: %d\n", value);
-			printf("axis: %d\n", axis);
-
-			if (axis == 0) {
-				if (value > JOYSTICK_DEADZONE) {
-					printf("right\n");
-					accel.x = 1;
-				} else if (value < -JOYSTICK_DEADZONE) {
-					printf("left\n");
-					accel.x = -1;
-				} else {
-					printf("middle\n");
-					accel.x = 0;
-				}
-			} else {
-				if (value > JOYSTICK_DEADZONE) {
-					printf("down\n");
-					accel.y = 1;
-				} else if (value < -JOYSTICK_DEADZONE) {
-					printf("top\n");
-					accel.y = -1;
-				} else {
-					printf("middle\n");
-					accel.y = 0;
-				}
-			}
-
+			handle_joystick_axis_move(&e, &accel, 1);
 			break;
 		case SDL_JOYBUTTONDOWN:
-			printf("SDL_JOYBUTTONDOWN\n");
+			printf("SDL_JOYBUTTONDOWN -> not handled\n");
 			break;
 		default:
 			printf("an actual unsupported event occured %d\n",

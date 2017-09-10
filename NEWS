@@ -3,6 +3,8 @@
 #
 
 
+2017-09-10 -> fix joystick -> let both (i have only two) control the astronaut
+
 2017-09-09 -> add control of the astronaut via joystick
 
 2017-09-08 -> fix joystick initialisation

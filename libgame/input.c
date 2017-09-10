@@ -38,7 +38,7 @@ init_joysticks(SDL_Joystick *joystick_array[])
 	}
 
 	for (int i = 0; i < n; i++) {
-		SDL_Joystick *p = SDL_JoystickOpen(0);
+		SDL_Joystick *p = SDL_JoystickOpen(i);
 		if (p == NULL)
 			err_sdl_and_ret("could open joystick", -1);
 		else
@@ -65,4 +65,27 @@ free_joysticks(SDL_Joystick *joystick_array[])
 	int i = 0;
 	while(joystick_array[i] != NULL)
 		SDL_JoystickClose(joystick_array[i++]);
+}
+
+LIGGAME_EXPORT void
+handle_joystick_axis_move(SDL_Event *e, vector2d_t *mov_vec, unsigned char step)
+{
+	int value = e->jaxis.value;
+	int axis  = e->jaxis.axis;
+
+	if (axis == 0) {
+		if (value > JOYSTICK_DEADZONE)
+			mov_vec->x = step;           /* right  */
+		else if (value < -JOYSTICK_DEADZONE)
+			mov_vec->x = -step;          /* left   */
+		else
+			mov_vec->x = 0;              /* middle */
+	} else {
+		if (value > JOYSTICK_DEADZONE)
+			mov_vec->y = step;           /* down   */
+		else if (value < -JOYSTICK_DEADZONE)
+			mov_vec->y = -step;          /* up     */
+		else
+			mov_vec->y = 0;              /* middle */
+	}
 }

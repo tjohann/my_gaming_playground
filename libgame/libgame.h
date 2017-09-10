@@ -205,10 +205,26 @@ norm_vec(vector2d_t *a);
  * --------------------------- input related -----------------------------------
  */
 
+/*
+ * init all alvailabel joysticks
+ */
 int
 init_joysticks(SDL_Joystick *joystick_array[]);
 
+/*
+ * close all opened joysticks
+ */
 void
 free_joysticks(SDL_Joystick *joystick_array[]);
+
+/*
+ * handle joystick axis movement
+ *
+ * mov_vec -> accel (or other represantation) vector
+ * step    -> set mov_vec.x/y to step
+ */
+void
+handle_joystick_axis_move(SDL_Event *e, vector2d_t *mov_vec, unsigned char step);
+
 
 #endif
