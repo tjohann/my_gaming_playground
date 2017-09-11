@@ -48,6 +48,17 @@ init_game_object(uint32_t x, uint32_t y, uint32_t w, uint32_t h,
 }
 
 LIGGAME_EXPORT game_obj_t *
+init_game_object_simple(uint32_t x, uint32_t y,	SDL_Texture *texture)
+{
+	int w, h;
+	int err = SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+	if (err < 0)
+		err_and_ret("query texture", NULL);
+
+	return init_game_object(x, y, w, h, texture);
+}
+
+LIGGAME_EXPORT game_obj_t *
 init_game_object_from_file(char *filename,
 			uint32_t x, uint32_t y, uint32_t w, uint32_t h,
 			SDL_Renderer *renderer)
@@ -91,11 +102,21 @@ set_object_frame(game_obj_t *obj, signed char frame)
 LIGGAME_EXPORT void
 set_object_accel(game_obj_t *obj, vector2d_t *accel)
 {
-	obj->velo.x = accel->x;
-	obj->velo.y = accel->y;
+	obj->accel.x = accel->x;
+	obj->accel.y = accel->y;
 
 	/* cal velo and new pos */
 	add_vec(&obj->velo, accel);
+	add_vec(&obj->pos, &obj->velo);
+}
+
+LIGGAME_EXPORT void
+set_object_velo(game_obj_t *obj, vector2d_t *velo)
+{
+	obj->velo.x = velo->x;
+	obj->velo.y = velo->y;
+
+	/* calc new pos */
 	add_vec(&obj->pos, &obj->velo);
 }
 

@@ -19,7 +19,7 @@
 
 #include <libgame.h>
 
-#define PROGNAME "use joystick or keyboard to move a game object"
+#define PROGNAME "use mouse to move a game object"
 #define SPRITE_SHEET "astronaut.png"
 
 #define RENDER_ALL() do {			\
@@ -46,10 +46,6 @@ bool running = false;
 game_obj_t *player;
 vector2d_t velo = {.x = 0, .y = 0};
 
-/* all joysticks */
-#define MAX_NUM_JOYSTICKS 2
-SDL_Joystick *joystick_array[MAX_NUM_JOYSTICKS + 1];
-
 /* size of window */
 const uint32_t SCREEN_WIDTH = 1280;
 const uint32_t SCREEN_HEIGHT = 720;
@@ -75,14 +71,6 @@ init_game(void)
 		exit(EXIT_FAILURE);
 }
 void
-init_inputs(void)
-{
-	int err = init_joysticks(joystick_array);
-	if (err == -1)
-		exit(EXIT_FAILURE);
-
-}
-void
 init_game_objects(void)
 {
 	SDL_Texture *texture = load_texture(SPRITE_SHEET, renderer);
@@ -90,8 +78,7 @@ init_game_objects(void)
 		exit(EXIT_FAILURE);
 
 	/* static object */
-	game_obj_t *t = init_game_object(SCREEN_WIDTH/2, SCREEN_HEIGHT/2,
-					 50, 60, texture);
+	game_obj_t *t = init_game_object_simple(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
 	else
@@ -105,7 +92,6 @@ void
 cleanup_game_object(void)
 {
 	free_game_object(player);
-	free_joysticks(joystick_array);
 }
 
 /*
@@ -160,28 +146,6 @@ handle_events(void)
 			printf("an actual SDL_QUIT event occured\n");
 			running = false;
 			break;
-		case SDL_JOYAXISMOTION:
-			printf("SDL_JOYAXISMOTION of: %d\n", e.jaxis.which);
-			handle_joystick_axis_move(&e, &velo, 3);
-			break;
-		case SDL_JOYBUTTONDOWN:
-			printf("SDL_JOYBUTTONDOWN -> not handled\n");
-			break;
-		case SDL_JOYBUTTONUP:
-			printf("SDL_JOYBUTTONUP -> not handled\n");
-			break;
-		case SDL_KEYDOWN:
-			printf("SDL_KEYDOWN -> not handled\n");
-			break;
-		case SDL_KEYUP:
-			printf("SDL_KEYUP -> not handled\n");
-			break;
-		case SDL_MOUSEBUTTONDOWN:
-			printf("SDL_MOUSEBUTTONDOWN -> not handled\n");
-			break;
-		case SDL_MOUSEBUTTONUP:
-			printf("SDL_MOUSEBUTTONUP -> not handled\n");
-			break;
 		default:
 			printf("an actual unsupported event occured %d\n",
 				e.type);
@@ -198,7 +162,6 @@ int
 main(void)
 {
 	init_game();
-	init_inputs();
 	init_game_objects();
 
         /* init done */

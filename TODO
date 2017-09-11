@@ -4,7 +4,6 @@ TODO
 
 libgame:
 
-- get size of an object (png) and of a sprite sheet
 - add function which gets a array of files (png) and return a game_obj_t *array[]
 - check https://wiki.libsdl.org/SDL_CreateSoftwareRenderer for devices with no hardware renderer
 

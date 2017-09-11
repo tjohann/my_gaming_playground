@@ -41,6 +41,9 @@ hello_sdl:
 
 	- simple SDL example to check if everthing is installed correctly
 
+	usage: ./hello_sdl [-f]
+	       -f -> fullscreen
+
 first_window:
 
 	- simple SDL example with something like a skeleton for base game functionallity
@@ -74,3 +77,7 @@ input_control:
 
 	- use joystick, mouse and keyboard to move an object over the screen
 	- first example which should also work on our tv (1280x720 size and an astronaut of 50x60)
+
+follow_mouse:
+
+	- follow the postion of a mouse click

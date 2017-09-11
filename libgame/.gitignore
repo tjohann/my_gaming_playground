@@ -1,6 +1,7 @@
 /libgame.a
 /helper.o
 /vector_2d.o
+/window.o
 /texture.o
 /objects.o
 /input.o

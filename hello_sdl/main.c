@@ -20,6 +20,7 @@
 #include <SDL.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define PROGNAME "my first SDL window"
 
@@ -27,7 +28,7 @@ SDL_Window *window;
 SDL_Renderer *renderer;
 
 int
-init_main_window()
+init_main_window(uint32_t flags)
 {
 	int err = SDL_Init(SDL_INIT_EVERYTHING);
 	if (err < 0) {
@@ -39,7 +40,7 @@ init_main_window()
 	window = SDL_CreateWindow(PROGNAME,
 				SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 				1024, 768,
-				SDL_WINDOW_SHOWN);
+				flags);
 	if (window == NULL) {
 		fprintf(stderr, "could not create main window (%s)\n",
 			SDL_GetError());
@@ -83,11 +84,28 @@ render_main_window()
 
 
 int
-main(void)
+main(int argc, char *argv[])
 {
 	printf("start to try to build a SDL window\n");
 
-	if (init_main_window() == -1) {
+	printf("usage: ./hello_sdl [-f]  \n");
+	printf("       -f -> fullscreen  \n");
+
+	int c;
+	uint32_t flag = SDL_WINDOW_SHOWN;
+	while ((c = getopt(argc, argv, "f")) != -1) {
+		switch (c) {
+		case 'f':
+			flag = SDL_WINDOW_FULLSCREEN;
+			printf("use SDL_WINDOW_FULLSCREEN\n");
+			break;
+		default:
+			fprintf(stderr, "no valid option\n");
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	if (init_main_window(flag) == -1) {
 		fprintf(stderr, "could not setup a SDL window\n");
 		exit(EXIT_FAILURE);
 	}

@@ -91,7 +91,6 @@ cleanup_main_window(SDL_Window *window, SDL_Renderer *renderer);
  * --------------------------- texture related ---------------------------------
  */
 
-
 /*
  * create a texture from file
  */
@@ -114,6 +113,9 @@ game_obj_t *
 init_game_object_from_file(char *filename,
 			uint32_t x, uint32_t y, uint32_t w, uint32_t h,
 			SDL_Renderer *renderer);
+/* ... use texture size */
+game_obj_t *
+init_game_object_simple(uint32_t x, uint32_t y,	SDL_Texture *texture);
 
 /*
  * free a game object
@@ -138,6 +140,12 @@ set_object_frame(game_obj_t *obj, signed char frame);
  */
 void
 set_object_accel(game_obj_t *obj, vector2d_t *accel);
+
+/*
+ * set velo and calc pos
+ */
+void
+set_object_velo(game_obj_t *obj, vector2d_t *velo);
 
 /*
  * get actual value(s) of pos

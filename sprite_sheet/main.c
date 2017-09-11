@@ -141,7 +141,6 @@ render_window()
 		fprintf(stderr, "could not set render texture (%s)\n",
 			SDL_GetError());
 
-
 	/* bring everthing to the window -> now we see the changes */
 	SDL_RenderPresent(renderer);
 }
