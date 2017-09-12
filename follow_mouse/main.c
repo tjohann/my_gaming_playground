@@ -146,6 +146,30 @@ handle_events(void)
 			printf("an actual SDL_QUIT event occured\n");
 			running = false;
 			break;
+		case SDL_MOUSEBUTTONDOWN:
+			printf("MOUSEBUTTONDOWN");
+
+			uint32_t x = e.motion.x;
+			uint32_t y = e.motion.y;
+			printf("mouse click @x: %d and @y: %d\n", x, y);
+
+			if (e.button.button == SDL_BUTTON_LEFT) {
+				printf("left botton\n");
+				velo.x = x;
+				velo.y = y;
+			}
+
+			if (e.button.button == SDL_BUTTON_MIDDLE)
+				printf("middle botton\n");
+
+			if (e.button.button == SDL_BUTTON_RIGHT)
+				printf("right botton\n");
+
+			break;
+		case SDL_MOUSEBUTTONUP:
+			printf("MOUSEBUTTONUP\n");
+			clear_vec(&velo);
+			break;
 		default:
 			printf("an actual unsupported event occured %d\n",
 				e.type);
