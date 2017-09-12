@@ -207,6 +207,8 @@ float
 lenght_vec(vector2d_t *a);
 void
 norm_vec(vector2d_t *a);
+void
+clear_vec(vector2d_t *a);
 
 
 /*
@@ -232,7 +234,13 @@ free_joysticks(SDL_Joystick *joystick_array[]);
  * step    -> set mov_vec.x/y to step
  */
 void
-handle_joystick_axis_move(SDL_Event *e, vector2d_t *mov_vec, unsigned char step);
+handle_joystick_axis_move(SDL_Event *e, vector2d_t *mov_vec,
+			unsigned char step);
 
+/*
+ * handle cursor keys for movement
+ */
+void
+handle_keyboard_cursor_move(vector2d_t *mov_vec, unsigned char step);
 
 #endif

@@ -162,7 +162,7 @@ handle_events(void)
 			break;
 		case SDL_JOYAXISMOTION:
 			printf("SDL_JOYAXISMOTION of: %d\n", e.jaxis.which);
-			handle_joystick_axis_move(&e, &velo, 3);
+			handle_joystick_axis_move(&e, &velo, 2);
 			break;
 		case SDL_JOYBUTTONDOWN:
 			printf("SDL_JOYBUTTONDOWN -> not handled\n");
@@ -171,10 +171,12 @@ handle_events(void)
 			printf("SDL_JOYBUTTONUP -> not handled\n");
 			break;
 		case SDL_KEYDOWN:
-			printf("SDL_KEYDOWN -> not handled\n");
+			printf("SDL_KEYDOWN\n");
+			handle_keyboard_cursor_move(&velo, 2);
 			break;
 		case SDL_KEYUP:
-			printf("SDL_KEYUP -> not handled\n");
+			printf("SDL_KEYUP\n");
+			clear_vec(&velo);
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			printf("SDL_MOUSEBUTTONDOWN -> not handled\n");
@@ -197,6 +199,9 @@ handle_events(void)
 int
 main(void)
 {
+	printf("usage: ./input_control \n");
+	printf("       use cursor keys and/or WASD to move the astronaut\n");
+
 	init_game();
 	init_inputs();
 	init_game_objects();

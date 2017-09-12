@@ -64,3 +64,10 @@ norm_vec(vector2d_t *a)
 		a->y /= 1;
 	}
 }
+
+inline void
+clear_vec(vector2d_t *a)
+{
+	a->x = 0;
+	a->y = 0;
+}

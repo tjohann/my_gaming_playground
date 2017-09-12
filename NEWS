@@ -2,6 +2,10 @@
 # some news ... see also TODO for hints
 #
 
+
+2017-09-12 -> add keyboard handling in input_control
+	   -> add some more documenation and links around SDL
+
 2017-09-11 -> add fullscreen kdo arg to hello_sdl
 	   -> fix wrong usage of accel and velo in input_control example
 	   -> add init_game_object_simple() wich uses SDL_QueryTexture to get

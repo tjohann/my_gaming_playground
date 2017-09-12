@@ -89,3 +89,23 @@ handle_joystick_axis_move(SDL_Event *e, vector2d_t *mov_vec, unsigned char step)
 			mov_vec->y = 0;              /* middle */
 	}
 }
+
+LIGGAME_EXPORT void
+handle_keyboard_cursor_move(vector2d_t *mov_vec, unsigned char step)
+{
+	const uint8_t *k = SDL_GetKeyboardState(NULL);
+
+	if (k[SDL_SCANCODE_RIGHT] || k[SDL_SCANCODE_D]) {
+		mov_vec->x = step;
+	} else if (k[SDL_SCANCODE_LEFT] || k[SDL_SCANCODE_A]) {
+		mov_vec->x = -step;
+	} else if (k[SDL_SCANCODE_UP] || k[SDL_SCANCODE_W]) {
+		mov_vec->y = -step;
+	} else if (k[SDL_SCANCODE_DOWN] || k[SDL_SCANCODE_S]) {
+		mov_vec->y = step;
+	} else {
+		/* clear if other key was pressed */
+		mov_vec->y = 0;
+		mov_vec->x = 0;
+	}
+}
