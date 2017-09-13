@@ -51,8 +51,8 @@ vector2d_t velo = {.x = 0, .y = 0};
 SDL_Joystick *joystick_array[MAX_NUM_JOYSTICKS + 1];
 
 /* size of window */
-const uint32_t SCREEN_WIDTH = 1280;
-const uint32_t SCREEN_HEIGHT = 720;
+const int SCREEN_WIDTH = 1280;
+const int SCREEN_HEIGHT = 720;
 
 /*
  * do all init stuff
@@ -132,13 +132,13 @@ render_window(void)
 void
 update_all(void)
 {
-	uint32_t x = get_object_pos_x(player);
+	int x = get_object_pos_x(player);
 	if (x > SCREEN_WIDTH)
 		set_object_pos_x(player, 0);
 	else if (x == 0)
 		set_object_pos_x(player, SCREEN_WIDTH);
 
-	uint32_t y = get_object_pos_y(player);
+	int y = get_object_pos_y(player);
 	if (y > SCREEN_HEIGHT)
 		set_object_pos_y(player, 0);
 	else if (y == 0)
@@ -176,7 +176,7 @@ handle_events(void)
 			break;
 		case SDL_KEYUP:
 			printf("SDL_KEYUP\n");
-			clear_vec(&velo);
+			clear_vec(&velo);   /* imitate the joystick middle pos */
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			printf("SDL_MOUSEBUTTONDOWN -> not handled\n");

@@ -19,7 +19,7 @@
 
 #include <libgame.h>
 
-#define PROGNAME "use mouse to move a game object"
+#define PROGNAME "use joystick or keyboard control the flying astronaut"
 #define SPRITE_SHEET "astronaut.png"
 
 #define RENDER_ALL() do {			\
@@ -45,10 +45,15 @@ bool running = false;
 /* the player parts */
 game_obj_t *player;
 vector2d_t velo = {.x = 0, .y = 0};
+vector2d_t accel = {.x = 0, .y = 0};
+
+/* all joysticks */
+#define MAX_NUM_JOYSTICKS 2
+SDL_Joystick *joystick_array[MAX_NUM_JOYSTICKS + 1];
 
 /* size of window */
-const uint32_t SCREEN_WIDTH = 1280;
-const uint32_t SCREEN_HEIGHT = 720;
+const int SCREEN_WIDTH = 1280;
+const int SCREEN_HEIGHT = 720;
 
 /*
  * do all init stuff
@@ -71,6 +76,14 @@ init_game(void)
 		exit(EXIT_FAILURE);
 }
 void
+init_inputs(void)
+{
+	int err = init_joysticks(joystick_array);
+	if (err == -1)
+		exit(EXIT_FAILURE);
+
+}
+void
 init_game_objects(void)
 {
 	SDL_Texture *texture = load_texture(SPRITE_SHEET, renderer);
@@ -78,7 +91,7 @@ init_game_objects(void)
 		exit(EXIT_FAILURE);
 
 	/* static object */
-	game_obj_t *t = init_game_object_simple(1, 1, texture);
+	game_obj_t *t = init_game_object_simple(100, 100, texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
 	else
@@ -92,6 +105,7 @@ void
 cleanup_game_object(void)
 {
 	free_game_object(player);
+	free_joysticks(joystick_array);
 }
 
 /*
@@ -118,19 +132,18 @@ render_window(void)
 void
 update_all(void)
 {
-	uint32_t x = get_object_pos_x(player);
-	if (x > SCREEN_WIDTH)
-		set_object_pos_x(player, 0);
-	else if (x == 0)
-		set_object_pos_x(player, SCREEN_WIDTH);
-
-	uint32_t y = get_object_pos_y(player);
-	if (y > SCREEN_HEIGHT)
-		set_object_pos_y(player, 0);
-	else if (y == 0)
-		set_object_pos_y(player, SCREEN_HEIGHT);
-
 	set_object_velo(player, &velo);
+//	set_object_accel(player, &accel);
+
+	int x = get_object_pos_x(player);
+	if (x > (SCREEN_WIDTH - get_object_size_w(player)) || x < 0)
+		inv_vec_x(&velo);
+
+	int y = get_object_pos_y(player);
+	if (y > (SCREEN_HEIGHT - get_object_size_h(player)) || y < 0)
+		inv_vec_y(&velo);
+
+	show_object_kine_vals(player);
 }
 
 /*
@@ -146,24 +159,29 @@ handle_events(void)
 			printf("an actual SDL_QUIT event occured\n");
 			running = false;
 			break;
+		case SDL_JOYAXISMOTION:
+			printf("SDL_JOYAXISMOTION of: %d\n", e.jaxis.which);
+			tip_joystick_axis_move(&e, &velo, 1);
+			break;
+		case SDL_JOYBUTTONDOWN:
+			printf("SDL_JOYBUTTONDOWN -> not handled\n");
+			break;
+		case SDL_JOYBUTTONUP:
+			printf("SDL_JOYBUTTONUP -> not handled\n");
+			break;
+		case SDL_KEYDOWN:
+			printf("SDL_KEYDOWN\n");
+			tip_keyboard_cursor_move(&velo, 1);
+			handle_keyboard_calc_keys(&accel, 1);
+			break;
+		case SDL_KEYUP:
+			printf("SDL_KEYUP\n");
+			break;
 		case SDL_MOUSEBUTTONDOWN:
-			printf("MOUSEBUTTONDOWN");
-
-			if (e.button.button == SDL_BUTTON_LEFT) {
-				printf("left botton\n");
-				set_object_pos_via_mouse(player, &e, 2);
-			}
-
-			if (e.button.button == SDL_BUTTON_MIDDLE)
-				printf("middle botton\n");
-
-			if (e.button.button == SDL_BUTTON_RIGHT)
-				printf("right botton\n");
-
+			printf("SDL_MOUSEBUTTONDOWN -> increase accel.x\n");
 			break;
 		case SDL_MOUSEBUTTONUP:
-			printf("MOUSEBUTTONUP\n");
-			clear_vec(&velo);
+			printf("SDL_MOUSEBUTTONUP -> not handled\n");
 			break;
 		default:
 			printf("an actual unsupported event occured %d\n",
@@ -180,14 +198,18 @@ handle_events(void)
 int
 main(void)
 {
+	printf("usage: ./input_control \n");
+	printf("       use cursor keys and/or WASD to move the astronaut\n");
+
 	init_game();
+	init_inputs();
 	init_game_objects();
 
         /* init done */
 	running = true;
 
 	uint32_t frame_start, frame_time;
-	unsigned char local_fps = FPS + 1; /* the first run never fits */
+	unsigned char local_fps =  FPS + 1; /* the first run never fits */
 	uint32_t delay_time = 1000.0f / local_fps;
 
 	while (running) {

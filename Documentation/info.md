@@ -7,9 +7,11 @@ SDL
 Pixel in System-RAM -> surface
 Pixel in Video-RAM  -> texture
 
+SDL - coordinates start top left corner with (0,0)
 
-Links SDL
----------
+
+Links SDL (tutorial)
+--------------------
 
 http://www.sdltutorials.com/
 http://lazyfoo.net/tutorials/SDL/index.php

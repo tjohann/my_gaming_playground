@@ -23,12 +23,13 @@
 
 
 LIGGAME_EXPORT game_obj_t *
-init_game_object(uint32_t x, uint32_t y, uint32_t w, uint32_t h,
-		SDL_Texture *texture)
+init_game_object(int x, int y, int w, int h, SDL_Texture *texture)
 {
 	game_obj_t *t = malloc(sizeof(game_obj_t));
 	if (t == NULL)
 		err_and_ret("could not alloc mem", NULL);
+
+	memset(t, 0, sizeof(game_obj_t));
 
 	t->pos.x = x;
 	t->pos.y = y;
@@ -48,7 +49,7 @@ init_game_object(uint32_t x, uint32_t y, uint32_t w, uint32_t h,
 }
 
 LIGGAME_EXPORT game_obj_t *
-init_game_object_simple(uint32_t x, uint32_t y,	SDL_Texture *texture)
+init_game_object_simple(int x, int y, SDL_Texture *texture)
 {
 	int w, h;
 	int err = SDL_QueryTexture(texture, NULL, NULL, &w, &h);
@@ -59,8 +60,7 @@ init_game_object_simple(uint32_t x, uint32_t y,	SDL_Texture *texture)
 }
 
 LIGGAME_EXPORT game_obj_t *
-init_game_object_from_file(char *filename,
-			uint32_t x, uint32_t y, uint32_t w, uint32_t h,
+init_game_object_from_file(char *filename, int x, int y, int w, int h,
 			SDL_Renderer *renderer)
 {
 	SDL_Texture *texture = load_texture(filename, renderer);
@@ -105,7 +105,7 @@ set_object_accel(game_obj_t *obj, vector2d_t *accel)
 	obj->accel.x = accel->x;
 	obj->accel.y = accel->y;
 
-	/* cal velo and new pos */
+	/* set velo and new pos */
 	add_vec(&obj->velo, accel);
 	add_vec(&obj->pos, &obj->velo);
 }
@@ -113,23 +113,23 @@ set_object_accel(game_obj_t *obj, vector2d_t *accel)
 LIGGAME_EXPORT void
 set_object_velo(game_obj_t *obj, vector2d_t *velo)
 {
-	obj->velo.x = velo->x;
-	obj->velo.y = velo->y;
+	obj->velo.x += velo->x;
+	obj->velo.y += velo->y;
 
-	/* calc new pos */
+	/* set new pos */
 	add_vec(&obj->pos, &obj->velo);
 }
 
-LIGGAME_EXPORT uint32_t
+LIGGAME_EXPORT int
 get_object_pos_x(game_obj_t *obj)
 {
-	return ((uint32_t) obj->pos.x);
+	return obj->pos.x;
 }
 
-LIGGAME_EXPORT uint32_t
+LIGGAME_EXPORT int
 get_object_pos_y(game_obj_t *obj)
 {
-	return ((uint32_t) obj->pos.y);
+	return obj->pos.y;
 }
 
 LIGGAME_EXPORT vector2d_t *
@@ -158,19 +158,19 @@ clear_object_pos(game_obj_t *obj)
 }
 
 LIGGAME_EXPORT void
-set_object_pos_x(game_obj_t *obj, uint32_t x)
+set_object_pos_x(game_obj_t *obj, int x)
 {
 	obj->pos.x = x;
 }
 
 LIGGAME_EXPORT void
-set_object_pos_y(game_obj_t *obj, uint32_t y)
+set_object_pos_y(game_obj_t *obj, int y)
 {
 	obj->pos.y = y;
 }
 
 LIGGAME_EXPORT void
-set_object_pos_x_y(game_obj_t *obj, uint32_t x, uint32_t y)
+set_object_pos_x_y(game_obj_t *obj, int x, int y)
 {
 	obj->pos.x = x;
 	obj->pos.y = y;
@@ -181,4 +181,32 @@ set_object_pos(game_obj_t *obj, vector2d_t *pos)
 {
 	obj->pos.x = pos->x;
 	obj->pos.y = pos->y;
+}
+
+LIGGAME_EXPORT void
+set_object_pos_via_mouse(game_obj_t *obj, SDL_Event *e, int frac)
+{
+	vector2d_t mouse_pos;
+	get_mouse_position(e, &mouse_pos);
+
+	obj->pos.x = mouse_pos.x / frac;
+	obj->pos.y = mouse_pos.y / frac;
+}
+
+LIGGAME_EXPORT int
+get_object_size_w(game_obj_t *obj)
+{
+	return obj->size.w;
+}
+
+LIGGAME_EXPORT int
+get_object_size_h(game_obj_t *obj)
+{
+	return obj->size.h;
+}
+
+LIGGAME_EXPORT spread_t *
+get_object_size(game_obj_t *obj)
+{
+	return &obj->size;
 }

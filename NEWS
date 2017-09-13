@@ -3,6 +3,13 @@
 #
 
 
+2017-09-13 -> add some functions to handle mouse related topics
+	   -> finalize follow_mouse example
+	   -> add some more documentation
+	   -> add some functions in different areas
+	   -> add skeleton and first steps of flying_astronaut "ball" demo
+	   -> go back to int for vector2d_t and update examples
+
 2017-09-12 -> add keyboard handling in input_control
 	   -> add some more documenation and links around SDL
 

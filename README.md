@@ -75,9 +75,15 @@ use_game_obj_t:
 
 input_control:
 
-	- use joystick keyboard (cursor or WASD) to move an object over the screen
+	- use joystick or keyboard (cursor or WASD) to move an object over the screen
 	- first example which should also work on our tv (1280x720 size and an astronaut of 50x60)
 
 follow_mouse:
 
 	- follow the postion of a mouse click
+
+flying_astronaut:
+
+	- use joystick or keyboard to control the direction of the movement
+	- the screen is like a cage with an flying ball/astronaut
+	- use + and - to inc/dec acceleration

@@ -36,8 +36,8 @@
 #define JOYSTICK_DEADZONE 10000
 
 typedef struct {
-	float x;
-	float y;
+	int x;
+	int y;
 } vector2d_t;
 
 typedef struct {
@@ -66,6 +66,17 @@ typedef struct {
 
 /*
  * --------------------------- other topics ------------------------------------
+ */
+
+/*
+ * debug values
+ */
+void
+show_object_kine_vals(game_obj_t *obj);
+
+
+/*
+ * --------------------------- window related ----------------------------------
  */
 
 /*
@@ -106,16 +117,14 @@ load_texture(char *file_name, SDL_Renderer *renderer);
  * create a game object
  */
 game_obj_t *
-init_game_object(uint32_t x, uint32_t y, uint32_t w, uint32_t h,
-		SDL_Texture *texture);
+init_game_object(int x, int y, int w, int h, SDL_Texture *texture);
 /* ... from file */
 game_obj_t *
-init_game_object_from_file(char *filename,
-			uint32_t x, uint32_t y, uint32_t w, uint32_t h,
+init_game_object_from_file(char *filename, int x, int y, int w, int h,
 			SDL_Renderer *renderer);
 /* ... use texture size */
 game_obj_t *
-init_game_object_simple(uint32_t x, uint32_t y,	SDL_Texture *texture);
+init_game_object_simple(int x, int y, SDL_Texture *texture);
 
 /*
  * free a game object
@@ -152,9 +161,9 @@ set_object_velo(game_obj_t *obj, vector2d_t *velo);
  */
 vector2d_t *
 get_object_pos(game_obj_t *obj);
-uint32_t
+int
 get_object_pos_x(game_obj_t *obj);
-uint32_t
+int
 get_object_pos_y(game_obj_t *obj);
 
 /*
@@ -171,13 +180,25 @@ clear_object_pos(game_obj_t *obj);
  * get actual value(s) of pos
  */
 void
-set_object_pos_x(game_obj_t *obj, uint32_t x);
+set_object_pos_x(game_obj_t *obj, int x);
 void
-set_object_pos_y(game_obj_t *obj, uint32_t y);
+set_object_pos_y(game_obj_t *obj, int y);
 void
-set_object_pos_x_y(game_obj_t *obj, uint32_t x, uint32_t y);
+set_object_pos_x_y(game_obj_t *obj, int x, int y);
 void
 set_object_pos(game_obj_t *obj, vector2d_t *pos);
+void
+set_object_pos_via_mouse(game_obj_t *obj, SDL_Event *e, int frac);
+
+/*
+ * get size value(s)
+ */
+int
+get_object_size_w(game_obj_t *obj);
+int
+get_object_size_h(game_obj_t *obj);
+spread_t *
+get_object_size(game_obj_t *obj);
 
 
 /*
@@ -188,22 +209,36 @@ set_object_pos(game_obj_t *obj, vector2d_t *pos);
  * base operations
  */
 void
-add_vec(vector2d_t *a, vector2d_t *b);
+add_vec(vector2d_t *a, vector2d_t *b);     /* a += b*/
 void
-sub_vec(vector2d_t *a, vector2d_t *b);
+sub_vec(vector2d_t *a, vector2d_t *b);     /* a -= b*/
 
 /*
  * scalar operations
  */
 void
-scal_mul_vec(vector2d_t *a, float b);
+scal_mul_vec(vector2d_t *a, int b);
 void
-scal_div_vec(vector2d_t *a, float b);
+scal_div_vec(vector2d_t *a, int b);
+void
+scal_sub_vec(vector2d_t *a, int b);
+void
+scal_add_vec(vector2d_t *a, int b);
+
+/*
+ * invert x/y
+ */
+void
+inv_vec(vector2d_t *a);
+void
+inv_vec_x(vector2d_t *a);
+void
+inv_vec_y(vector2d_t *a);
 
 /*
  * others
  */
-float
+int
 lenght_vec(vector2d_t *a);
 void
 norm_vec(vector2d_t *a);
@@ -238,9 +273,49 @@ handle_joystick_axis_move(SDL_Event *e, vector2d_t *mov_vec,
 			unsigned char step);
 
 /*
+ * handle joystick axis movement
+ *
+ * same like handle_joystick_axis_move, but wont clear mov_vec with
+ * middle pos!
+ */
+void
+tip_joystick_axis_move(SDL_Event *e, vector2d_t *mov_vec,
+			unsigned char step);
+
+
+/*
  * handle cursor keys for movement
  */
 void
 handle_keyboard_cursor_move(vector2d_t *mov_vec, unsigned char step);
+
+/*
+ * handle cursor keys for movement
+ *
+ * same like handle_keyboard_cursor_move, but wont clear mov_vec with
+ * unknown keys!
+ */
+void
+tip_keyboard_cursor_move(vector2d_t *mov_vec, unsigned char step);
+
+/*
+ * handle cursor keys for movement
+ */
+void
+handle_keyboard_calc_keys(vector2d_t *mov_vec, unsigned char step);
+
+
+/*
+ * get the actual position of the mouse cursor
+ */
+void
+get_mouse_position(SDL_Event *e, vector2d_t *pos);
+void
+get_mouse_position_x(SDL_Event *e, int *pos_x);
+void
+get_mouse_position_y(SDL_Event *e, int *pos_y);
+void
+get_mouse_position_x_y(SDL_Event *e, int *pos_x, int *pos_y);
+
 
 #endif

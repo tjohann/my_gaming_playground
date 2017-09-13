@@ -36,20 +36,34 @@ sub_vec(vector2d_t *a, vector2d_t *b)
 }
 
 inline LIGGAME_EXPORT void
-scal_mul_vec(vector2d_t *a, float b)
+scal_mul_vec(vector2d_t *a, int b)
 {
 	a->x *= b;
 	a->y *= b;
 }
 
 inline LIGGAME_EXPORT void
-scal_div_vec(vector2d_t *a, float b)
+scal_div_vec(vector2d_t *a, int b)
 {
 	a->x /= b;
 	a->y /= b;
 }
 
-inline LIGGAME_EXPORT float
+inline LIGGAME_EXPORT void
+scal_add_vec(vector2d_t *a, int b)
+{
+	a->x += b;
+	a->y += b;
+}
+
+inline LIGGAME_EXPORT void
+scal_sub_vec(vector2d_t *a, int b)
+{
+	a->x -= b;
+	a->y -= b;
+}
+
+inline LIGGAME_EXPORT int
 lenght_vec(vector2d_t *a)
 {
 	return (sqrt((a->x) * (a->x) + (a->y) * (a->y)));
@@ -58,16 +72,35 @@ lenght_vec(vector2d_t *a)
 inline LIGGAME_EXPORT void
 norm_vec(vector2d_t *a)
 {
-	float l = lenght_vec(a);
+	int l = lenght_vec(a);
 	if (l > 1) {
 		a->x /= l;
 		a->y /= 1;
 	}
 }
 
-inline void
+inline LIGGAME_EXPORT void
 clear_vec(vector2d_t *a)
 {
 	a->x = 0;
 	a->y = 0;
+}
+
+inline LIGGAME_EXPORT void
+inv_vec(vector2d_t *a)
+{
+	a->x *= -1;
+	a->y *= -1;
+}
+
+inline LIGGAME_EXPORT void
+inv_vec_x(vector2d_t *a)
+{
+	a->x *= -1;
+}
+
+inline LIGGAME_EXPORT void
+inv_vec_y(vector2d_t *a)
+{
+	a->y *= -1;
 }

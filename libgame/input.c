@@ -68,6 +68,25 @@ free_joysticks(SDL_Joystick *joystick_array[])
 }
 
 LIGGAME_EXPORT void
+tip_joystick_axis_move(SDL_Event *e, vector2d_t *mov_vec, unsigned char step)
+{
+	int value = e->jaxis.value;
+	int axis  = e->jaxis.axis;
+
+	if (axis == 0) {
+		if (value > JOYSTICK_DEADZONE)
+			mov_vec->x = step;           /* right  */
+		if (value < -JOYSTICK_DEADZONE)
+			mov_vec->x = -step;          /* left   */
+	} else {
+		if (value > JOYSTICK_DEADZONE)
+			mov_vec->y = step;           /* down   */
+		if (value < -JOYSTICK_DEADZONE)
+			mov_vec->y = -step;          /* up     */
+	}
+}
+
+LIGGAME_EXPORT void
 handle_joystick_axis_move(SDL_Event *e, vector2d_t *mov_vec, unsigned char step)
 {
 	int value = e->jaxis.value;
@@ -91,6 +110,25 @@ handle_joystick_axis_move(SDL_Event *e, vector2d_t *mov_vec, unsigned char step)
 }
 
 LIGGAME_EXPORT void
+tip_keyboard_cursor_move(vector2d_t *mov_vec, unsigned char step)
+{
+	const uint8_t *k = SDL_GetKeyboardState(NULL);
+
+	if (k[SDL_SCANCODE_RIGHT] || k[SDL_SCANCODE_D])
+		mov_vec->x = step;
+
+	if (k[SDL_SCANCODE_LEFT] || k[SDL_SCANCODE_A])
+		mov_vec->x = -step;
+
+	if (k[SDL_SCANCODE_UP] || k[SDL_SCANCODE_W])
+		mov_vec->y = -step;
+
+	if (k[SDL_SCANCODE_DOWN] || k[SDL_SCANCODE_S])
+		mov_vec->y = step;
+}
+
+
+LIGGAME_EXPORT void
 handle_keyboard_cursor_move(vector2d_t *mov_vec, unsigned char step)
 {
 	const uint8_t *k = SDL_GetKeyboardState(NULL);
@@ -108,4 +146,54 @@ handle_keyboard_cursor_move(vector2d_t *mov_vec, unsigned char step)
 		mov_vec->y = 0;
 		mov_vec->x = 0;
 	}
+}
+
+LIGGAME_EXPORT void
+handle_keyboard_calc_keys(vector2d_t *mov_vec, unsigned char step)
+{
+	const uint8_t *k = SDL_GetKeyboardState(NULL);
+
+	if (k[SDL_SCANCODE_KP_MINUS] || k[SDL_SCANCODE_MINUS]) {
+		printf("MINUS \n");
+		scal_sub_vec(mov_vec, step);
+	}
+
+	if (k[SDL_SCANCODE_KP_PLUS] || k[SDLK_PLUS]) {
+		printf("PLUS \n");
+		scal_add_vec(mov_vec, step);
+	}
+}
+
+LIGGAME_EXPORT void
+get_mouse_position(SDL_Event *e, vector2d_t *pos)
+{
+	pos->x = e->motion.x;
+	pos->y = e->motion.y;
+
+	printf("mouse click @x: %d and @y: %d\n", pos->x, pos->y);
+}
+
+LIGGAME_EXPORT void
+get_mouse_position_x(SDL_Event *e, int *pos_x)
+{
+	*pos_x = e->motion.x;
+
+	printf("mouse click @x: %d\n", *pos_x);
+}
+
+LIGGAME_EXPORT void
+get_mouse_position_y(SDL_Event *e, int *pos_y)
+{
+	*pos_y = e->motion.y;
+
+	printf("mouse click @y: %d\n", *pos_y);
+}
+
+LIGGAME_EXPORT void
+get_mouse_position_x_y(SDL_Event *e, int *pos_x, int *pos_y)
+{
+	*pos_x = e->motion.x;
+	*pos_y = e->motion.y;
+
+	printf("mouse click @x: %d and @y: %d\n", *pos_x, *pos_y);
 }

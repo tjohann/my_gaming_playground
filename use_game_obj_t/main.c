@@ -48,8 +48,8 @@ game_obj_t *static_obj_array[MAX_NUM_OBJ + 1];
 game_obj_t *moving_obj_array[MAX_NUM_OBJ + 1];
 
 /* size of window */
-const uint32_t SCREEN_WIDTH = 1024;
-const uint32_t SCREEN_HEIGHT = 768;
+const int SCREEN_WIDTH = 1024;
+const int SCREEN_HEIGHT = 768;
 
 /*
  * do all init stuff
@@ -89,7 +89,7 @@ init_game_objects(void)
 	else
 		static_obj_array[0] = t;
 
-	t = init_game_object(100, 100, 128, 82, texture);
+	t = init_game_object(SCREEN_WIDTH, 100, 128, 82, texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
 	else
@@ -159,16 +159,16 @@ update_all(void)
 	if (get_object_pos_x(static_obj_array[0]) > SCREEN_WIDTH)
 		clear_object_pos_x(static_obj_array[0]);
 
-	vector2d_t accel = {.x = 1, .y = 0};
-	set_object_accel(static_obj_array[0], &accel);
+	vector2d_t velo = {.x = 1, .y = 0};
+	set_object_velo(static_obj_array[0], &velo);
 
 
         /* static cat in the middle */
 	if (get_object_pos_x(static_obj_array[1]) == 0)
-		set_object_pos_x(static_obj_array[1],SCREEN_WIDTH);
+		set_object_pos_x(static_obj_array[1], SCREEN_WIDTH);
 
-	vector2d_t accel_2 = {.x = -1, .y = 0};
-	set_object_accel(static_obj_array[1], &accel_2);
+	vector2d_t velo_2 = {.x = -1, .y = 0};
+	set_object_velo(static_obj_array[1], &velo_2);
 
 
 	/* running cat stuff */
