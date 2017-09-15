@@ -49,7 +49,6 @@ typedef struct {
 typedef struct {
 	vector2d_t       pos;        /* position                  */
 	vector2d_t       velo;       /* velocity                  */
-	vector2d_t       accel;      /* acceleration              */
 	spread_t         size;       /* height and width          */
 	signed char      frame;      /* num frame of spreed sheet */
 	SDL_Texture      *texture;
@@ -143,12 +142,6 @@ draw_object(game_obj_t *obj, SDL_Renderer *renderer);
  */
 void
 set_object_frame(game_obj_t *obj, signed char frame);
-
-/*
- * set accel and calc velo/pos
- */
-void
-set_object_accel(game_obj_t *obj, vector2d_t *accel);
 
 /*
  * set velo and calc pos
@@ -265,7 +258,7 @@ free_joysticks(SDL_Joystick *joystick_array[]);
 /*
  * handle joystick axis movement
  *
- * mov_vec -> accel (or other represantation) vector
+ * mov_vec -> velo (or other represantation) vector
  * step    -> set mov_vec.x/y to step
  */
 void

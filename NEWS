@@ -3,6 +3,9 @@
 #
 
 
+2017-09-15 -> remove accel related stuff
+	   -> finalize flying_astronaut example
+
 2017-09-13 -> add some functions to handle mouse related topics
 	   -> finalize follow_mouse example
 	   -> add some more documentation

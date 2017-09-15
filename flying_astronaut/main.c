@@ -42,10 +42,12 @@ SDL_Renderer *renderer;
 /* the global state -> true still running, false quit */
 bool running = false;
 
+/* show some additional infos */
+bool enable_debug = false;
+
 /* the player parts */
 game_obj_t *player;
 vector2d_t velo = {.x = 0, .y = 0};
-vector2d_t accel = {.x = 0, .y = 0};
 
 /* all joysticks */
 #define MAX_NUM_JOYSTICKS 2
@@ -133,7 +135,6 @@ void
 update_all(void)
 {
 	set_object_velo(player, &velo);
-//	set_object_accel(player, &accel);
 
 	int x = get_object_pos_x(player);
 	if (x > (SCREEN_WIDTH - get_object_size_w(player)) || x < 0)
@@ -143,7 +144,10 @@ update_all(void)
 	if (y > (SCREEN_HEIGHT - get_object_size_h(player)) || y < 0)
 		inv_vec_y(&velo);
 
-	show_object_kine_vals(player);
+	set_object_velo(player, &velo);
+
+	if (enable_debug)
+		show_object_kine_vals(player);
 }
 
 /*
@@ -156,7 +160,7 @@ handle_events(void)
 	if (SDL_PollEvent(&e)) {
 		switch(e.type) {
 		case SDL_QUIT:
-			printf("an actual SDL_QUIT event occured\n");
+			printf("quit the example -> bye %s\n", getenv("USER"));
 			running = false;
 			break;
 		case SDL_JOYAXISMOTION:
@@ -164,24 +168,24 @@ handle_events(void)
 			tip_joystick_axis_move(&e, &velo, 1);
 			break;
 		case SDL_JOYBUTTONDOWN:
-			printf("SDL_JOYBUTTONDOWN -> not handled\n");
+                        /* do something */
 			break;
 		case SDL_JOYBUTTONUP:
-			printf("SDL_JOYBUTTONUP -> not handled\n");
+			/* do something */
 			break;
 		case SDL_KEYDOWN:
 			printf("SDL_KEYDOWN\n");
 			tip_keyboard_cursor_move(&velo, 1);
-			handle_keyboard_calc_keys(&accel, 1);
+			handle_keyboard_calc_keys(&velo, 1);
 			break;
 		case SDL_KEYUP:
-			printf("SDL_KEYUP\n");
+			/* do something */
 			break;
 		case SDL_MOUSEBUTTONDOWN:
-			printf("SDL_MOUSEBUTTONDOWN -> increase accel.x\n");
+			/* do something */
 			break;
 		case SDL_MOUSEBUTTONUP:
-			printf("SDL_MOUSEBUTTONUP -> not handled\n");
+			/* do something */
 			break;
 		default:
 			printf("an actual unsupported event occured %d\n",
@@ -196,10 +200,25 @@ handle_events(void)
  * -----------------------------------------------------------------------------
  */
 int
-main(void)
+main(int argc, char *argv[])
 {
-	printf("usage: ./input_control \n");
+	printf("usage: ./flying astronaut [-d]                          \n");
+	printf("       -d -> show actual postion and velocity           \n");
 	printf("       use cursor keys and/or WASD to move the astronaut\n");
+	printf("       use +/- keys to add 1 to velocity(x and y!)      \n");
+
+	int c;
+	while ((c = getopt(argc, argv, "d")) != -1) {
+		switch (c) {
+		case 'd':
+			enable_debug = true;
+			printf("flip horizontal\n");
+			break;
+		default:
+			fprintf(stderr, "no valid option\n");
+			exit(EXIT_FAILURE);
+		}
+	}
 
 	init_game();
 	init_inputs();

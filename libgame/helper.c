@@ -27,6 +27,5 @@ show_object_kine_vals(game_obj_t *obj)
 	printf("-----------------------------------\n");
 	printf("position x/y %d/%d\n", obj->pos.x, obj->pos.y);
 	printf("veloctiy x/y %d/%d\n", obj->velo.x,  obj->velo.y);
-	printf("acceleration x/y %d/%d\n", obj->accel.x, obj->accel.y);
 	printf("-----------------------------------\n\n");
 }

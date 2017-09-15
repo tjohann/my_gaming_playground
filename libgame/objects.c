@@ -21,7 +21,6 @@
 #include "libgame_private.h"
 
 
-
 LIGGAME_EXPORT game_obj_t *
 init_game_object(int x, int y, int w, int h, SDL_Texture *texture)
 {
@@ -100,21 +99,10 @@ set_object_frame(game_obj_t *obj, signed char frame)
 }
 
 LIGGAME_EXPORT void
-set_object_accel(game_obj_t *obj, vector2d_t *accel)
-{
-	obj->accel.x = accel->x;
-	obj->accel.y = accel->y;
-
-	/* set velo and new pos */
-	add_vec(&obj->velo, accel);
-	add_vec(&obj->pos, &obj->velo);
-}
-
-LIGGAME_EXPORT void
 set_object_velo(game_obj_t *obj, vector2d_t *velo)
 {
-	obj->velo.x += velo->x;
-	obj->velo.y += velo->y;
+	obj->velo.x = velo->x;
+	obj->velo.y = velo->y;
 
 	/* set new pos */
 	add_vec(&obj->pos, &obj->velo);

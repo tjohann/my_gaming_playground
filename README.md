@@ -86,4 +86,4 @@ flying_astronaut:
 
 	- use joystick or keyboard to control the direction of the movement
 	- the screen is like a cage with an flying ball/astronaut
-	- use + and - to inc/dec acceleration
+	- use + and - to inc/dec velocity
