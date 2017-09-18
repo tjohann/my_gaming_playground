@@ -29,7 +29,7 @@
 
 #define eprintf(format, ...) fprintf (stderr, format, ##__VA_ARGS__)
 
-/* frame rate */
+/* base frame rate */
 #define FPS 60
 
 /* deadzone for the joystick */
@@ -117,13 +117,17 @@ load_texture(char *file_name, SDL_Renderer *renderer);
  */
 game_obj_t *
 init_game_object(int x, int y, int w, int h, SDL_Texture *texture);
+/* ... use texture size */
+game_obj_t *
+init_game_object_simple(int x, int y, SDL_Texture *texture);
 /* ... from file */
 game_obj_t *
 init_game_object_from_file(char *filename, int x, int y, int w, int h,
 			SDL_Renderer *renderer);
-/* ... use texture size */
+/* ... from file ... use texture size */
 game_obj_t *
-init_game_object_simple(int x, int y, SDL_Texture *texture);
+init_game_object_from_file_simple(char *filename, int x, int y,
+				SDL_Renderer *renderer);
 
 /*
  * free a game object

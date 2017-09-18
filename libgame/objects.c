@@ -66,8 +66,22 @@ init_game_object_from_file(char *filename, int x, int y, int w, int h,
 	if (texture == NULL)
 		err_and_ret("could not load texture", NULL);
 
-	/* static objects */
 	game_obj_t *t = init_game_object(x, y, w, h, texture);
+	if (t == NULL)
+		err_and_ret("could not init game object", NULL);
+
+	return t;
+}
+
+LIGGAME_EXPORT game_obj_t *
+init_game_object_from_file_simple(char *filename, int x, int y,
+			SDL_Renderer *renderer)
+{
+	SDL_Texture *texture = load_texture(filename, renderer);
+	if (texture == NULL)
+		err_and_ret("could not load texture", NULL);
+
+	game_obj_t *t = init_game_object_simple(x, y, texture);
 	if (t == NULL)
 		err_and_ret("could not init game object", NULL);
 

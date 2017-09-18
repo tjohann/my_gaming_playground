@@ -105,7 +105,6 @@ void
 cleanup_game_object(void)
 {
 	free_game_object(player);
-	free_joysticks(joystick_array);
 }
 
 /*
@@ -233,6 +232,7 @@ main(void)
 	}
 
 	cleanup_game_object();
+	free_joysticks(joystick_array);
 	cleanup_main_window(window, renderer);
 
 	exit(EXIT_SUCCESS);

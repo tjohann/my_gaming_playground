@@ -19,3 +19,13 @@
 
 #include "libgame.h"
 #include "libgame_private.h"
+
+
+LIGGAME_EXPORT void
+show_object_kine_vals(game_obj_t *obj)
+{
+	printf("-----------------------------------\n");
+	printf("position x/y %d/%d\n", obj->pos.x, obj->pos.y);
+	printf("veloctiy x/y %d/%d\n", obj->velo.x,  obj->velo.y);
+	printf("-----------------------------------\n\n");
+}

@@ -3,7 +3,7 @@ my playground regarding game developement
 
 Something like a summary around game development which should lead in a series of retro games (https://github.com/tjohann/crasonars/blob/master/Documentation/ideas.md).
 
-Note: the bitmaps within the examples are taken from http://www.widgetworx.com/projects/sl.html (like in the book below).
+Note: the bitmaps within the examples are taken from http://www.widgetworx.com/projects/sl.html (like in the book below) or are made by myself (see https://github.com/tjohann/crasonars)
 
 
 The book
@@ -23,6 +23,20 @@ SDL stuff
 ---------
 
 API-Docu of SDL -> https://wiki.libsdl.org/CategoryAPI
+
+
+Overview of the code
+--------------------
+
+To build all type
+
+	make
+
+To run a menu from where you can start all examples type
+
+	make run
+
+after building all.
 
 
 Library
@@ -86,4 +100,4 @@ flying_astronaut:
 
 	- use joystick or keyboard to control the direction of the movement
 	- the screen is like a cage with an flying ball/astronaut
-	- use + and - to inc/dec velocity
+	- use + and - to inc/dec velocity (x and y!)

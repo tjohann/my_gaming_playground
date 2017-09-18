@@ -3,6 +3,15 @@
 #
 
 
+2017-09-18 -> some smaller improvements in flying_astronaut and input_control
+	   -> some smaller documentation updates
+
+2017-09-17 -> add skeleton for menu program which should start all demos
+	   -> add function init_game_object_from_file_simple() which uses the
+	      texture info for with/height
+	   -> add file object_fab.c to libgame (game object fab based on a
+	      configuration file)
+
 2017-09-15 -> remove accel related stuff
 	   -> finalize flying_astronaut example
 

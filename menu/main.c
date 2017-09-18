@@ -19,8 +19,7 @@
 
 #include <libgame.h>
 
-#define PROGNAME "use joystick or keyboard control the flying astronaut"
-#define SPRITE_SHEET "astronaut.png"
+#define PROGNAME "main menu for all examples"
 
 #define RENDER_ALL() do {			\
 		render_window();		\
@@ -36,32 +35,26 @@
 
 
 /* main window and renderer*/
-SDL_Window   *window;
+SDL_Window *window;
 SDL_Renderer *renderer;
+
+/* all joysticks */
+#define MAX_NUM_JOYSTICKS 1
+SDL_Joystick *joystick_array[MAX_NUM_JOYSTICKS + 1];
+
+/* size of window */
+const int SCREEN_WIDTH = 800;
+const int SCREEN_HEIGHT = 600;
 
 /* the global state -> true still running, false quit */
 bool running = false;
 
-/* show some additional infos */
-bool enable_debug = false;
-
-/* the player parts */
-game_obj_t *player;
-vector2d_t velo = {.x = 0, .y = 0};
-
-/* all joysticks */
-#define MAX_NUM_JOYSTICKS 2
-SDL_Joystick *joystick_array[MAX_NUM_JOYSTICKS + 1];
-
-/* size of window */
-const int SCREEN_WIDTH = 1280;
-const int SCREEN_HEIGHT = 720;
 
 /*
  * do all init stuff
  */
 void
-init_game(void)
+init_menu(void)
 {
 	window = setup_main_window(PROGNAME, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
 	if (window == NULL)
@@ -86,27 +79,9 @@ init_inputs(void)
 
 }
 void
-init_game_objects(void)
+init_menu_objects(void)
 {
-	SDL_Texture *texture = load_texture(SPRITE_SHEET, renderer);
-	if (texture == NULL)
-		exit(EXIT_FAILURE);
-
-	/* static object */
-	game_obj_t *t = init_game_object_simple(100, 100, texture);
-	if (t == NULL)
-		exit(EXIT_FAILURE);
-	else
-		player = t;
-}
-
-/*
- * cleanup all create game objects
- */
-void
-cleanup_game_object(void)
-{
-	free_game_object(player);
+	/* do something */
 }
 
 /*
@@ -121,7 +96,9 @@ render_window(void)
 		fprintf(stderr, "could not set clear rendering target (%s)\n",
 			SDL_GetError());
 
-	draw_object(player, renderer);
+	/*
+	 * draw_object(player, renderer);
+	 */
 
 	/* bring everthing to the window -> now we see the changes */
 	SDL_RenderPresent(renderer);
@@ -133,18 +110,18 @@ render_window(void)
 void
 update_all(void)
 {
-	set_object_velo(player, &velo);
+	/* do something */
+}
 
-	int x = get_object_pos_x(player);
-	if (x > (SCREEN_WIDTH - get_object_size_w(player)) || x < 0)
-		inv_vec_x(&velo);
-
-	int y = get_object_pos_y(player);
-	if (y > (SCREEN_HEIGHT - get_object_size_h(player)) || y < 0)
-		inv_vec_y(&velo);
-
-	if (enable_debug)
-		show_object_kine_vals(player);
+/*
+ * cleanup all create menu objects
+ */
+void
+cleanup_menu_objects(void)
+{
+	/*
+	 * free_game_object(player);
+	 */
 }
 
 /*
@@ -161,21 +138,12 @@ handle_events(void)
 			running = false;
 			break;
 		case SDL_JOYAXISMOTION:
-			printf("SDL_JOYAXISMOTION of: %d\n", e.jaxis.which);
-			tip_joystick_axis_move(&e, &velo, 1);
+			/* do something */
 			break;
 		case SDL_JOYBUTTONDOWN:
                         /* do something */
 			break;
 		case SDL_JOYBUTTONUP:
-			/* do something */
-			break;
-		case SDL_KEYDOWN:
-			printf("SDL_KEYDOWN\n");
-			tip_keyboard_cursor_move(&velo, 1);
-			handle_keyboard_calc_keys(&velo, 1);
-			break;
-		case SDL_KEYUP:
 			/* do something */
 			break;
 		case SDL_MOUSEBUTTONDOWN:
@@ -197,29 +165,13 @@ handle_events(void)
  * -----------------------------------------------------------------------------
  */
 int
-main(int argc, char *argv[])
+main(void)
 {
-	printf("usage: ./flying astronaut [-d]                          \n");
-	printf("       -d -> show actual postion and velocity           \n");
-	printf("       use cursor keys and/or WASD to move the astronaut\n");
-	printf("       use +/- keys to add 1 to velocity(x and y!)      \n");
+	printf("usage: ./menu  \n");
 
-	int c;
-	while ((c = getopt(argc, argv, "d")) != -1) {
-		switch (c) {
-		case 'd':
-			enable_debug = true;
-			printf("flip horizontal\n");
-			break;
-		default:
-			fprintf(stderr, "no valid option\n");
-			exit(EXIT_FAILURE);
-		}
-	}
-
-	init_game();
+	init_menu();
 	init_inputs();
-	init_game_objects();
+	init_menu_objects();
 
         /* init done */
 	running = true;
@@ -247,7 +199,7 @@ main(int argc, char *argv[])
 		}
 	}
 
-	cleanup_game_object();
+	cleanup_menu_objects();
 	free_joysticks(joystick_array);
 	cleanup_main_window(window, renderer);
 
