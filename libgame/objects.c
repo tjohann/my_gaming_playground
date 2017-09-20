@@ -21,8 +21,42 @@
 #include "libgame_private.h"
 
 
+LIGGAME_EXPORT game_obj_t *
+alloc_game_object_simple(int x, int y, SDL_Texture *texture)
+{
+	game_obj_t *t = malloc(sizeof(game_obj_t));
+	if (t == NULL)
+		err_and_ret("could not alloc mem", NULL);
+
+	memset(t, 0, sizeof(game_obj_t));
+
+	t->data = alloc_game_data_object_simple(x, y, texture);
+	if (t == NULL) {
+		free(t);
+		err_and_ret("could not alloc mem", NULL);
+	}
+
+	t->draw = draw_object;
+	t->update = set_object_velo;
+	t->collision_window = collision_window;
+	t->collision_object = collision_object;
+	t->detect_collision_object = detect_collision_object;
+
+	return t;
+}
+
+LIGGAME_EXPORT void
+free_game_object(game_obj_t *obj)
+{
+	if (obj != NULL) {
+		free_game_data_object(obj->data);
+		free(obj);
+	} else
+		printf("game object == NULL\n");
+}
+
 LIGGAME_EXPORT game_obj_data_t *
-init_game_object(int x, int y, int w, int h, SDL_Texture *texture)
+alloc_game_data_object(int x, int y, int w, int h, SDL_Texture *texture)
 {
 	game_obj_data_t *t = malloc(sizeof(game_obj_data_t));
 	if (t == NULL)
@@ -48,25 +82,25 @@ init_game_object(int x, int y, int w, int h, SDL_Texture *texture)
 }
 
 LIGGAME_EXPORT game_obj_data_t *
-init_game_object_simple(int x, int y, SDL_Texture *texture)
+alloc_game_data_object_simple(int x, int y, SDL_Texture *texture)
 {
 	int w, h;
 	int err = SDL_QueryTexture(texture, NULL, NULL, &w, &h);
 	if (err < 0)
 		err_and_ret("query texture", NULL);
 
-	return init_game_object(x, y, w, h, texture);
+	return alloc_game_data_object(x, y, w, h, texture);
 }
 
 LIGGAME_EXPORT game_obj_data_t *
-init_game_object_from_file(char *filename, int x, int y, int w, int h,
-			SDL_Renderer *renderer)
+alloc_game_data_object_from_file(char *filename, int x, int y, int w, int h,
+				SDL_Renderer *renderer)
 {
 	SDL_Texture *texture = load_texture(filename, renderer);
 	if (texture == NULL)
 		err_and_ret("could not load texture", NULL);
 
-	game_obj_data_t *t = init_game_object(x, y, w, h, texture);
+	game_obj_data_t *t = alloc_game_data_object(x, y, w, h, texture);
 	if (t == NULL)
 		err_and_ret("could not init game object", NULL);
 
@@ -74,14 +108,14 @@ init_game_object_from_file(char *filename, int x, int y, int w, int h,
 }
 
 LIGGAME_EXPORT game_obj_data_t *
-init_game_object_from_file_simple(char *filename, int x, int y,
-			SDL_Renderer *renderer)
+alloc_game_data_object_from_file_simple(char *filename, int x, int y,
+				SDL_Renderer *renderer)
 {
 	SDL_Texture *texture = load_texture(filename, renderer);
 	if (texture == NULL)
 		err_and_ret("could not load texture", NULL);
 
-	game_obj_data_t *t = init_game_object_simple(x, y, texture);
+	game_obj_data_t *t = alloc_game_data_object_simple(x, y, texture);
 	if (t == NULL)
 		err_and_ret("could not init game object", NULL);
 
@@ -89,10 +123,10 @@ init_game_object_from_file_simple(char *filename, int x, int y,
 }
 
 LIGGAME_EXPORT void
-free_game_object(game_obj_data_t *t)
+free_game_data_object(game_obj_data_t *obj)
 {
-	if (t != NULL)
-		free(t);
+	if (obj != NULL)
+		free(obj);
 	else
 		printf("game object == NULL\n");
 }
@@ -212,3 +246,13 @@ get_object_size(game_obj_data_t *obj)
 {
 	return &obj->size;
 }
+
+LIGGAME_EXPORT void
+calc_object_surface_pos(game_obj_data_t *obj, int *l, int *r, int *t, int *b)
+{
+	*l = obj->pos.x;
+	*r = obj->pos.x + obj->size.w;
+	*t = obj->pos.y;
+	*b = obj->pos.y + obj->size.h;
+}
+

@@ -43,7 +43,7 @@ SDL_Renderer *renderer;
 bool running = false;
 
 /* the player parts */
-game_obj_t *player;
+game_obj_data_t *player;
 vector2d_t velo = {.x = 0, .y = 0};
 
 /* size of window */
@@ -78,7 +78,7 @@ init_game_objects(void)
 		exit(EXIT_FAILURE);
 
 	/* static object */
-	game_obj_t *t = init_game_object_simple(1, 1, texture);
+	game_obj_data_t *t = alloc_game_data_object_simple(1, 1, texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
 	else
@@ -91,7 +91,7 @@ init_game_objects(void)
 void
 cleanup_game_object(void)
 {
-	free_game_object(player);
+	free_game_data_object(player);
 }
 
 /*

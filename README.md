@@ -43,7 +43,13 @@ Library
 -------
 
 libgame:
+
 	- some useful functions used in some examples
+
+The library implements 2 different models of an game object (see examples below for usage)
+
+	- simple form wich uses only data -> game_obj_data_t
+	- a more complex form wich uses data and functions pointers -> game_obj_t
 
 
 Examples (stand alone)
@@ -80,8 +86,8 @@ sprite_sheet_2:
 	- same example like sprite_sheet, but uses a png instead of a bmp (alpha topic)
 
 
-Examples (using libgame)
-------------------------
+Examples (using libgame with simple game object)
+------------------------------------------------
 
 use_game_obj_t:
 
@@ -89,15 +95,27 @@ use_game_obj_t:
 
 input_control:
 
-	- use joystick or keyboard (cursor or WASD) to move an object over the screen
+	- use joystick or keyboard (cursor or WASD) to move an object over the screen (velocity resets after release of button or middle position of joystick)
 	- first example which should also work on our tv (1280x720 size and an astronaut of 50x60)
 
 follow_mouse:
 
-	- follow the postion of a mouse click
+	- follow the position of a mouse click (only 50% of click position)
 
 flying_astronaut:
 
-	- use joystick or keyboard to control the direction of the movement
+	- use joystick or keyboard to control the direction of the movement (velocity wont reset after release of button or middle position of joystick)
 	- the screen is like a cage with an flying ball/astronaut
 	- use + and - to inc/dec velocity (x and y!)
+
+
+Examples (using libgame with complex game object)
+-------------------------------------------------
+
+collision:
+
+	- use joystick to move to the static object
+
+flying_astronaut_2:
+
+	- use joystick to control the direction of the movement (velocity wont reset in middle position of joystick)

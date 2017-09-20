@@ -19,8 +19,9 @@
 
 #include <libgame.h>
 
-#define PROGNAME "use joystick or keyboard to move a game object"
-#define SPRITE_SHEET "astronaut.png"
+#define PROGNAME "simple collision demo"
+#define PLAYER_PIC "astronaut.png"
+#define STATIC_OBJ_PIC "astronaut.png"
 
 #define RENDER_ALL() do {			\
 		render_window();		\
@@ -42,17 +43,25 @@ SDL_Renderer *renderer;
 /* the global state -> true still running, false quit */
 bool running = false;
 
+/* show some additional infos */
+bool enable_debug = false;
+
 /* the player parts */
-game_obj_data_t *player;
+game_obj_t *player;
 vector2d_t velo = {.x = 0, .y = 0};
 
+/* the fixed objects */
+#define MAX_NUM_OBJ 10
+game_obj_t *static_obj_array[MAX_NUM_OBJ + 1];
+
 /* all joysticks */
-#define MAX_NUM_JOYSTICKS 2
+#define MAX_NUM_JOYSTICKS 1
 SDL_Joystick *joystick_array[MAX_NUM_JOYSTICKS + 1];
 
 /* size of window */
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
+
 
 /*
  * do all init stuff
@@ -85,17 +94,67 @@ init_inputs(void)
 void
 init_game_objects(void)
 {
-	SDL_Texture *texture = load_texture(SPRITE_SHEET, renderer);
+	SDL_Texture *texture = load_texture(PLAYER_PIC, renderer);
 	if (texture == NULL)
 		exit(EXIT_FAILURE);
 
-	/* static object */
-	game_obj_data_t *t = alloc_game_data_object(SCREEN_WIDTH/2, SCREEN_HEIGHT/2,
-						50, 60, texture);
+	/* player object */
+	game_obj_t *t = alloc_game_object_simple(0, SCREEN_HEIGHT/2,
+						texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
 	else
 		player = t;
+
+	/* the static objects */
+	texture = load_texture(STATIC_OBJ_PIC, renderer);
+	if (texture == NULL)
+		exit(EXIT_FAILURE);
+
+	t = alloc_game_object_simple(SCREEN_WIDTH/6, SCREEN_HEIGHT/6,
+				texture);
+	if (t == NULL)
+		exit(EXIT_FAILURE);
+	else
+		static_obj_array[0] = t;
+
+	t = alloc_game_object_simple(SCREEN_WIDTH/2, SCREEN_HEIGHT/3,
+				texture);
+	if (t == NULL)
+		exit(EXIT_FAILURE);
+	else
+		static_obj_array[1] = t;
+
+	t = alloc_game_object_simple(SCREEN_WIDTH/5, SCREEN_HEIGHT/2,
+				texture);
+	if (t == NULL)
+		exit(EXIT_FAILURE);
+	else
+		static_obj_array[2] = t;
+
+	t = alloc_game_object_simple(SCREEN_WIDTH/3, SCREEN_HEIGHT/4,
+				texture);
+	if (t == NULL)
+		exit(EXIT_FAILURE);
+	else
+		static_obj_array[3] = t;
+
+	/* the next 2 should still be within the screen size */
+	t = alloc_game_object_simple(SCREEN_WIDTH - 200, SCREEN_HEIGHT - 100,
+				texture);
+	if (t == NULL)
+		exit(EXIT_FAILURE);
+	else
+		static_obj_array[4] = t;
+
+	t = alloc_game_object_simple(SCREEN_WIDTH - 100, SCREEN_HEIGHT - 400,
+				texture);
+	if (t == NULL)
+		exit(EXIT_FAILURE);
+	else
+		static_obj_array[5] = t;
+
+	static_obj_array[1] = NULL;
 }
 
 /*
@@ -104,7 +163,10 @@ init_game_objects(void)
 void
 cleanup_game_object(void)
 {
-	free_game_data_object(player);
+	free_game_object(player);
+
+	for (int i = 0; static_obj_array[i] != NULL; i++)
+		free_game_object(static_obj_array[i]);
 }
 
 /*
@@ -113,15 +175,16 @@ cleanup_game_object(void)
 void
 render_window(void)
 {
-        /* clear rendering target to the drawing color */
 	int err = SDL_RenderClear(renderer);
 	if (err < 0)
 		fprintf(stderr, "could not set clear rendering target (%s)\n",
 			SDL_GetError());
 
-	draw_object(player, renderer);
+	player->draw(player->data, renderer);  /* use the member func */
 
-	/* bring everthing to the window -> now we see the changes */
+	for (int i = 0; static_obj_array[i] != NULL; i++)
+		static_obj_array[i]->draw(static_obj_array[i]->data, renderer);
+
 	SDL_RenderPresent(renderer);
 }
 
@@ -131,19 +194,12 @@ render_window(void)
 void
 update_all(void)
 {
-	int x = get_object_pos_x(player);
-	if (x > SCREEN_WIDTH)
-		set_object_pos_x(player, 0);
-	else if (x == 0)
-		set_object_pos_x(player, SCREEN_WIDTH);
+	player->update(player->data, &velo);
+	player->collision_window(player->data, &velo,
+				SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	int y = get_object_pos_y(player);
-	if (y > SCREEN_HEIGHT)
-		set_object_pos_y(player, 0);
-	else if (y == 0)
-		set_object_pos_y(player, SCREEN_HEIGHT);
-
-	set_object_velo(player, &velo);
+	for (int i = 0; static_obj_array[i] != NULL; i++)
+		player->collision_object(player->data, static_obj_array[i]->data, &velo);
 }
 
 /*
@@ -156,7 +212,7 @@ handle_events(void)
 	if (SDL_PollEvent(&e)) {
 		switch(e.type) {
 		case SDL_QUIT:
-			printf("an actual SDL_QUIT event occured\n");
+			printf("quit the example -> bye %s\n", getenv("USER"));
 			running = false;
 			break;
 		case SDL_JOYAXISMOTION:
@@ -164,24 +220,22 @@ handle_events(void)
 			handle_joystick_axis_move(&e, &velo, 2);
 			break;
 		case SDL_JOYBUTTONDOWN:
-			printf("SDL_JOYBUTTONDOWN -> not handled\n");
+                        /* do something */
 			break;
 		case SDL_JOYBUTTONUP:
-			printf("SDL_JOYBUTTONUP -> not handled\n");
+			/* do something */
 			break;
 		case SDL_KEYDOWN:
-			printf("SDL_KEYDOWN\n");
-			handle_keyboard_cursor_move(&velo, 2);
+			/* do something */
 			break;
 		case SDL_KEYUP:
-			printf("SDL_KEYUP\n");
-			clear_vec(&velo);   /* imitate the joystick middle pos */
+			/* do something */
 			break;
 		case SDL_MOUSEBUTTONDOWN:
-			printf("SDL_MOUSEBUTTONDOWN -> not handled\n");
+			/* do something */
 			break;
 		case SDL_MOUSEBUTTONUP:
-			printf("SDL_MOUSEBUTTONUP -> not handled\n");
+			/* do something */
 			break;
 		default:
 			printf("an actual unsupported event occured %d\n",
@@ -198,8 +252,9 @@ handle_events(void)
 int
 main(void)
 {
-	printf("usage: ./input_control \n");
-	printf("       use cursor keys and/or WASD to move the astronaut\n");
+	printf("usage: ./collision                                   \n");
+	printf("       use the joystick to move the astronaut around \n");
+	printf("       every collision will be shown on the console  \n");
 
 	init_game();
 	init_inputs();
@@ -209,7 +264,7 @@ main(void)
 	running = true;
 
 	uint32_t frame_start, frame_time;
-	unsigned char local_fps = FPS + 1; /* the first run never fits */
+	unsigned char local_fps =  FPS + 1; /* the first run never fits */
 	uint32_t delay_time = 1000.0f / local_fps;
 
 	while (running) {

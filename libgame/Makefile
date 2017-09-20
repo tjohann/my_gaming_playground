@@ -7,7 +7,7 @@ CFLAGS = -std=gnu11 -Wall -Wextra `pkg-config --cflags sdl2 SDL2_image`
 LDLIBS =
 
 LIB = libgame.a
-OBJ = helper.o vector_2d.o window.o input.o texture.o objects.o object_fab.o
+OBJ = helper.o vector_2d.o window.o input.o texture.o objects.o collision.o object_fab.o
 
 %.o: %.c
 	$(CC) -g -c -o $@ $< $(CFLAGS) $(LDLIBS)

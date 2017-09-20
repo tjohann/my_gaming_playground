@@ -46,7 +46,7 @@ bool running = false;
 bool enable_debug = false;
 
 /* the player parts */
-game_obj_t *player;
+game_obj_data_t *player;
 vector2d_t velo = {.x = 0, .y = 0};
 
 /* all joysticks */
@@ -92,8 +92,8 @@ init_game_objects(void)
 	if (texture == NULL)
 		exit(EXIT_FAILURE);
 
-	/* static object */
-	game_obj_t *t = init_game_object_simple(100, 100, texture);
+	/* player object */
+	game_obj_data_t *t = alloc_game_data_object_simple(100, 100, texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
 	else
@@ -106,7 +106,7 @@ init_game_objects(void)
 void
 cleanup_game_object(void)
 {
-	free_game_object(player);
+	free_game_data_object(player);
 }
 
 /*
@@ -209,7 +209,7 @@ main(int argc, char *argv[])
 		switch (c) {
 		case 'd':
 			enable_debug = true;
-			printf("flip horizontal\n");
+			printf("show actual pos and velo\n");
 			break;
 		default:
 			fprintf(stderr, "no valid option\n");

@@ -19,3 +19,33 @@
 
 #include "libgame.h"
 #include "libgame_private.h"
+
+
+/*
+ * --------------------------- debugging stuff ---------------------------------
+ */
+
+LIGGAME_EXPORT void
+show_object_kine_vals(game_obj_data_t *obj)
+{
+	printf("-----------------------------------\n");
+	printf("position x/y %d/%d\n", obj->pos.x, obj->pos.y);
+	printf("veloctiy x/y %d/%d\n", obj->velo.x,  obj->velo.y);
+	printf("-----------------------------------\n\n");
+}
+
+LIGGAME_EXPORT void
+show_object_size_vals(game_obj_data_t *obj)
+{
+	printf("-----------------------------------\n");
+	printf("weight %d\n", obj->size.w);
+	printf("height %d\n", obj->size.h);
+	printf("-----------------------------------\n\n");
+}
+
+LIGGAME_EXPORT void
+show_object_vals(game_obj_t *obj)
+{
+	show_object_kine_vals(obj->data);
+	show_object_size_vals(obj->data);
+}

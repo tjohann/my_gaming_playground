@@ -3,6 +3,9 @@
 #
 
 
+2017-09-20 -> use new game_obj_t and game_obj_data_t in all examples
+	   -> add functions for collision handling (lib and two example's)
+
 2017-09-19 -> add usage.md to describe the general usage of the library/examples
 	   -> some first changes regarding object fab
 

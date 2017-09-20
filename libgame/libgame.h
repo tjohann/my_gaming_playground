@@ -55,12 +55,23 @@ typedef struct {
 	SDL_RendererFlip flip;
 } game_obj_data_t;
 
+/* the member functions */
+typedef void (*draw_func) (game_obj_data_t *t, SDL_Renderer *renderer);
+typedef void (*update_func) (game_obj_data_t *t, vector2d_t *velo);
+typedef void (*collision_window_func) (game_obj_data_t *t, vector2d_t *velo,
+				const int w, const int h);
+typedef void (*collision_object_func) (game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo);
+typedef bool (*detect_collision_object_func) (game_obj_data_t *a, game_obj_data_t *b);
+
 /* a object within the game ... as a container for data and func */
-//typedef struct {
-//	game_obj_data_t *data;
-//	void (*draw) (game_obj_t *data, SDL_Renderer *renderer);
-//	void (*update) (game_obj_t *data);
-//} game_obj____t;
+typedef struct {
+	game_obj_data_t *data;
+	draw_func draw;
+	update_func update;
+	collision_window_func collision_window;
+	collision_object_func collision_object;
+	detect_collision_object_func detect_collision_object;
+} game_obj_t;
 
 typedef struct {
 	uint8_t r;
@@ -77,8 +88,16 @@ typedef struct {
 /*
  * debug values
  */
+
+/*
+ * calls the game_obj_data_t based functions
+ */
+void
+show_object_vals(game_obj_t *obj);
 void
 show_object_kine_vals(game_obj_data_t *obj);
+void
+show_object_size_vals(game_obj_data_t *obj);
 
 
 /*
@@ -120,27 +139,41 @@ load_texture(char *file_name, SDL_Renderer *renderer);
  */
 
 /*
- * create a game object
+ * create a game object (the complex game object with function pointers)
  */
-game_obj_data_t *
-init_game_object(int x, int y, int w, int h, SDL_Texture *texture);
+
 /* ... use texture size */
-game_obj_data_t *
-init_game_object_simple(int x, int y, SDL_Texture *texture);
-/* ... from file */
-game_obj_data_t *
-init_game_object_from_file(char *filename, int x, int y, int w, int h,
-			SDL_Renderer *renderer);
-/* ... from file ... use texture size */
-game_obj_data_t *
-init_game_object_from_file_simple(char *filename, int x, int y,
-				SDL_Renderer *renderer);
+game_obj_t *
+alloc_game_object_simple(int x, int y, SDL_Texture *texture);
 
 /*
- * free a game object
+ * free a game data object
  */
 void
-free_game_object(game_obj_data_t *t);
+free_game_object(game_obj_t *obj);
+
+/*
+ * create a game data object (the simple game object without function pointers)
+ */
+game_obj_data_t *
+alloc_game_data_object(int x, int y, int w, int h, SDL_Texture *texture);
+/* ... use texture size */
+game_obj_data_t *
+alloc_game_data_object_simple(int x, int y, SDL_Texture *texture);
+/* ... from file */
+game_obj_data_t *
+alloc_game_data_object_from_file(char *filename, int x, int y, int w, int h,
+				SDL_Renderer *renderer);
+/* ... from file ... use texture size */
+game_obj_data_t *
+alloc_game_data_object_from_file_simple(char *filename, int x, int y,
+					SDL_Renderer *renderer);
+
+/*
+ * free a game data object
+ */
+void
+free_game_data_object(game_obj_data_t *obj);
 
 /*
  * draw a object based on obj content
@@ -204,12 +237,41 @@ get_object_size_h(game_obj_data_t *obj);
 spread_t *
 get_object_size(game_obj_data_t *obj);
 
+/*
+ * get the actual positions of the object surface
+ */
+void
+calc_object_surface_pos(game_obj_data_t *obj, int *l, int *r, int *t, int *b);
+
 
 /*
  * --------------------------- object fab related ------------------------------
  */
 
 
+
+/*
+ * --------------------------- collision related -------------------------------
+ */
+
+/*
+ * check if pos is out of w/h and inv velo values
+ */
+void
+collision_window(game_obj_data_t *obj, vector2d_t *velo,
+		const int w, const int h);
+
+/*
+ * check if object a and b collide inv velo values
+ */
+void
+collision_object(game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo);
+
+/*
+ * check if object a and b collide
+ */
+bool
+detect_collision_object(game_obj_data_t *a, game_obj_data_t *b);
 
 
 /*

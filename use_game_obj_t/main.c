@@ -83,13 +83,13 @@ init_game_objects(void)
 		exit(EXIT_FAILURE);
 
 	/* static objects */
-	game_obj_data_t *t = init_game_object(0, 0, 128, 82, texture);
+	game_obj_data_t *t = alloc_game_data_object(0, 0, 128, 82, texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
 	else
 		static_obj_array[0] = t;
 
-	t = init_game_object(SCREEN_WIDTH, 100, 128, 82, texture);
+	t = alloc_game_data_object(SCREEN_WIDTH, 100, 128, 82, texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
 	else
@@ -101,7 +101,7 @@ init_game_objects(void)
 	static_obj_array[2] = NULL;
 
 	/* moving objects */
-	t = init_game_object(200, 200, 128, 82, texture);
+	t = alloc_game_data_object(200, 200, 128, 82, texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
 	else
@@ -118,11 +118,11 @@ cleanup_game_object(void)
 {
 	int i = 0;
 	while (static_obj_array[i])
-		free_game_object(static_obj_array[i++]);
+		free_game_data_object(static_obj_array[i++]);
 
 	i = 0;
 	while (moving_obj_array[i])
-		free_game_object(moving_obj_array[i++]);
+		free_game_data_object(moving_obj_array[i++]);
 }
 
 /*

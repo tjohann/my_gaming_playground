@@ -52,7 +52,8 @@ setup_main_window(char *name, uint32_t size_x, uint32_t size_y, unsigned char f)
 LIGGAME_EXPORT SDL_Renderer *
 setup_renderer(SDL_Window *window, color_t *b)
 {
-	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1,
+						SDL_RENDERER_ACCELERATED);
 	if (renderer == NULL)
 		err_sdl_and_ret("could not create renderer", NULL);
 
