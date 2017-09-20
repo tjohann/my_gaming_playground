@@ -194,6 +194,16 @@ void
 set_object_velo(game_obj_data_t *obj, vector2d_t *velo);
 
 /*
+ * get actual velo values
+ */
+vector2d_t *
+get_object_velo(game_obj_data_t *obj);
+int
+get_object_velo_x(game_obj_data_t *obj);
+int
+get_object_velo_y(game_obj_data_t *obj);
+
+/*
  * get actual value(s) of pos
  */
 vector2d_t *

@@ -157,6 +157,24 @@ set_object_velo(game_obj_data_t *obj, vector2d_t *velo)
 }
 
 LIGGAME_EXPORT int
+get_object_velo_x(game_obj_data_t *obj)
+{
+	return obj->velo.x;
+}
+
+LIGGAME_EXPORT int
+get_object_velo_y(game_obj_data_t *obj)
+{
+	return obj->velo.y;
+}
+
+LIGGAME_EXPORT vector2d_t *
+get_object_velo(game_obj_data_t *obj)
+{
+	return &obj->velo;
+}
+
+LIGGAME_EXPORT int
 get_object_pos_x(game_obj_data_t *obj)
 {
 	return obj->pos.x;

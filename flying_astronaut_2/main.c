@@ -20,7 +20,7 @@
 #include <libgame.h>
 
 #define PROGNAME "simple collision demo"
-#define PLAYER_PIC "astronaut.png"
+#define PLAYER_PIC "astronaut_side.png"
 #define STATIC_OBJ_PIC "astronaut.png"
 
 #define RENDER_ALL() do {			\
@@ -154,7 +154,7 @@ init_game_objects(void)
 	else
 		static_obj_array[5] = t;
 
-	static_obj_array[1] = NULL;
+	static_obj_array[6] = NULL;
 }
 
 /*
@@ -217,7 +217,7 @@ handle_events(void)
 			break;
 		case SDL_JOYAXISMOTION:
 			printf("SDL_JOYAXISMOTION of: %d\n", e.jaxis.which);
-			handle_joystick_axis_move(&e, &velo, 2);
+			tip_joystick_axis_move(&e, &velo, 1);
 			break;
 		case SDL_JOYBUTTONDOWN:
                         /* do something */
@@ -238,8 +238,7 @@ handle_events(void)
 			/* do something */
 			break;
 		default:
-			printf("an actual unsupported event occured %d\n",
-				e.type);
+			/* ignore this time */
 			break;
 		}
 	}
