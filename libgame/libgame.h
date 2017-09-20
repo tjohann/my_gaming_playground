@@ -45,7 +45,7 @@ typedef struct {
 	int w;
 } spread_t;
 
-/* this a object within the game */
+/* a object within the game ... or only the data */
 typedef struct {
 	vector2d_t       pos;        /* position                  */
 	vector2d_t       velo;       /* velocity                  */
@@ -53,7 +53,14 @@ typedef struct {
 	signed char      frame;      /* num frame of spreed sheet */
 	SDL_Texture      *texture;
 	SDL_RendererFlip flip;
-} game_obj_t;
+} game_obj_data_t;
+
+/* a object within the game ... as a container for data and func */
+//typedef struct {
+//	game_obj_data_t *data;
+//	void (*draw) (game_obj_t *data, SDL_Renderer *renderer);
+//	void (*update) (game_obj_t *data);
+//} game_obj____t;
 
 typedef struct {
 	uint8_t r;
@@ -71,7 +78,7 @@ typedef struct {
  * debug values
  */
 void
-show_object_kine_vals(game_obj_t *obj);
+show_object_kine_vals(game_obj_data_t *obj);
 
 
 /*
@@ -115,17 +122,17 @@ load_texture(char *file_name, SDL_Renderer *renderer);
 /*
  * create a game object
  */
-game_obj_t *
+game_obj_data_t *
 init_game_object(int x, int y, int w, int h, SDL_Texture *texture);
 /* ... use texture size */
-game_obj_t *
+game_obj_data_t *
 init_game_object_simple(int x, int y, SDL_Texture *texture);
 /* ... from file */
-game_obj_t *
+game_obj_data_t *
 init_game_object_from_file(char *filename, int x, int y, int w, int h,
 			SDL_Renderer *renderer);
 /* ... from file ... use texture size */
-game_obj_t *
+game_obj_data_t *
 init_game_object_from_file_simple(char *filename, int x, int y,
 				SDL_Renderer *renderer);
 
@@ -133,69 +140,76 @@ init_game_object_from_file_simple(char *filename, int x, int y,
  * free a game object
  */
 void
-free_game_object(game_obj_t *t);
+free_game_object(game_obj_data_t *t);
 
 /*
  * draw a object based on obj content
  */
 void
-draw_object(game_obj_t *obj, SDL_Renderer *renderer);
+draw_object(game_obj_data_t *obj, SDL_Renderer *renderer);
 
 /*
- * set game_obj_t.frame with frame
+ * set game_obj_data_t.frame with frame
  */
 void
-set_object_frame(game_obj_t *obj, signed char frame);
+set_object_frame(game_obj_data_t *obj, signed char frame);
 
 /*
  * set velo and calc pos
  */
 void
-set_object_velo(game_obj_t *obj, vector2d_t *velo);
+set_object_velo(game_obj_data_t *obj, vector2d_t *velo);
 
 /*
  * get actual value(s) of pos
  */
 vector2d_t *
-get_object_pos(game_obj_t *obj);
+get_object_pos(game_obj_data_t *obj);
 int
-get_object_pos_x(game_obj_t *obj);
+get_object_pos_x(game_obj_data_t *obj);
 int
-get_object_pos_y(game_obj_t *obj);
+get_object_pos_y(game_obj_data_t *obj);
 
 /*
  * clear value(s) of pos
  */
 void
-clear_object_pos_x(game_obj_t *obj);
+clear_object_pos_x(game_obj_data_t *obj);
 void
-clear_object_pos_y(game_obj_t *obj);
+clear_object_pos_y(game_obj_data_t *obj);
 void
-clear_object_pos(game_obj_t *obj);
+clear_object_pos(game_obj_data_t *obj);
 
 /*
  * get actual value(s) of pos
  */
 void
-set_object_pos_x(game_obj_t *obj, int x);
+set_object_pos_x(game_obj_data_t *obj, int x);
 void
-set_object_pos_y(game_obj_t *obj, int y);
+set_object_pos_y(game_obj_data_t *obj, int y);
 void
-set_object_pos_x_y(game_obj_t *obj, int x, int y);
+set_object_pos_x_y(game_obj_data_t *obj, int x, int y);
 void
-set_object_pos(game_obj_t *obj, vector2d_t *pos);
+set_object_pos(game_obj_data_t *obj, vector2d_t *pos);
 void
-set_object_pos_via_mouse(game_obj_t *obj, SDL_Event *e, int frac);
+set_object_pos_via_mouse(game_obj_data_t *obj, SDL_Event *e, int frac);
 
 /*
  * get size value(s)
  */
 int
-get_object_size_w(game_obj_t *obj);
+get_object_size_w(game_obj_data_t *obj);
 int
-get_object_size_h(game_obj_t *obj);
+get_object_size_h(game_obj_data_t *obj);
 spread_t *
-get_object_size(game_obj_t *obj);
+get_object_size(game_obj_data_t *obj);
+
+
+/*
+ * --------------------------- object fab related ------------------------------
+ */
+
+
 
 
 /*

@@ -127,7 +127,6 @@ tip_keyboard_cursor_move(vector2d_t *mov_vec, unsigned char step)
 		mov_vec->y = step;
 }
 
-
 LIGGAME_EXPORT void
 handle_keyboard_cursor_move(vector2d_t *mov_vec, unsigned char step)
 {

@@ -3,6 +3,9 @@
 #
 
 
+2017-09-19 -> add usage.md to describe the general usage of the library/examples
+	   -> some first changes regarding object fab
+
 2017-09-18 -> some smaller improvements in flying_astronaut and input_control
 	   -> some smaller documentation updates
 

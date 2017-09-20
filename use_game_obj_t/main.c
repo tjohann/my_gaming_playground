@@ -19,7 +19,7 @@
 
 #include <libgame.h>
 
-#define PROGNAME "use game_obj_t for game objects"
+#define PROGNAME "use game_obj_data_t for game objects"
 #define SPRITE_SHEET "animate-alpha.png"
 
 #define RENDER_ALL() do {			\
@@ -44,8 +44,8 @@ bool running = false;
 
 /* all game objects */
 #define MAX_NUM_OBJ 10
-game_obj_t *static_obj_array[MAX_NUM_OBJ + 1];
-game_obj_t *moving_obj_array[MAX_NUM_OBJ + 1];
+game_obj_data_t *static_obj_array[MAX_NUM_OBJ + 1];
+game_obj_data_t *moving_obj_array[MAX_NUM_OBJ + 1];
 
 /* size of window */
 const int SCREEN_WIDTH = 1024;
@@ -83,7 +83,7 @@ init_game_objects(void)
 		exit(EXIT_FAILURE);
 
 	/* static objects */
-	game_obj_t *t = init_game_object(0, 0, 128, 82, texture);
+	game_obj_data_t *t = init_game_object(0, 0, 128, 82, texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
 	else

@@ -43,7 +43,7 @@ load_texture(char *file_name, SDL_Renderer *renderer)
 }
 
 void
-draw_texture(game_obj_t *obj, SDL_Renderer *renderer)
+draw_texture(game_obj_data_t *obj, SDL_Renderer *renderer)
 {
 	SDL_Rect src_rect;
 	SDL_Rect dest_rect;
@@ -66,7 +66,7 @@ draw_texture(game_obj_t *obj, SDL_Renderer *renderer)
 }
 
 void
-draw_frame_texture(game_obj_t *obj, SDL_Renderer *renderer)
+draw_frame_texture(game_obj_data_t *obj, SDL_Renderer *renderer)
 {
 	SDL_Rect src_rect;
 	SDL_Rect dest_rect;
