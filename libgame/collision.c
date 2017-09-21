@@ -62,22 +62,38 @@ collision_object(game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo)
 		return;
 
 	if ((a_right >= b_left) && (a_right < b_right)) {
-		printf("left\n");
+		printf("LEFT -> a_right >= b_left\n");
+		printf("left a_l %d ... a_r %d ... a_t %d ... a_b %d\n",
+			a_left, a_right, a_top, a_bottom);
+		printf("left b_l %d ... b_r %d ... b_t %d ... b_b %d\n\n",
+			b_left, b_right, b_top, b_bottom);
 		inv_vec_x(velo);
 	}
 
 	if ((a_left <= b_right) && (a_left > b_left)) {
-		printf("right\n");
+		printf("RIGHT -> a_left <= b_right\n");
+		printf("right a_l %d ... a_r %d ... a_t %d ... a_b %d\n",
+			a_left, a_right, a_top, a_bottom);
+		printf("right b_l %d ... b_r %d ... b_t %d ... b_b %d\n\n",
+			b_left, b_right, b_top, b_bottom);
 		inv_vec_x(velo);
 	}
 
 	if ((a_bottom >= b_top) && (a_bottom < b_bottom)) {
-		printf("top\n");
+		printf("TOP -> a_bottom >= b_top\n");
+		printf("top a_l %d ... a_r %d ... a_t %d ... a_b %d\n",
+			a_left, a_right, a_top, a_bottom);
+		printf("top b_l %d ... b_r %d ... b_t %d ... b_b %d\n\n",
+			b_left, b_right, b_top, b_bottom);
 		inv_vec_y(velo);
 	}
 
 	if ((a_top <= b_bottom) && (a_top > b_top)) {
-		printf("bottom\n");
+		printf("BOTTOM -> a_top <= b_bottom\n");
+		printf("bottom a_l %d ... a_r %d ... a_t %d ... a_b %d\n",
+			a_left, a_right, a_top, a_bottom);
+		printf("bottom b_l %d ... b_r %d ... b_t %d ... b_b %d\n\n",
+			b_left, b_right, b_top, b_bottom);
 		inv_vec_y(velo);
 	}
 }
