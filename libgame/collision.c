@@ -49,6 +49,9 @@ collision_object(game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo)
 	int b_bottom = 0;
 	calc_object_surface_pos(b, &b_left, &b_right, &b_top, &b_bottom);
 
+	/*
+	 * check for collision
+	 */
 	if (a_bottom <= b_top)
 		return;
 
@@ -61,13 +64,42 @@ collision_object(game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo)
 	if (a_left >= b_right)
 		return;
 
+	/*
+	 * check direction:
+	 *
+	 * - a moves
+	 * - b sticks
+	 *
+	 *            +----+
+	 *            |    |
+	 *    +----+  | -b |
+	 *    |    |  +----+
+	 *    | -a |
+	 *    +----+
+	 *
+	 * - due to velocity steps the sides of -a will collide on two sides
+	 *   of -b:
+	 *
+	 *        +----+
+	 *        |    |
+	 *    +---|+ b |
+	 *    |   +|---+
+	 *    | -a |
+	 *    +----+
+	 *
+	 * - this leads to detect a collision of left and bottom
+	 * - to distinguish between left and bottom, calculate the overlapping
+	 *   of a right and b left and a top and b bottom
+	 * - the large one should be to direction
+	 */
+	bool l = false, r = false, t = false, b = false;
 	if ((a_right >= b_left) && (a_right < b_right)) {
 		printf("LEFT -> a_right >= b_left\n");
 		printf("left a_l %d ... a_r %d ... a_t %d ... a_b %d\n",
 			a_left, a_right, a_top, a_bottom);
 		printf("left b_l %d ... b_r %d ... b_t %d ... b_b %d\n\n",
 			b_left, b_right, b_top, b_bottom);
-		inv_vec_x(velo);
+		l = true
 	}
 
 	if ((a_left <= b_right) && (a_left > b_left)) {
@@ -76,7 +108,7 @@ collision_object(game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo)
 			a_left, a_right, a_top, a_bottom);
 		printf("right b_l %d ... b_r %d ... b_t %d ... b_b %d\n\n",
 			b_left, b_right, b_top, b_bottom);
-		inv_vec_x(velo);
+		r = true;
 	}
 
 	if ((a_bottom >= b_top) && (a_bottom < b_bottom)) {
@@ -85,7 +117,7 @@ collision_object(game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo)
 			a_left, a_right, a_top, a_bottom);
 		printf("top b_l %d ... b_r %d ... b_t %d ... b_b %d\n\n",
 			b_left, b_right, b_top, b_bottom);
-		inv_vec_y(velo);
+		t = true;
 	}
 
 	if ((a_top <= b_bottom) && (a_top > b_top)) {
@@ -94,8 +126,23 @@ collision_object(game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo)
 			a_left, a_right, a_top, a_bottom);
 		printf("bottom b_l %d ... b_r %d ... b_t %d ... b_b %d\n\n",
 			b_left, b_right, b_top, b_bottom);
-		inv_vec_y(velo);
+		b = true
 	}
+
+	/*
+	 * inv_vec_x(velo);
+	 * inv_vec_y(velo);
+	 */
+
+	if (l && b) {
+		printf("left - bottoom\n");
+		if ((a_top - b_bottom) > (a_right - b_left))
+			inv_vec_x(velo);
+		else
+			inv_vec_y(velo);
+	}
+
+
 }
 
 LIGGAME_EXPORT bool
