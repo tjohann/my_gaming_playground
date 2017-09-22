@@ -217,7 +217,7 @@ handle_events(void)
 			break;
 		case SDL_JOYAXISMOTION:
 			printf("SDL_JOYAXISMOTION of: %d\n", e.jaxis.which);
-			handle_joystick_axis_move(&e, &velo, 1);
+			tip_joystick_axis_move(&e, &velo, 1);
 			break;
 		case SDL_JOYBUTTONDOWN:
                         /* do something */

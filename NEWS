@@ -2,6 +2,7 @@
 # some news ... see also TODO for hints
 #
 
+2017-09-22 -> fix collision_object function
 
 2017-09-20 -> use new game_obj_t and game_obj_data_t in all examples
 	   -> add functions for collision handling (lib and two example's)

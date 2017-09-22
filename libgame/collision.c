@@ -68,7 +68,7 @@ collision_object(game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo)
 	 * check direction:
 	 *
 	 * - a moves
-	 * - b sticks
+	 * - b standing still
 	 *
 	 *            +----+
 	 *            |    |
@@ -92,57 +92,56 @@ collision_object(game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo)
 	 *   of a right and b left and a top and b bottom
 	 * - the large one should be to direction
 	 */
-	bool l = false, r = false, t = false, b = false;
-	if ((a_right >= b_left) && (a_right < b_right)) {
-		printf("LEFT -> a_right >= b_left\n");
-		printf("left a_l %d ... a_r %d ... a_t %d ... a_b %d\n",
-			a_left, a_right, a_top, a_bottom);
-		printf("left b_l %d ... b_r %d ... b_t %d ... b_b %d\n\n",
-			b_left, b_right, b_top, b_bottom);
-		l = true
-	}
+	bool l_ = false, r_ = false, t_ = false, b_ = false;
+	if ((a_right >= b_left) && (a_right < b_right))
+		l_ = true;
 
-	if ((a_left <= b_right) && (a_left > b_left)) {
-		printf("RIGHT -> a_left <= b_right\n");
-		printf("right a_l %d ... a_r %d ... a_t %d ... a_b %d\n",
-			a_left, a_right, a_top, a_bottom);
-		printf("right b_l %d ... b_r %d ... b_t %d ... b_b %d\n\n",
-			b_left, b_right, b_top, b_bottom);
-		r = true;
-	}
+	if ((a_left <= b_right) && (a_left > b_left))
+		r_ = true;
 
-	if ((a_bottom >= b_top) && (a_bottom < b_bottom)) {
-		printf("TOP -> a_bottom >= b_top\n");
-		printf("top a_l %d ... a_r %d ... a_t %d ... a_b %d\n",
-			a_left, a_right, a_top, a_bottom);
-		printf("top b_l %d ... b_r %d ... b_t %d ... b_b %d\n\n",
-			b_left, b_right, b_top, b_bottom);
-		t = true;
-	}
+	if ((a_bottom >= b_top) && (a_bottom < b_bottom))
+		t_ = true;
 
-	if ((a_top <= b_bottom) && (a_top > b_top)) {
-		printf("BOTTOM -> a_top <= b_bottom\n");
-		printf("bottom a_l %d ... a_r %d ... a_t %d ... a_b %d\n",
-			a_left, a_right, a_top, a_bottom);
-		printf("bottom b_l %d ... b_r %d ... b_t %d ... b_b %d\n\n",
-			b_left, b_right, b_top, b_bottom);
-		b = true
-	}
+	if ((a_top <= b_bottom) && (a_top > b_top))
+		b_ = true;
 
-	/*
-	 * inv_vec_x(velo);
-	 * inv_vec_y(velo);
-	 */
-
-	if (l && b) {
-		printf("left - bottoom\n");
-		if ((a_top - b_bottom) > (a_right - b_left))
+	if (l_ && b_) {
+		if ((b_bottom - a_top) > (a_right - b_left))
 			inv_vec_x(velo);
 		else
 			inv_vec_y(velo);
+		return;
 	}
 
+	if (l_ && t_) {
+		if ((a_bottom - b_top) > (a_right - b_left))
+			inv_vec_x(velo);
+		else
+			inv_vec_y(velo);
+		return;
+	}
 
+	if (r_ && b_) {
+		if ((b_bottom - a_top) > (b_right - a_left))
+			inv_vec_x(velo);
+		else
+			inv_vec_y(velo);
+		return;
+	}
+
+	if (r_ && t_) {
+		if ((a_bottom - b_top) > (b_right - a_left))
+			inv_vec_x(velo);
+		else
+			inv_vec_y(velo);
+		return;
+	}
+
+	if (l_ || r_)
+		inv_vec_x(velo);
+
+	if (b_ || t_)
+		inv_vec_y(velo);
 }
 
 LIGGAME_EXPORT bool
