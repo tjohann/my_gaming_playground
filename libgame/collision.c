@@ -37,31 +37,32 @@ collision_window(game_obj_data_t *obj, vector2d_t *velo,
 LIGGAME_EXPORT void
 collision_object(game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo)
 {
-	int a_left   = 0;
-	int a_right  = 0;
-	int a_top    = 0;
-	int a_bottom = 0;
-	calc_object_surface_pos(a, &a_left, &a_right, &a_top, &a_bottom);
+	int a_l = 0;    /* left   */
+	int a_r = 0;    /* right  */
+	int a_t = 0;    /* top    */
+	int a_b = 0;    /* bottom */
+	calc_object_surface_pos(a, &a_l, &a_r, &a_t, &a_b);
 
-	int b_left   = 0;
-	int b_right  = 0;
-	int b_top    = 0;
-	int b_bottom = 0;
-	calc_object_surface_pos(b, &b_left, &b_right, &b_top, &b_bottom);
+	int b_l = 0;
+	int b_r = 0;
+	int b_t = 0;
+	int b_b = 0;
+	calc_object_surface_pos(b, &b_l, &b_r, &b_t, &b_b);
 
 	/*
 	 * check for collision
 	 */
-	if (a_bottom <= b_top)
+
+	if (a_b <= b_t)
 		return;
 
-	if (a_top >= b_bottom)
+	if (a_t >= b_b)
 		return;
 
-	if (a_right <= b_left)
+	if (a_r <= b_l)
 		return;
 
-	if (a_left >= b_right)
+	if (a_l >= b_r)
 		return;
 
 	/*
@@ -93,20 +94,20 @@ collision_object(game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo)
 	 * - the large one should be to direction
 	 */
 	bool l_ = false, r_ = false, t_ = false, b_ = false;
-	if ((a_right >= b_left) && (a_right < b_right))
+	if ((a_r >= b_l) && (a_r < b_r))
 		l_ = true;
 
-	if ((a_left <= b_right) && (a_left > b_left))
+	if ((a_l <= b_r) && (a_l > b_l))
 		r_ = true;
 
-	if ((a_bottom >= b_top) && (a_bottom < b_bottom))
+	if ((a_b >= b_t) && (a_b < b_b))
 		t_ = true;
 
-	if ((a_top <= b_bottom) && (a_top > b_top))
+	if ((a_t <= b_b) && (a_t > b_t))
 		b_ = true;
 
 	if (l_ && b_) {
-		if ((b_bottom - a_top) > (a_right - b_left))
+		if ((b_b - a_t) > (a_r - b_l))
 			inv_vec_x(velo);
 		else
 			inv_vec_y(velo);
@@ -114,7 +115,7 @@ collision_object(game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo)
 	}
 
 	if (l_ && t_) {
-		if ((a_bottom - b_top) > (a_right - b_left))
+		if ((a_b - b_t) > (a_r - b_l))
 			inv_vec_x(velo);
 		else
 			inv_vec_y(velo);
@@ -122,7 +123,7 @@ collision_object(game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo)
 	}
 
 	if (r_ && b_) {
-		if ((b_bottom - a_top) > (b_right - a_left))
+		if ((b_b - a_t) > (b_r - a_l))
 			inv_vec_x(velo);
 		else
 			inv_vec_y(velo);
@@ -130,7 +131,7 @@ collision_object(game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo)
 	}
 
 	if (r_ && t_) {
-		if ((a_bottom - b_top) > (b_right - a_left))
+		if ((a_b - b_t) > (b_r - a_l))
 			inv_vec_x(velo);
 		else
 			inv_vec_y(velo);
@@ -147,28 +148,28 @@ collision_object(game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo)
 LIGGAME_EXPORT bool
 detect_collision_object(game_obj_data_t *a, game_obj_data_t *b)
 {
-	int a_left   = 0;
-	int a_right  = 0;
-	int a_top    = 0;
-	int a_bottom = 0;
-	calc_object_surface_pos(a, &a_left, &a_right, &a_top, &a_bottom);
+	int a_l = 0;    /* left   */
+	int a_r = 0;    /* right  */
+	int a_t = 0;    /* top    */
+	int a_b = 0;    /* bottom */
+	calc_object_surface_pos(a, &a_l, &a_r, &a_t, &a_b);
 
-	int b_left   = 0;
-	int b_right  = 0;
-	int b_top    = 0;
-	int b_bottom = 0;
-	calc_object_surface_pos(b, &b_left, &b_right, &b_top, &b_bottom);
+	int b_l = 0;
+	int b_r = 0;
+	int b_t = 0;
+	int b_b = 0;
+	calc_object_surface_pos(b, &b_l, &b_r, &b_t, &b_b);
 
-	if (a_bottom <= b_top)
+	if (a_b <= b_t)
 		return false;
 
-	if (a_top >= b_bottom)
+	if (a_t >= b_b)
 		return false;
 
-	if (a_right <= b_left)
+	if (a_r <= b_l)
 		return false;
 
-	if (a_left >= b_right)
+	if (a_l >= b_r)
 		return false;
 
 	return true;

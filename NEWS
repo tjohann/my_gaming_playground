@@ -7,6 +7,7 @@
 	   -> make flying_astronaut_2 and collision use it
 	   -> add first stuff to the object fab
 	   -> add skeleton dynamic_config based on flying_astronaut_2
+	   -> add new_pos and new_velo to game_obj_t
 
 2017-09-22 -> fix collision_object function
 

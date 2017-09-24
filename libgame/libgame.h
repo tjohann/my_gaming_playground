@@ -84,7 +84,9 @@ typedef struct {
 typedef struct {
 	game_obj_data_t *data;
 	game_obj_func_t *func;
-	char *name;
+	char            *name;
+	vector2d_t      new_pos;    /* position to set in next update */
+	vector2d_t      new_velo;   /* velo to set in next update     */
 } game_obj_t;
 
 

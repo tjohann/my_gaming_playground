@@ -48,11 +48,9 @@ bool enable_debug = false;
 
 /* the player parts */
 game_obj_t *player;
-vector2d_t velo = {.x = 0, .y = 0};
 
 /* the fixed objects */
-#define MAX_NUM_OBJ 10
-game_obj_t *static_obj_array[MAX_NUM_OBJ + 1];
+game_obj_t **static_obj_array;
 
 /* all joysticks */
 #define MAX_NUM_JOYSTICKS 1
@@ -107,60 +105,7 @@ init_game_objects(void)
 		player = t;
 
 	/* the static objects */
-	texture = load_texture(STATIC_OBJ_PIC, renderer);
-	if (texture == NULL)
-		exit(EXIT_FAILURE);
 
-	t = alloc_game_object_simple("first-object",
-				SCREEN_WIDTH/6, SCREEN_HEIGHT/6,
-				texture);
-	if (t == NULL)
-		exit(EXIT_FAILURE);
-	else
-		static_obj_array[0] = t;
-
-	t = alloc_game_object_simple("another-object",
-				SCREEN_WIDTH/2, SCREEN_HEIGHT/3,
-				texture);
-	if (t == NULL)
-		exit(EXIT_FAILURE);
-	else
-		static_obj_array[1] = t;
-
-	t = alloc_game_object_simple("another-object",
-				SCREEN_WIDTH/5, SCREEN_HEIGHT/2,
-				texture);
-	if (t == NULL)
-		exit(EXIT_FAILURE);
-	else
-		static_obj_array[2] = t;
-
-	t = alloc_game_object_simple("another-object",
-				SCREEN_WIDTH/3, SCREEN_HEIGHT/4,
-				texture);
-	if (t == NULL)
-		exit(EXIT_FAILURE);
-	else
-		static_obj_array[3] = t;
-
-	/* the next 2 should still be within the screen size */
-	t = alloc_game_object_simple("another-object",
-				SCREEN_WIDTH - 200, SCREEN_HEIGHT - 100,
-				texture);
-	if (t == NULL)
-		exit(EXIT_FAILURE);
-	else
-		static_obj_array[4] = t;
-
-	t = alloc_game_object_simple("another-object",
-				SCREEN_WIDTH - 100, SCREEN_HEIGHT - 400,
-				texture);
-	if (t == NULL)
-		exit(EXIT_FAILURE);
-	else
-		static_obj_array[5] = t;
-
-	static_obj_array[6] = NULL;
 }
 
 /*
@@ -171,8 +116,10 @@ cleanup_game_object(void)
 {
 	free_game_object(player);
 
+
 	for (int i = 0; static_obj_array[i] != NULL; i++)
 		free_game_object(static_obj_array[i]);
+
 }
 
 /*
@@ -201,13 +148,13 @@ render_window(void)
 void
 update_all(void)
 {
-	player->func->update(player->data, &velo);
-	player->func->collision_window(player->data, &velo,
+	player->func->update(player->data, &player->new_velo);
+	player->func->collision_window(player->data, &player->new_velo,
 				SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	for (int i = 0; static_obj_array[i] != NULL; i++)
 		player->func->collision_object(player->data,
-					static_obj_array[i]->data, &velo);
+					static_obj_array[i]->data, &player->new_velo);
 }
 
 /*
@@ -225,7 +172,7 @@ handle_events(void)
 			break;
 		case SDL_JOYAXISMOTION:
 			printf("SDL_JOYAXISMOTION of: %d\n", e.jaxis.which);
-			tip_joystick_axis_move(&e, &velo, 1);
+			tip_joystick_axis_move(&e, &player->new_velo, 1);
 			break;
 		case SDL_JOYBUTTONDOWN:
                         /* do something */
