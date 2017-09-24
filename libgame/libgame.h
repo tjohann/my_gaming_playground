@@ -89,6 +89,13 @@ typedef struct {
 } game_obj_t;
 
 
+/* a helper struct with all textures */
+typedef struct {
+	char *name;
+	char *file;
+	SDL_Texture *texture;
+} game_texture_t;
+
 /*
  * --------------------------- other topics ------------------------------------
  */
@@ -155,6 +162,12 @@ cleanup_main_window(SDL_Window *window, SDL_Renderer *renderer);
  */
 SDL_Texture *
 load_texture(char *file_name, SDL_Renderer *renderer);
+
+/*
+ * create array game_texture_t array based on cofiguration file
+ */
+game_texture_t **
+load_texture_via_config(config_t *cfg, SDL_Renderer *renderer);
 
 
 /*

@@ -71,6 +71,7 @@ init_game(void)
 	if (err == -1)
 		exit(EXIT_FAILURE);
 
+	/* setup main window */
 	window = setup_main_window_via_config(&cfg, 0);
 	if (window == NULL)
 		exit(EXIT_FAILURE);
@@ -78,6 +79,10 @@ init_game(void)
 	renderer = setup_renderer_via_config(&cfg, window);
 	if (renderer == NULL)
 		exit(EXIT_FAILURE);
+
+	/* load all textures */
+	game_texture_t **texture_array;
+	texture_array = load_texture_via_config(&cfg, renderer);
 
 	config_destroy(&cfg);
 }
