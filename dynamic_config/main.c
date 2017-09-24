@@ -19,7 +19,6 @@
 
 #include <libgame.h>
 
-#define PROGNAME "simple data driven config demo"
 #define PLAYER_PIC "astronaut_side.png"
 #define STATIC_OBJ_PIC "astronaut.png"
 
@@ -43,9 +42,6 @@ SDL_Renderer *renderer;
 /* the global state -> true still running, false quit */
 bool running = false;
 
-/* show some additional infos */
-bool enable_debug = false;
-
 /* the player parts */
 game_obj_t *player;
 
@@ -57,6 +53,9 @@ game_obj_t **static_obj_array;
 SDL_Joystick *joystick_array[MAX_NUM_JOYSTICKS + 1];
 
 /* size of window */
+char *progname = "dynamic_config";
+char *config_file = "dynamic_config.conf";
+
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
 
@@ -67,27 +66,20 @@ const int SCREEN_HEIGHT = 720;
 void
 init_game(void)
 {
-	window = setup_main_window(PROGNAME, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
-	if (window == NULL)
-		exit(EXIT_FAILURE);
-
-	color_t background;
-	background.r = 100;
-	background.g = 100;
-	background.b = 100;
-	background.a = 255;
-
-	renderer = setup_renderer(window, &background);
-	if (renderer == NULL)
-		exit(EXIT_FAILURE);
-}
-void
-init_inputs(void)
-{
-	int err = init_joysticks(joystick_array);
+	config_t cfg;
+	int err = open_config(config_file, progname, &cfg);
 	if (err == -1)
 		exit(EXIT_FAILURE);
 
+	window = setup_main_window_via_config(&cfg, 0);
+	if (window == NULL)
+		exit(EXIT_FAILURE);
+
+	renderer = setup_renderer_via_config(&cfg, window);
+	if (renderer == NULL)
+		exit(EXIT_FAILURE);
+
+	config_destroy(&cfg);
 }
 void
 init_game_objects(void)
@@ -105,6 +97,14 @@ init_game_objects(void)
 		player = t;
 
 	/* the static objects */
+
+}
+void
+init_inputs(void)
+{
+	int err = init_joysticks(joystick_array);
+	if (err == -1)
+		exit(EXIT_FAILURE);
 
 }
 
@@ -135,9 +135,9 @@ render_window(void)
 
 	player->func->draw(player->data, renderer);  /* use the member func */
 
-	for (int i = 0; static_obj_array[i] != NULL; i++)
-		static_obj_array[i]->func->draw(static_obj_array[i]->data,
-						renderer);
+//	for (int i = 0; static_obj_array[i] != NULL; i++)
+//		static_obj_array[i]->func->draw(static_obj_array[i]->data,
+//						renderer);
 
 	SDL_RenderPresent(renderer);
 }
@@ -152,9 +152,9 @@ update_all(void)
 	player->func->collision_window(player->data, &player->new_velo,
 				SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	for (int i = 0; static_obj_array[i] != NULL; i++)
-		player->func->collision_object(player->data,
-					static_obj_array[i]->data, &player->new_velo);
+//	for (int i = 0; static_obj_array[i] != NULL; i++)
+//		player->func->collision_object(player->data,
+//					static_obj_array[i]->data, &player->new_velo);
 }
 
 /*
@@ -208,11 +208,11 @@ main(void)
 {
 	printf("usage: ./collision                                   \n");
 	printf("       use the joystick to move the astronaut around \n");
-	printf("       every collision will be shown on the console  \n");
 
 	init_game();
-	init_inputs();
 	init_game_objects();
+
+	init_inputs();
 
         /* init done */
 	running = true;

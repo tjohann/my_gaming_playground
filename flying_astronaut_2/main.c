@@ -261,7 +261,6 @@ main(void)
 {
 	printf("usage: ./collision                                   \n");
 	printf("       use the joystick to move the astronaut around \n");
-	printf("       every collision will be shown on the console  \n");
 
 	init_game();
 	init_inputs();

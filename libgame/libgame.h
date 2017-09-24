@@ -85,7 +85,6 @@ typedef struct {
 	game_obj_data_t *data;
 	game_obj_func_t *func;
 	char            *name;
-	vector2d_t      new_pos;    /* position to set in next update */
 	vector2d_t      new_velo;   /* velo to set in next update     */
 } game_obj_t;
 
@@ -125,13 +124,20 @@ alloc_string(const char *s);
  * setup main window
  */
 SDL_Window *
-setup_main_window(char *name, uint32_t size_x, uint32_t size_y, unsigned char f);
+setup_main_window(const char *name, uint32_t size_x, uint32_t size_y,
+		unsigned char flags);
+/* ... via configuration file */
+SDL_Window *
+setup_main_window_via_config(config_t *cfg, unsigned char flags);
 
 /*
  * setup renderer
  */
 SDL_Renderer *
 setup_renderer(SDL_Window *window, color_t *b);
+/* ... via configuration file*/
+SDL_Renderer *
+setup_renderer_via_config(config_t *cfg, SDL_Window *window);
 
 /*
  * cleanup window, renderer and SDL_Quit
@@ -281,6 +287,17 @@ get_object_size(game_obj_data_t *obj);
  */
 void
 calc_object_surface_pos(game_obj_data_t *obj, int *l, int *r, int *t, int *b);
+
+
+/*
+ * --------------------------- config related ----------------------------------
+ */
+
+/*
+ * read config and check if its for this game
+ */
+int
+open_config(char *file, char *name, config_t *cfg);
 
 
 /*

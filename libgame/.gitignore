@@ -7,3 +7,4 @@
 /input.o
 /object_fab.o
 /collision.o
+/config.o

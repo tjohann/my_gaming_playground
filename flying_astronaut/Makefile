@@ -3,8 +3,8 @@
 #
 
 CC = gcc
-CFLAGS = -std=gnu11 -Wall -Wextra `pkg-config --cflags sdl2 SDL2_image`
-LDLIBS = -I../libgame -L../libgame -lgame -lm `pkg-config --libs sdl2 SDL2_image`
+CFLAGS = -std=gnu11 -Wall -Wextra `pkg-config --cflags sdl2 SDL2_image libconfig`
+LDLIBS = -I../libgame -L../libgame -lgame -lm `pkg-config --libs sdl2 SDL2_image libconfig`
 
 PROG = flying_astronaut
 OBJ = main.o

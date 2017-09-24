@@ -5,9 +5,10 @@
 
 2017-09-24 -> add game_obj_func_t which holds all functions
 	   -> make flying_astronaut_2 and collision use it
-	   -> add first stuff to the object fab
-	   -> add skeleton dynamic_config based on flying_astronaut_2
-	   -> add new_pos and new_velo to game_obj_t
+	   -> add first stuff for the config handling (data driven design)
+	   -> add skeleton and first parts for dynamic_config (flying astrount data driven)
+	   -> add new_velo to game_obj_t
+	   -> add libconfig for configuration file handling
 
 2017-09-22 -> fix collision_object function
 
