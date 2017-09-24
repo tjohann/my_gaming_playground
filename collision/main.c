@@ -99,7 +99,7 @@ init_game_objects(void)
 		exit(EXIT_FAILURE);
 
 	/* player object */
-	game_obj_t *t = alloc_game_object_simple(0, SCREEN_HEIGHT/2,
+	game_obj_t *t = alloc_game_object_simple("player", 0, SCREEN_HEIGHT/2,
 						texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
@@ -111,28 +111,28 @@ init_game_objects(void)
 	if (texture == NULL)
 		exit(EXIT_FAILURE);
 
-	t = alloc_game_object_simple(SCREEN_WIDTH/6, SCREEN_HEIGHT/6,
+	t = alloc_game_object_simple("others", SCREEN_WIDTH/6, SCREEN_HEIGHT/6,
 				texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
 	else
 		static_obj_array[0] = t;
 
-	t = alloc_game_object_simple(SCREEN_WIDTH/2, SCREEN_HEIGHT/3,
+	t = alloc_game_object_simple("others", SCREEN_WIDTH/2, SCREEN_HEIGHT/3,
 				texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
 	else
 		static_obj_array[1] = t;
 
-	t = alloc_game_object_simple(SCREEN_WIDTH/5, SCREEN_HEIGHT/2,
+	t = alloc_game_object_simple("others", SCREEN_WIDTH/5, SCREEN_HEIGHT/2,
 				texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
 	else
 		static_obj_array[2] = t;
 
-	t = alloc_game_object_simple(SCREEN_WIDTH/3, SCREEN_HEIGHT/4,
+	t = alloc_game_object_simple("others", SCREEN_WIDTH/3, SCREEN_HEIGHT/4,
 				texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
@@ -140,14 +140,16 @@ init_game_objects(void)
 		static_obj_array[3] = t;
 
 	/* the next 2 should still be within the screen size */
-	t = alloc_game_object_simple(SCREEN_WIDTH - 200, SCREEN_HEIGHT - 100,
+	t = alloc_game_object_simple("others",
+				SCREEN_WIDTH - 200, SCREEN_HEIGHT - 100,
 				texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
 	else
 		static_obj_array[4] = t;
 
-	t = alloc_game_object_simple(SCREEN_WIDTH - 100, SCREEN_HEIGHT - 400,
+	t = alloc_game_object_simple("others",
+				SCREEN_WIDTH - 100, SCREEN_HEIGHT - 400,
 				texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
@@ -180,10 +182,10 @@ render_window(void)
 		fprintf(stderr, "could not set clear rendering target (%s)\n",
 			SDL_GetError());
 
-	player->draw(player->data, renderer);  /* use the member func */
+	player->func->draw(player->data, renderer);  /* use the member func */
 
 	for (int i = 0; static_obj_array[i] != NULL; i++)
-		static_obj_array[i]->draw(static_obj_array[i]->data, renderer);
+		static_obj_array[i]->func->draw(static_obj_array[i]->data, renderer);
 
 	SDL_RenderPresent(renderer);
 }
@@ -194,12 +196,12 @@ render_window(void)
 void
 update_all(void)
 {
-	player->update(player->data, &velo);
-	player->collision_window(player->data, &velo,
+	player->func->update(player->data, &velo);
+	player->func->collision_window(player->data, &velo,
 				SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	for (int i = 0; static_obj_array[i] != NULL; i++)
-		if (player->detect_collision_object(player->data,
+		if (player->func->detect_collision_object(player->data,
 							static_obj_array[i]->data))
 			printf("object %d collide with player\n", i);
 }
