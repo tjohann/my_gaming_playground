@@ -22,6 +22,7 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <libconfig.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -34,6 +35,14 @@
 
 /* deadzone for the joystick */
 #define JOYSTICK_DEADZONE 10000
+
+
+typedef struct {
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+	uint8_t a;   /* alpha */
+} color_t;
 
 typedef struct {
 	int x;
@@ -63,22 +72,20 @@ typedef void (*collision_window_func) (game_obj_data_t *t, vector2d_t *velo,
 typedef void (*collision_object_func) (game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo);
 typedef bool (*detect_collision_object_func) (game_obj_data_t *a, game_obj_data_t *b);
 
-/* a object within the game ... as a container for data and func */
 typedef struct {
-	game_obj_data_t *data;
 	draw_func draw;
 	update_func update;
 	collision_window_func collision_window;
 	collision_object_func collision_object;
 	detect_collision_object_func detect_collision_object;
-} game_obj_t;
+} game_obj_func_t;
 
+/* a object within the game ... as a container for data and func */
 typedef struct {
-	uint8_t r;
-	uint8_t g;
-	uint8_t b;
-	uint8_t a;   /* alpha */
-} color_t;
+	game_obj_data_t *data;
+	game_obj_func_t *func;
+	char *name;
+} game_obj_t;
 
 
 /*
@@ -98,6 +105,14 @@ void
 show_object_kine_vals(game_obj_data_t *obj);
 void
 show_object_size_vals(game_obj_data_t *obj);
+
+
+/*
+ * string stuff
+ */
+
+char *
+alloc_string(const char *s);
 
 
 /*
@@ -144,7 +159,7 @@ load_texture(char *file_name, SDL_Renderer *renderer);
 
 /* ... use texture size */
 game_obj_t *
-alloc_game_object_simple(int x, int y, SDL_Texture *texture);
+alloc_game_object_simple(char *name, int x, int y, SDL_Texture *texture);
 
 /*
  * free a game data object
@@ -153,7 +168,7 @@ void
 free_game_object(game_obj_t *obj);
 
 /*
- * create a game data object (the simple game object without function pointers)
+ * create a games data object (the simple game object without function pointers)
  */
 game_obj_data_t *
 alloc_game_data_object(int x, int y, int w, int h, SDL_Texture *texture);
@@ -170,10 +185,22 @@ alloc_game_data_object_from_file_simple(char *filename, int x, int y,
 					SDL_Renderer *renderer);
 
 /*
- * free a game data object
+ * free a games data object
  */
 void
 free_game_data_object(game_obj_data_t *obj);
+
+/*
+ * create a games func object
+ */
+game_obj_func_t *
+alloc_game_func_object_simple(void);
+
+/*
+ * free a games func object
+ */
+void
+free_game_func_object(game_obj_func_t *obj);
 
 /*
  * draw a object based on obj content

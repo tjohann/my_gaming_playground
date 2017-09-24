@@ -22,27 +22,30 @@
 
 
 LIGGAME_EXPORT game_obj_t *
-alloc_game_object_simple(int x, int y, SDL_Texture *texture)
+alloc_game_object_simple(char *name, int x, int y, SDL_Texture *texture)
 {
 	game_obj_t *t = malloc(sizeof(game_obj_t));
 	if (t == NULL)
-		err_and_ret("could not alloc mem", NULL);
+		goto error;
 
 	memset(t, 0, sizeof(game_obj_t));
 
 	t->data = alloc_game_data_object_simple(x, y, texture);
-	if (t == NULL) {
-		free(t);
-		err_and_ret("could not alloc mem", NULL);
-	}
+	if (t == NULL)
+		goto error;
 
-	t->draw = draw_object;
-	t->update = set_object_velo;
-	t->collision_window = collision_window;
-	t->collision_object = collision_object;
-	t->detect_collision_object = detect_collision_object;
+	t->func = alloc_game_func_object_simple();
+	if (t == NULL)
+		goto error;
+
+	t->name = alloc_string(name);
+	if (t == NULL)
+		goto error;
 
 	return t;
+error:
+	free_game_object(t);
+	err_and_ret("could not alloc mem", NULL);
 }
 
 LIGGAME_EXPORT void
@@ -50,6 +53,8 @@ free_game_object(game_obj_t *obj)
 {
 	if (obj != NULL) {
 		free_game_data_object(obj->data);
+		free_game_func_object(obj->func);
+		free(obj->name);
 		free(obj);
 	} else
 		printf("game object == NULL\n");
@@ -128,7 +133,35 @@ free_game_data_object(game_obj_data_t *obj)
 	if (obj != NULL)
 		free(obj);
 	else
-		printf("game object == NULL\n");
+		printf("game data object == NULL\n");
+}
+
+LIGGAME_EXPORT game_obj_func_t *
+alloc_game_func_object_simple(void)
+{
+	game_obj_func_t *t = malloc(sizeof(game_obj_func_t));
+	if (t == NULL)
+		err_and_ret("could not alloc mem", NULL);
+
+	memset(t, 0, sizeof(game_obj_func_t));
+
+	/* set the defaults */
+	t->draw = draw_object;
+	t->update = set_object_velo;
+	t->collision_window = collision_window;
+	t->collision_object = collision_object;
+	t->detect_collision_object = detect_collision_object;
+
+	return t;
+}
+
+LIGGAME_EXPORT void
+free_game_func_object(game_obj_func_t *obj)
+{
+	if (obj != NULL)
+		free(obj);
+	else
+		printf("game func object == NULL\n");
 }
 
 LIGGAME_EXPORT void

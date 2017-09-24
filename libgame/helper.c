@@ -49,3 +49,28 @@ show_object_vals(game_obj_t *obj)
 	show_object_kine_vals(obj->data);
 	show_object_size_vals(obj->data);
 }
+
+/*
+ * --------------------------- "string" stuff ----------------------------------
+ */
+
+LIGGAME_EXPORT char *
+alloc_string(const char *s)
+{
+	char *str = NULL;
+	size_t len = 0;
+
+	if (s == NULL)
+		return NULL;
+
+	len = strlen(s) + 1;
+
+	str = malloc(len);
+	if (str == NULL)
+		return NULL;
+
+	memset(str, 0, len);
+	strncat(str, s, len);
+
+	return str;
+}

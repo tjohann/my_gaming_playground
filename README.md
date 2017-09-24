@@ -114,8 +114,13 @@ Examples (using libgame with complex game object)
 
 collision:
 
-	- use joystick to move to the static object
+	- use joystick to move to the static object and "see" the collision
 
 flying_astronaut_2:
 
 	- use joystick to control the direction of the movement (velocity wont reset in middle position of joystick)
+
+dynamic_config:
+
+	- same like flying_astronaut_2 but using the object fab
+

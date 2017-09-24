@@ -20,3 +20,11 @@
 #include "libgame.h"
 #include "libgame_private.h"
 
+/*
+static int
+read_game_config()
+{
+
+	return 0;
+}
+*/

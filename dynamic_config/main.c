@@ -19,7 +19,7 @@
 
 #include <libgame.h>
 
-#define PROGNAME "simple collision demo"
+#define PROGNAME "simple data driven config demo"
 #define PLAYER_PIC "astronaut_side.png"
 #define STATIC_OBJ_PIC "astronaut.png"
 
