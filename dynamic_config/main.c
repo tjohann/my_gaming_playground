@@ -41,9 +41,9 @@ bool running = false;
 char *progname = "dynamic_config";
 char *config_file = "dynamic_config.conf";
 
-game_obj_t *player;                 /* the player parts      */
-game_obj_t **static_obj_array;      /* the fixed objects     */
-game_texture_cont_t *texture_cont;  /* the texture container */
+game_obj_t *player;                 /* the player parts   */
+game_obj_t **static_obj_array;      /* the fixed objects  */
+game_texture_t **texture_array;     /* all textures       */
 
 SDL_Window   *window;
 SDL_Renderer *renderer;
@@ -78,20 +78,13 @@ init_game(void)
 		exit(EXIT_FAILURE);
 
 	/* load all textures */
-	texture_cont = load_texture_via_config(&cfg, renderer);
-	if (texture_cont == NULL)
+	err = load_texture_via_config(&cfg, texture_array, renderer);
+	if (err == -1)
 		exit(EXIT_FAILURE);
 
-//	printf("%p .....\n", texture_cont->array);
-//	printf("name .... %s\n", texture_cont->array[0].name);
-//	printf("file .... %s\n", texture_cont->array[0].file);
-//	printf("count .... %d\n", texture_cont->count);
-
-	sleep(1);
+	printf("texture_array %p\n", texture_array);
 
 	config_destroy(&cfg);
-
-	exit(EXIT_FAILURE);
 }
 void
 init_game_objects(void)

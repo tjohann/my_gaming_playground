@@ -92,14 +92,8 @@ typedef struct {
 /* a helper struct with all textures */
 typedef struct {
 	char *name;
-	char *file;
 	SDL_Texture *texture;
 } game_texture_t;
-
-typedef struct {
-	game_texture_t *array;
-	int count;
-} game_texture_cont_t;
 
 
 /*
@@ -173,8 +167,9 @@ load_texture(char *file_name, SDL_Renderer *renderer);
 /*
  * create array game_texture_t array based on cofiguration file
  */
-game_texture_cont_t *
-load_texture_via_config(config_t *cfg, SDL_Renderer *renderer);
+int
+load_texture_via_config(config_t *cfg, game_texture_t *array[],
+			SDL_Renderer *renderer);
 
 
 /*
