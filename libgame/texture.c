@@ -42,29 +42,33 @@ load_texture(char *file_name, SDL_Renderer *renderer)
 	return texture;
 }
 
-LIGGAME_EXPORT game_texture_t **
-load_texture_via_config(config_t *cfg, SDL_Renderer *renderer)
+LIGGAME_EXPORT int
+load_texture_via_config(config_t *cfg, game_texture_t *array[],
+			SDL_Renderer *renderer)
 {
 	config_setting_t *setting = config_lookup(cfg, "config.textures");
-	if(setting != NULL)
+	if (setting != NULL)
 	{
 		int count = config_setting_length(setting);
 		int i;
 
 		for(i = 0; i < count; ++i)
 		{
-			config_setting_t *texture = config_setting_get_elem(setting, i);
+			config_setting_t *texture =
+				config_setting_get_elem(setting, i);
 
 			const char *name, *file;
-			if (!(config_setting_lookup_string(texture, "name", &name)
-					&& config_setting_lookup_string(texture, "file", &file)))
+			if (!(config_setting_lookup_string(texture, "name",
+							   &name)
+			      && config_setting_lookup_string(texture, "file",
+							      &file)))
 				continue;
 
 			printf("name %s .... file %s\n", name, file);
 		}
 	}
 
-	return NULL;
+	return 0;
 }
 
 void

@@ -166,8 +166,9 @@ load_texture(char *file_name, SDL_Renderer *renderer);
 /*
  * create array game_texture_t array based on cofiguration file
  */
-game_texture_t **
-load_texture_via_config(config_t *cfg, SDL_Renderer *renderer);
+int
+load_texture_via_config(config_t *cfg, game_texture_t *array[],
+			SDL_Renderer *renderer);
 
 
 /*

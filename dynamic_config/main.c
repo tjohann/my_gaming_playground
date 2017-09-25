@@ -48,6 +48,9 @@ game_obj_t *player;
 /* the fixed objects */
 game_obj_t **static_obj_array;
 
+/* the texture array */
+game_texture_t **texture_array;
+
 /* all joysticks */
 #define MAX_NUM_JOYSTICKS 1
 SDL_Joystick *joystick_array[MAX_NUM_JOYSTICKS + 1];
@@ -81,8 +84,9 @@ init_game(void)
 		exit(EXIT_FAILURE);
 
 	/* load all textures */
-	game_texture_t **texture_array;
-	texture_array = load_texture_via_config(&cfg, renderer);
+	err = load_texture_via_config(&cfg, texture_array, renderer);
+	if (err == -1)
+		exit(EXIT_FAILURE);
 
 	config_destroy(&cfg);
 }
