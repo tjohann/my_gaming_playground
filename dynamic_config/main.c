@@ -35,32 +35,25 @@
 	} while (0)
 
 
-/* main window and renderer*/
-SDL_Window   *window;
-SDL_Renderer *renderer;
-
 /* the global state -> true still running, false quit */
 bool running = false;
 
-/* the player parts */
-game_obj_t *player;
+char *progname = "dynamic_config";
+char *config_file = "dynamic_config.conf";
 
-/* the fixed objects */
-game_obj_t **static_obj_array;
+game_obj_t *player;                 /* the player parts      */
+game_obj_t **static_obj_array;      /* the fixed objects     */
+game_texture_cont_t *texture_cont;  /* the texture container */
 
-/* the texture array */
-game_texture_t **texture_array;
+SDL_Window   *window;
+SDL_Renderer *renderer;
+
+int screen_width;
+int screen_height;
 
 /* all joysticks */
 #define MAX_NUM_JOYSTICKS 1
 SDL_Joystick *joystick_array[MAX_NUM_JOYSTICKS + 1];
-
-/* size of window */
-char *progname = "dynamic_config";
-char *config_file = "dynamic_config.conf";
-
-const int SCREEN_WIDTH = 1280;
-const int SCREEN_HEIGHT = 720;
 
 
 /*
@@ -75,7 +68,8 @@ init_game(void)
 		exit(EXIT_FAILURE);
 
 	/* setup main window */
-	window = setup_main_window_via_config(&cfg, 0);
+	window = setup_main_window_via_config(&cfg, 0,
+					&screen_width, &screen_height);
 	if (window == NULL)
 		exit(EXIT_FAILURE);
 
@@ -84,11 +78,20 @@ init_game(void)
 		exit(EXIT_FAILURE);
 
 	/* load all textures */
-	err = load_texture_via_config(&cfg, texture_array, renderer);
-	if (err == -1)
+	texture_cont = load_texture_via_config(&cfg, renderer);
+	if (texture_cont == NULL)
 		exit(EXIT_FAILURE);
 
+//	printf("%p .....\n", texture_cont->array);
+//	printf("name .... %s\n", texture_cont->array[0].name);
+//	printf("file .... %s\n", texture_cont->array[0].file);
+//	printf("count .... %d\n", texture_cont->count);
+
+	sleep(1);
+
 	config_destroy(&cfg);
+
+	exit(EXIT_FAILURE);
 }
 void
 init_game_objects(void)
@@ -98,7 +101,7 @@ init_game_objects(void)
 		exit(EXIT_FAILURE);
 
 	/* player object */
-	game_obj_t *t = alloc_game_object_simple("player", 0, SCREEN_HEIGHT/2,
+	game_obj_t *t = alloc_game_object_simple("player", 0, 100,
 						texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
@@ -124,7 +127,6 @@ void
 cleanup_game_object(void)
 {
 	free_game_object(player);
-
 
 	for (int i = 0; static_obj_array[i] != NULL; i++)
 		free_game_object(static_obj_array[i]);
@@ -159,7 +161,7 @@ update_all(void)
 {
 	player->func->update(player->data, &player->new_velo);
 	player->func->collision_window(player->data, &player->new_velo,
-				SCREEN_WIDTH, SCREEN_HEIGHT);
+				screen_width, screen_height);
 
 //	for (int i = 0; static_obj_array[i] != NULL; i++)
 //		player->func->collision_object(player->data,

@@ -96,6 +96,12 @@ typedef struct {
 	SDL_Texture *texture;
 } game_texture_t;
 
+typedef struct {
+	game_texture_t *array;
+	int count;
+} game_texture_cont_t;
+
+
 /*
  * --------------------------- other topics ------------------------------------
  */
@@ -135,7 +141,8 @@ setup_main_window(const char *name, uint32_t size_x, uint32_t size_y,
 		unsigned char flags);
 /* ... via configuration file */
 SDL_Window *
-setup_main_window_via_config(config_t *cfg, unsigned char flags);
+setup_main_window_via_config(config_t *cfg, unsigned char flags,
+			int *screen_width, int *screen_height);
 
 /*
  * setup renderer
@@ -166,9 +173,8 @@ load_texture(char *file_name, SDL_Renderer *renderer);
 /*
  * create array game_texture_t array based on cofiguration file
  */
-int
-load_texture_via_config(config_t *cfg, game_texture_t *array[],
-			SDL_Renderer *renderer);
+game_texture_cont_t *
+load_texture_via_config(config_t *cfg, SDL_Renderer *renderer);
 
 
 /*

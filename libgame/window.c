@@ -22,7 +22,8 @@
 
 
 LIGGAME_EXPORT SDL_Window *
-setup_main_window_via_config(config_t *cfg, unsigned char flags)
+setup_main_window_via_config(config_t *cfg, unsigned char flags,
+			int *screen_width, int *screen_height)
 {
 	const char *str;
 	int w = 0, h = 0;
@@ -40,11 +41,17 @@ setup_main_window_via_config(config_t *cfg, unsigned char flags)
 		return NULL;
 	}
 
+	if (screen_width != NULL)
+		*screen_width = w;
+	if (screen_height != NULL)
+		*screen_height = h;
+
 	return setup_main_window(str, w, h, flags);
 }
 
 LIGGAME_EXPORT SDL_Window *
-setup_main_window(const char *name, uint32_t size_x, uint32_t size_y, unsigned char flags)
+setup_main_window(const char *name, uint32_t size_x, uint32_t size_y,
+		unsigned char flags)
 {
 	int err = SDL_Init(SDL_INIT_EVERYTHING);
 	if (err < 0)
