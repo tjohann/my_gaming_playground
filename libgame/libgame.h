@@ -124,6 +124,17 @@ alloc_string(const char *s);
 
 
 /*
+ * config stuff
+ */
+
+/*
+ * read config and check if its for this game
+ */
+int
+open_config(char *file, char *name, config_t *cfg);
+
+
+/*
  * --------------------------- window related ----------------------------------
  */
 
@@ -167,9 +178,8 @@ load_texture(char *file_name, SDL_Renderer *renderer);
 /*
  * create array game_texture_t array based on cofiguration file
  */
-int
-load_texture_via_config(config_t *cfg, game_texture_t *array[],
-			SDL_Renderer *renderer);
+ game_texture_t *
+ load_texture_via_config(config_t *cfg, SDL_Renderer *renderer);
 
 
 /*
@@ -183,6 +193,10 @@ load_texture_via_config(config_t *cfg, game_texture_t *array[],
 /* ... use texture size */
 game_obj_t *
 alloc_game_object_simple(char *name, int x, int y, SDL_Texture *texture);
+/* ... from texture array */
+game_obj_t *
+alloc_game_object_from_array(char *name, int x, int y, game_texture_t a[]);
+
 
 /*
  * free a game data object
@@ -305,19 +319,9 @@ calc_object_surface_pos(game_obj_data_t *obj, int *l, int *r, int *t, int *b);
 
 
 /*
- * --------------------------- config related ----------------------------------
- */
-
-/*
- * read config and check if its for this game
- */
-int
-open_config(char *file, char *name, config_t *cfg);
-
-
-/*
  * --------------------------- object fab related ------------------------------
  */
+
 
 
 

@@ -27,7 +27,6 @@ alloc_game_object_simple(char *name, int x, int y, SDL_Texture *texture)
 	game_obj_t *t = malloc(sizeof(game_obj_t));
 	if (t == NULL)
 		goto error;
-
 	memset(t, 0, sizeof(game_obj_t));
 
 	t->data = alloc_game_data_object_simple(x, y, texture);
@@ -46,6 +45,24 @@ alloc_game_object_simple(char *name, int x, int y, SDL_Texture *texture)
 error:
 	free_game_object(t);
 	err_and_ret("could not alloc mem", NULL);
+}
+
+LIGGAME_EXPORT game_obj_t *
+alloc_game_object_from_array(char *name, int x, int y, game_texture_t a[])
+{
+	for (int i = 0; a[i].name != NULL; i++) {
+		if (strlen(name) != strlen(a[i].name))
+			continue;
+		if (strncmp(a[i].name, name, strlen(name)) != 0)
+			continue;
+
+		printf("found it a[i].name: %s\n", a[i].name);
+
+		return alloc_game_object_simple(name, x, y, a[i].texture);
+	}
+
+	eprintf("no texture for for %s found\n", name);
+	return NULL;
 }
 
 LIGGAME_EXPORT void

@@ -74,3 +74,39 @@ alloc_string(const char *s)
 
 	return str;
 }
+
+/*
+ * --------------------------- config stuff ------------------------------------
+ */
+
+LIGGAME_EXPORT int
+open_config(char *file, char *name, config_t *cfg)
+{
+	config_init(cfg);
+
+	if (!config_read_file(cfg, file)) {
+		eprintf("could not read config file %s:%d - %s\n",
+			config_error_file(cfg),
+			config_error_line(cfg),
+			config_error_text(cfg));
+		return -1;
+	}
+
+	const char *str;
+	if (!config_lookup_string(cfg, "name", &str)) {
+		eprintf("no valid naming in configuration file\n");
+		return -1;
+	}
+
+	if (strlen(str) != strlen(name)) {
+		eprintf("not a valid configuration\n");
+		return -1;
+	}
+
+	if (strncmp(str, name, strlen(name)) != 0) {
+		eprintf("not a valid configuration\n");
+		return -1;
+	}
+
+	return 0;
+}

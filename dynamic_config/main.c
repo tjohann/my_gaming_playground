@@ -42,8 +42,8 @@ char *progname = "dynamic_config";
 char *config_file = "dynamic_config.conf";
 
 game_obj_t *player;                 /* the player parts   */
-game_obj_t **static_obj_array;      /* the fixed objects  */
-game_texture_t **texture_array;     /* all textures       */
+game_obj_t *static_obj_array;       /* the fixed objects  */
+game_texture_t *texture_array;      /* all textures       */
 
 SDL_Window   *window;
 SDL_Renderer *renderer;
@@ -78,31 +78,17 @@ init_game(void)
 		exit(EXIT_FAILURE);
 
 	/* load all textures */
-	err = load_texture_via_config(&cfg, texture_array, renderer);
-	if (err == -1)
-		exit(EXIT_FAILURE);
-
-	printf("texture_array %p\n", texture_array);
-
-	config_destroy(&cfg);
-}
-void
-init_game_objects(void)
-{
-	SDL_Texture *texture = load_texture(PLAYER_PIC, renderer);
-	if (texture == NULL)
+	texture_array = load_texture_via_config(&cfg, renderer);
+	if (texture_array == NULL)
 		exit(EXIT_FAILURE);
 
 	/* player object */
-	game_obj_t *t = alloc_game_object_simple("player", 0, 100,
-						texture);
-	if (t == NULL)
+	player = alloc_game_object_from_array("player", 0, 100,
+							texture_array);
+	if (player == NULL)
 		exit(EXIT_FAILURE);
-	else
-		player = t;
 
-	/* the static objects */
-
+	config_destroy(&cfg);
 }
 void
 init_inputs(void)
@@ -121,9 +107,10 @@ cleanup_game_object(void)
 {
 	free_game_object(player);
 
+	/*
 	for (int i = 0; static_obj_array[i] != NULL; i++)
 		free_game_object(static_obj_array[i]);
-
+	*/
 }
 
 /*
@@ -137,7 +124,7 @@ render_window(void)
 		fprintf(stderr, "could not set clear rendering target (%s)\n",
 			SDL_GetError());
 
-	player->func->draw(player->data, renderer);  /* use the member func */
+	player->func->draw(player->data, renderer);
 
 //	for (int i = 0; static_obj_array[i] != NULL; i++)
 //		static_obj_array[i]->func->draw(static_obj_array[i]->data,
@@ -214,8 +201,6 @@ main(void)
 	printf("       use the joystick to move the astronaut around \n");
 
 	init_game();
-	init_game_objects();
-
 	init_inputs();
 
         /* init done */

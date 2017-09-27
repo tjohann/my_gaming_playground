@@ -42,25 +42,20 @@ load_texture(char *file_name, SDL_Renderer *renderer)
 	return texture;
 }
 
-LIGGAME_EXPORT int
-load_texture_via_config(config_t *cfg, game_texture_t *array[],
-			SDL_Renderer *renderer)
+LIGGAME_EXPORT game_texture_t *
+load_texture_via_config(config_t *cfg, SDL_Renderer *renderer)
 {
 	config_setting_t *setting = config_lookup(cfg, "config.textures");
-	if (setting == NULL) {
-		printf("no textures entry in config\n");
-		return -1;
-	}
+	if (setting == NULL)
+		err_and_ret("no textures entry in configurattion", NULL);
 
 	int count = config_setting_length(setting);
 
-	size_t len = count * sizeof(game_texture_t *);
-	game_texture_t **a = malloc(len);
+	size_t len = (count + 1) * sizeof(game_texture_t);
+	game_texture_t *a = malloc(len);
 	if (a == NULL)
-		err_and_ret("could not alloc memory", -1);
-
+		err_and_ret("could not alloc memory", NULL);
 	memset(a, 0, len);
-	printf("len %ld \n", len);
 
 	for(int i = 0; i < count; i++)
 	{
@@ -75,24 +70,22 @@ load_texture_via_config(config_t *cfg, game_texture_t *array[],
 								&file)))
 			continue;
 
-		game_texture_t *t = malloc(sizeof(game_texture_t));
-		if (t == NULL)
-			err_and_ret("could not alloc memory", -1);
+		char *tmp = alloc_string(file); /* to satisfy -Wall/-Wextra */
+		a[i].texture = load_texture(tmp, renderer);
+		if (a[i].texture == NULL) {
+			free(tmp);
+			err_and_ret("could not create texture", NULL);
+		}
+		a[i].name = alloc_string(name);
 
-		t->name = alloc_string(name);
-		t->texture = load_texture(file, renderer);
-		if (t->texture == NULL)
-			err_and_ret("could not create texture", -1);
-
-		a[i] = t;
+		free(tmp);
 	}
 
-	array = a;
+	/* to point out the end of the array */
+	a[count].name = NULL;
+	a[count].texture = NULL;
 
-	printf("sdfsfsd %s\n", array[0]->name);
-	printf("sdfsfsd %p\n", array[1]->name);
-
-	return 0;
+	return a;
 }
 
 void

@@ -3,6 +3,9 @@
 #
 
 
+2017-09-27 -> some fixes for player handling in dynamic_config example
+	   -> mv config stuff to helper
+
 2017-09-24 -> add game_obj_func_t which holds all functions
 	   -> make flying_astronaut_2 and collision use it
 	   -> add first stuff for the config handling (data driven design)
