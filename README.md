@@ -122,5 +122,9 @@ flying_astronaut_2:
 
 dynamic_config:
 
-	- same like flying_astronaut_2 but using the object fab
+	- same like flying_astronaut_2 but using a more data driven approach
+
+object_fab:
+
+	- same like flying_astronaut_2 but using the object fab to generate all objects taken from config file
 

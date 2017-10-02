@@ -35,11 +35,11 @@
 /* the global state -> true still running, false quit */
 bool running = false;
 
-char *progname = "dynamic_config";
-char *config_file = "dynamic_config.conf";
+char *progname = "object_fab";
+char *config_file = "object_fab.conf";
 
 game_obj_t *player;                 /* the player parts   */
-game_obj_t *static_obj_array[3];     /* the fixed objects  */
+game_obj_t **static_obj_array;      /* the fixed objects  */
 game_texture_t *texture_array;      /* all textures       */
 
 SDL_Window   *window;
@@ -79,23 +79,6 @@ init_game(void)
 	if (texture_array == NULL)
 		exit(EXIT_FAILURE);
 
-	/* player object */
-	player = alloc_game_object_from_array("player", "player", 0, 100, texture_array);
-	if (player == NULL)
-		exit(EXIT_FAILURE);
-
-	/* fixed_01 object */
-	static_obj_array[0] = alloc_game_object_from_array("object 1", "others", 0, 400, texture_array);
-	if (static_obj_array[0] == NULL)
-		exit(EXIT_FAILURE);
-
-	/* fixed_02 object */
-	static_obj_array[1] = alloc_game_object_from_array("object 2", "others", 50, 100, texture_array);
-	if (static_obj_array[1] == NULL)
-		exit(EXIT_FAILURE);
-
-	static_obj_array[2] = NULL;
-
 	config_destroy(&cfg);
 }
 void
@@ -114,9 +97,10 @@ void
 cleanup_game_object(void)
 {
 	free_game_object(player);
-
+/*
 	for (int i = 0; static_obj_array[i] != NULL; i++)
 		free_game_object(static_obj_array[i]);
+*/
 }
 
 /*
@@ -130,11 +114,13 @@ render_window(void)
 		fprintf(stderr, "could not set clear rendering target (%s)\n",
 			SDL_GetError());
 
+	/*
 	player->func->draw(player->data, renderer);
 
 	for (int i = 0; static_obj_array[i] != NULL; i++)
 		static_obj_array[i]->func->draw(static_obj_array[i]->data,
 						renderer);
+	*/
 
 	SDL_RenderPresent(renderer);
 }
@@ -145,6 +131,7 @@ render_window(void)
 void
 update_all(void)
 {
+	/*
 	player->func->update(player->data, &player->new_velo);
 	player->func->collision_window(player->data, &player->new_velo,
 				screen_width, screen_height);
@@ -152,6 +139,7 @@ update_all(void)
 	for (int i = 0; static_obj_array[i] != NULL; i++)
 		player->func->collision_object(player->data,
 					static_obj_array[i]->data, &player->new_velo);
+	*/
 }
 
 /*
@@ -169,7 +157,7 @@ handle_events(void)
 			break;
 		case SDL_JOYAXISMOTION:
 			printf("SDL_JOYAXISMOTION of: %d\n", e.jaxis.which);
-			tip_joystick_axis_move(&e, &player->new_velo, 1);
+			//tip_joystick_axis_move(&e, &player->new_velo, 1);
 			break;
 		case SDL_JOYBUTTONDOWN:
                         /* do something */
@@ -203,7 +191,7 @@ handle_events(void)
 int
 main(void)
 {
-	printf("usage: ./dynamic_conf                                \n");
+	printf("usage: ./object_fab                                  \n");
 	printf("       use the joystick to move the astronaut around \n");
 
 	init_game();

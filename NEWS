@@ -3,6 +3,11 @@
 #
 
 
+2017-09-29 -> some fix texture handling in dynamic_config example
+	   -> add first steps to a complete data driven object generation
+
+2017-09-28 -> add skeleton of object_fab example
+
 2017-09-27 -> some fixes for player handling in dynamic_config example
 	   -> mv config stuff to helper
 

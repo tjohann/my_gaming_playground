@@ -85,7 +85,7 @@ typedef struct {
 	game_obj_data_t *data;
 	game_obj_func_t *func;
 	char            *name;
-	vector2d_t      new_velo;   /* velo to set in next update     */
+	vector2d_t      new_velo;   /* velo to set in next update */
 } game_obj_t;
 
 
@@ -178,8 +178,8 @@ load_texture(char *file_name, SDL_Renderer *renderer);
 /*
  * create array game_texture_t array based on cofiguration file
  */
- game_texture_t *
- load_texture_via_config(config_t *cfg, SDL_Renderer *renderer);
+game_texture_t *
+load_texture_via_config(config_t *cfg, SDL_Renderer *renderer);
 
 
 /*
@@ -195,7 +195,8 @@ game_obj_t *
 alloc_game_object_simple(char *name, int x, int y, SDL_Texture *texture);
 /* ... from texture array */
 game_obj_t *
-alloc_game_object_from_array(char *name, int x, int y, game_texture_t a[]);
+alloc_game_object_from_array(char *name, char *texture_name, int x, int y,
+			game_texture_t a[]);
 
 
 /*
