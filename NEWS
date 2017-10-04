@@ -2,6 +2,9 @@
 # some news ... see also TODO for hints
 #
 
+2017-10-03 -> some minor updates/adds regarding textures and co
+	   -> add next steps to a complete data driven object generation
+	   -> finalize objcet_fab example
 
 2017-09-29 -> some fix texture handling in dynamic_config example
 	   -> add first steps to a complete data driven object generation

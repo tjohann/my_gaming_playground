@@ -88,6 +88,36 @@ load_texture_via_config(config_t *cfg, SDL_Renderer *renderer)
 	return a;
 }
 
+LIGGAME_EXPORT void
+clear_texture_array(game_texture_t *array[])
+{
+	if (array == NULL) {
+		printf("texture array == NULL\n");
+	} else {
+		for (int i = 0; array[i] != NULL; i++) {
+			if (array[i]->texture != NULL)
+				SDL_DestroyTexture(array[i]->texture);
+			if (array[i]->name != NULL)
+				free(array[i]->name);
+
+			array[i]->texture = NULL;
+			array[i]->name = NULL;
+		}
+	}
+}
+
+LIGGAME_EXPORT void
+free_texture_array(game_texture_t *array[])
+{
+	if (array == NULL) {
+		printf("texture array == NULL\n");
+	} else {
+		clear_texture_array(array);
+		free(array);
+		array = NULL;
+	}
+}
+
 void
 draw_texture(game_obj_data_t *obj, SDL_Renderer *renderer)
 {

@@ -181,6 +181,14 @@ load_texture(char *file_name, SDL_Renderer *renderer);
 game_texture_t *
 load_texture_via_config(config_t *cfg, SDL_Renderer *renderer);
 
+/*
+ * free/clear all allocated mem of texture array
+ */
+void
+free_texture_array(game_texture_t *array[]);
+void
+clear_texture_array(game_texture_t *array[]);
+
 
 /*
  * --------------------------- game object related -----------------------------
@@ -197,7 +205,6 @@ alloc_game_object_simple(char *name, int x, int y, SDL_Texture *texture);
 game_obj_t *
 alloc_game_object_from_array(char *name, char *texture_name, int x, int y,
 			game_texture_t a[]);
-
 
 /*
  * free a game data object
@@ -323,7 +330,21 @@ calc_object_surface_pos(game_obj_data_t *obj, int *l, int *r, int *t, int *b);
  * --------------------------- object fab related ------------------------------
  */
 
+/*
+ * alloc an array of all player objects
+ */
+game_obj_t **
+alloc_objects_via_config(config_t *cfg, char *section,
+			game_texture_t textures[]);
 
+game_obj_t **
+alloc_player_objects_via_config(config_t *cfg, game_texture_t textures[]);
+
+game_obj_t **
+alloc_static_objects_via_config(config_t *cfg, game_texture_t textures[]);
+
+game_obj_t **
+alloc_enemie_objects_via_config(config_t *cfg, game_texture_t textures[]);
 
 
 /*

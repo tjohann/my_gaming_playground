@@ -52,18 +52,12 @@ alloc_game_object_from_array(char *name, char *texture_name, int x, int y,
 			game_texture_t a[])
 {
 	for (int i = 0; a[i].name != NULL; i++) {
-
-		if (strlen(texture_name) != strlen(a[i].name)) {
-			printf("strlen passt nicht name %s ... a[i].name %s \n", texture_name, a[i].name);
+		if (strlen(texture_name) != strlen(a[i].name))
 			continue;
-		}
-		if (strncmp(a[i].name, texture_name, strlen(texture_name)) != 0) {
-			printf("strlen passt nicht name %s ... a[i].name %s \n", texture_name, a[i].name);
+		if (strncmp(a[i].name, texture_name, strlen(texture_name)) != 0)
 			continue;
-		}
 
-		printf("found it a[i].name: %s\n", a[i].name);
-
+		printf("found a[%d].name: %s\n", i, a[i].name);
 		return alloc_game_object_simple(name, x, y, a[i].texture);
 	}
 
@@ -75,6 +69,8 @@ LIGGAME_EXPORT void
 free_game_object(game_obj_t *obj)
 {
 	if (obj != NULL) {
+		if (obj->data->texture != NULL)
+			SDL_DestroyTexture(obj->data->texture);
 		free_game_data_object(obj->data);
 		free_game_func_object(obj->func);
 		free(obj->name);

@@ -38,15 +38,17 @@ bool running = false;
 char *progname = "object_fab";
 char *config_file = "object_fab.conf";
 
-game_obj_t *player;                 /* the player parts   */
-game_obj_t **static_obj_array;      /* the fixed objects  */
-game_texture_t *texture_array;      /* all textures       */
-
 SDL_Window   *window;
 SDL_Renderer *renderer;
 
 int screen_width;
 int screen_height;
+
+game_texture_t *texture_array;
+
+game_obj_t **players;               /* the player parts          */
+game_obj_t **static_objs;           /* the fixed objects         */
+game_obj_t **enemies;               /* the enemies flying around */
 
 /* all joysticks */
 #define MAX_NUM_JOYSTICKS 1
@@ -79,6 +81,29 @@ init_game(void)
 	if (texture_array == NULL)
 		exit(EXIT_FAILURE);
 
+	/* alloc all player objects */
+	players = alloc_player_objects_via_config(&cfg, texture_array);
+	if (players == NULL)
+		exit(EXIT_FAILURE);
+
+	for (int i = 0; players[i] != NULL; i++)
+		printf("name %s\n", players[i]->name);
+
+	/* alloc all static objects */
+	static_objs = alloc_static_objects_via_config(&cfg, texture_array);
+	if (static_objs == NULL)
+		exit(EXIT_FAILURE);
+
+	for (int i = 0; static_objs[i] != NULL; i++)
+		printf("name %s\n", static_objs[i]->name);
+
+	enemies = alloc_enemie_objects_via_config(&cfg, texture_array);
+	if (enemies == NULL)
+		exit(EXIT_FAILURE);
+
+	for (int i = 0; enemies[i] != NULL; i++)
+		printf("name %s\n", enemies[i]->name);
+
 	config_destroy(&cfg);
 }
 void
@@ -96,11 +121,14 @@ init_inputs(void)
 void
 cleanup_game_object(void)
 {
-	free_game_object(player);
-/*
-	for (int i = 0; static_obj_array[i] != NULL; i++)
-		free_game_object(static_obj_array[i]);
-*/
+	for (int i = 0; players[i] != NULL; i++)
+		free_game_object(players[i]);
+
+	for (int i = 0; static_objs[i] != NULL; i++)
+		free_game_object(static_objs[i]);
+
+	for (int i = 0; enemies[i] != NULL; i++)
+		free_game_object(enemies[i]);
 }
 
 /*
@@ -114,13 +142,14 @@ render_window(void)
 		fprintf(stderr, "could not set clear rendering target (%s)\n",
 			SDL_GetError());
 
-	/*
-	player->func->draw(player->data, renderer);
+	for (int i = 0; players[i] != NULL; i++)
+		players[i]->func->draw(players[i]->data, renderer);
 
-	for (int i = 0; static_obj_array[i] != NULL; i++)
-		static_obj_array[i]->func->draw(static_obj_array[i]->data,
-						renderer);
-	*/
+	for (int i = 0; static_objs[i] != NULL; i++)
+		static_objs[i]->func->draw(static_objs[i]->data, renderer);
+
+	for (int i = 0; enemies[i] != NULL; i++)
+		enemies[i]->func->draw(enemies[i]->data, renderer);
 
 	SDL_RenderPresent(renderer);
 }
@@ -131,15 +160,25 @@ render_window(void)
 void
 update_all(void)
 {
-	/*
-	player->func->update(player->data, &player->new_velo);
-	player->func->collision_window(player->data, &player->new_velo,
-				screen_width, screen_height);
+	for (int i = 0; players[i] != NULL; i++) {
+		players[i]->func->update(players[i]->data, &
+					players[i]->new_velo);
+		players[i]->func->collision_window(players[i]->data,
+						&players[i]->new_velo,
+						screen_width,
+						screen_height);
 
-	for (int i = 0; static_obj_array[i] != NULL; i++)
-		player->func->collision_object(player->data,
-					static_obj_array[i]->data, &player->new_velo);
-	*/
+		for (int j = 0; static_objs[j] != NULL; j++)
+			players[i]->func->collision_object(players[i]->data,
+							static_objs[j]->data,
+							&players[i]->new_velo);
+
+		for (int j = 0; enemies[j] != NULL; j++)
+			if (players[i]->func->detect_collision_object(
+					players[i]->data,
+					enemies[j]->data))
+				printf("COOOOOLISSION with %s\n", enemies[j]->name);
+	}
 }
 
 /*
@@ -157,7 +196,7 @@ handle_events(void)
 			break;
 		case SDL_JOYAXISMOTION:
 			printf("SDL_JOYAXISMOTION of: %d\n", e.jaxis.which);
-			//tip_joystick_axis_move(&e, &player->new_velo, 1);
+			tip_joystick_axis_move(&e, &players[0]->new_velo, 1);
 			break;
 		case SDL_JOYBUTTONDOWN:
                         /* do something */
@@ -193,6 +232,8 @@ main(void)
 {
 	printf("usage: ./object_fab                                  \n");
 	printf("       use the joystick to move the astronaut around \n");
+	printf("       the static objects redirect your movement     \n");
+	printf("       a collision with the enemies will be shown    \n");
 
 	init_game();
 	init_inputs();

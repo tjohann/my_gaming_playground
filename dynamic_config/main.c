@@ -151,7 +151,8 @@ update_all(void)
 
 	for (int i = 0; static_obj_array[i] != NULL; i++)
 		player->func->collision_object(player->data,
-					static_obj_array[i]->data, &player->new_velo);
+					static_obj_array[i]->data,
+					&player->new_velo);
 }
 
 /*
