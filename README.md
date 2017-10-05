@@ -126,5 +126,9 @@ dynamic_config:
 
 object_fab:
 
-	- same like flying_astronaut_2 but using the object fab to generate all objects taken from config file
+	- similar to flying_astronaut_2 but using the object fab to generate all objects taken from config file
+
+joystick_fab:
+
+	- similar to object_fab with joystick handling via config file
 

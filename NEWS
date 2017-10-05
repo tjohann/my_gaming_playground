@@ -2,6 +2,9 @@
 # some news ... see also TODO for hints
 #
 
+2017-10-05 -> add some new artwork
+	   -> add first multiple joystick handling to object_fab example
+	   -> add skelton for joystick configuration via config file
 
 2017-10-04 -> add some new artwork
 	   -> let object-fab demo use the new artwork

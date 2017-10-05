@@ -35,8 +35,8 @@
 /* the global state -> true still running, false quit */
 bool running = false;
 
-char *progname = "object_fab";
-char *config_file = "object_fab.conf";
+char *progname = "joystick_fab";
+char *config_file = "joystick_fab.conf";
 
 SDL_Window   *window;
 SDL_Renderer *renderer;
@@ -236,7 +236,7 @@ handle_events(void)
 int
 main(void)
 {
-	printf("usage: ./object_fab                                  \n");
+	printf("usage: ./joystick_fab                                \n");
 	printf("       use the joystick to move the astronaut around \n");
 	printf("       the static objects redirect your movement     \n");
 	printf("       a collision with the enemies will be shown    \n");
