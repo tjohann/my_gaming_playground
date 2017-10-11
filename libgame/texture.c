@@ -42,52 +42,6 @@ load_texture(char *file_name, SDL_Renderer *renderer)
 	return texture;
 }
 
-LIGGAME_EXPORT game_texture_t *
-load_texture_via_config(config_t *cfg, SDL_Renderer *renderer)
-{
-	config_setting_t *setting = config_lookup(cfg, "config.textures");
-	if (setting == NULL)
-		err_and_ret("no textures entry in configurattion", NULL);
-
-	int count = config_setting_length(setting);
-
-	size_t len = (count + 1) * sizeof(game_texture_t);
-	game_texture_t *a = malloc(len);
-	if (a == NULL)
-		err_and_ret("could not alloc memory", NULL);
-	memset(a, 0, len);
-
-	for(int i = 0; i < count; i++)
-	{
-		config_setting_t *texture =
-			config_setting_get_elem(setting, i);
-
-		const char *name, *file;
-		if (!(config_setting_lookup_string(texture, "name",
-								&name)
-				&& config_setting_lookup_string(texture,
-								"file",
-								&file)))
-			continue;
-
-		char *tmp = alloc_string(file); /* to satisfy -Wall/-Wextra */
-		a[i].texture = load_texture(tmp, renderer);
-		if (a[i].texture == NULL) {
-			free(tmp);
-			err_and_ret("could not create texture", NULL);
-		}
-		a[i].name = alloc_string(name);
-
-		free(tmp);
-	}
-
-	/* to point out the end of the array */
-	a[count].name = NULL;
-	a[count].texture = NULL;
-
-	return a;
-}
-
 LIGGAME_EXPORT void
 clear_texture_array(game_texture_t *array[])
 {

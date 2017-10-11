@@ -125,3 +125,222 @@ error:
 
 	return NULL;
 }
+
+/*
+ * --------------------------- window related ----------------------------------
+ */
+
+LIGGAME_EXPORT SDL_Window *
+setup_main_window_via_config(config_t *cfg, unsigned char flags,
+			int *screen_width, int *screen_height)
+{
+	const char *str;
+	int w = 0, h = 0;
+
+	if (!config_lookup_string(cfg, "config.window.title", &str)) {
+		eprintf("config.window.title not available\n");
+		return NULL;
+	}
+	if (!config_lookup_int(cfg, "config.window.size.w", &w)) {
+		eprintf("config.window.size.w not available\n");
+		return NULL;
+	}
+	if (!config_lookup_int(cfg, "config.window.size.h", &h)) {
+		eprintf("config.window.size.h not available\n");
+		return NULL;
+	}
+
+	if (screen_width != NULL)
+		*screen_width = w;
+	if (screen_height != NULL)
+		*screen_height = h;
+
+	return setup_main_window(str, w, h, flags);
+}
+
+LIGGAME_EXPORT SDL_Renderer *
+setup_renderer_via_config(config_t *cfg, SDL_Window *window)
+{
+	color_t t;
+	memset(&t, 0, sizeof(t));
+
+	int tmp = 0;
+
+	if (!config_lookup_int(cfg, "config.window.background.r", &tmp)) {
+		eprintf("config.window.background.r not available\n");
+		return NULL;
+	}
+	t.r = tmp;
+
+	if (!config_lookup_int(cfg, "config.window.background.g", &tmp)) {
+		eprintf("config.window.background.g not available\n");
+		return NULL;
+	}
+	t.g = tmp;
+
+	if (!config_lookup_int(cfg, "config.window.background.b", &tmp)) {
+		eprintf("config.window.background.b not available\n");
+		return NULL;
+	}
+	t.b = tmp;
+
+	if (!config_lookup_int(cfg, "config.window.background.a", &tmp)) {
+		eprintf("config.window.background.a not available\n");
+		return NULL;
+	}
+	t.a = tmp;
+
+	return setup_renderer(window, &t);
+}
+
+/*
+ * --------------------------- input related -----------------------------------
+ */
+
+LIGGAME_EXPORT game_joystick_t *
+alloc_joystick_objects_via_config(config_t *cfg)
+{
+	config_setting_t *setting = config_lookup(cfg, "config.joysticks");
+	if (setting == NULL)
+		err_and_ret("no joysticks entry in configuration", NULL);
+
+	int count = config_setting_length(setting);
+
+	size_t len = (count + 1) * sizeof(game_joystick_t);
+	game_joystick_t *a = malloc(len);
+	if (a == NULL)
+		err_and_ret("could not alloc memory", NULL);
+	memset(a, 0, len);
+
+	SDL_Joystick *j[count];
+	int err = init_joysticks(j);
+	if (err == -1)
+		goto error;
+
+	for(int i = 0; i < count; i++)
+	{
+		config_setting_t *joystick =
+			config_setting_get_elem(setting, i);
+
+		const char *name, *player;
+		int step;
+		if (!(config_setting_lookup_string(joystick, "name", &name)
+				&& config_setting_lookup_string(joystick,
+								"player",
+								&player)
+				&& config_setting_lookup_int(joystick, "step",
+							&step)))
+			continue;
+
+		a[i].name = alloc_string(name);
+		a[i].player = alloc_string(player);
+		a[i].step = step;
+		a[i].joystick = j[i];
+
+	}
+
+	/* to point out the end of the array */
+	a[count].name = NULL;
+	a[count].player = NULL;
+	a[count].joystick = NULL;
+
+	return a;
+error:
+	eprintf("an error in %s occured\n", __FUNCTION__);
+
+	if (a != NULL)
+		free_joystick_object_array(a);
+
+	if (j != NULL)
+		free_joysticks(j);
+
+
+	return NULL;
+}
+
+/*
+ * --------------------------- config stuff ------------------------------------
+ */
+
+LIGGAME_EXPORT int
+open_config(char *file, char *name, config_t *cfg)
+{
+	config_init(cfg);
+
+	if (!config_read_file(cfg, file)) {
+		eprintf("could not read config file %s:%d - %s\n",
+			config_error_file(cfg),
+			config_error_line(cfg),
+			config_error_text(cfg));
+		return -1;
+	}
+
+	const char *str;
+	if (!config_lookup_string(cfg, "name", &str)) {
+		eprintf("no valid naming in configuration file\n");
+		return -1;
+	}
+
+	if (strlen(str) != strlen(name)) {
+		eprintf("not a valid configuration\n");
+		return -1;
+	}
+
+	if (strncmp(str, name, strlen(name)) != 0) {
+		eprintf("not a valid configuration\n");
+		return -1;
+	}
+
+	return 0;
+}
+
+
+/*
+ * --------------------------- texture related ---------------------------------
+ */
+
+LIGGAME_EXPORT game_texture_t *
+alloc_textures_via_config(config_t *cfg, SDL_Renderer *renderer)
+{
+	config_setting_t *setting = config_lookup(cfg, "config.textures");
+	if (setting == NULL)
+		err_and_ret("no textures entry in configuration", NULL);
+
+	int count = config_setting_length(setting);
+
+	size_t len = (count + 1) * sizeof(game_texture_t);
+	game_texture_t *a = malloc(len);
+	if (a == NULL)
+		err_and_ret("could not alloc memory", NULL);
+	memset(a, 0, len);
+
+	for(int i = 0; i < count; i++)
+	{
+		config_setting_t *texture =
+			config_setting_get_elem(setting, i);
+
+		const char *name, *file;
+		if (!(config_setting_lookup_string(texture, "name",
+								&name)
+				&& config_setting_lookup_string(texture,
+								"file",
+								&file)))
+			continue;
+
+		char *tmp = alloc_string(file); /* to satisfy -Wall/-Wextra */
+		a[i].texture = load_texture(tmp, renderer);
+		if (a[i].texture == NULL) {
+			free(tmp);
+			err_and_ret("could not create texture", NULL);
+		}
+		a[i].name = alloc_string(name);
+
+		free(tmp);
+	}
+
+	/* to point out the end of the array */
+	a[count].name = NULL;
+	a[count].texture = NULL;
+
+	return a;
+}

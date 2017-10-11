@@ -75,7 +75,7 @@ init_game(void)
 		exit(EXIT_FAILURE);
 
 	/* load all textures */
-	texture_array = load_texture_via_config(&cfg, renderer);
+	texture_array = alloc_textures_via_config(&cfg, renderer);
 	if (texture_array == NULL)
 		exit(EXIT_FAILURE);
 

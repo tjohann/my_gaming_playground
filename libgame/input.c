@@ -21,6 +21,16 @@
 #include "libgame_private.h"
 
 
+LIGGAME_EXPORT void
+free_joystick_object_array(game_joystick_t *joystick_array[])
+{
+	int i = 0;
+//	while(joystick_array[i] != NULL) {
+//		SDL_JoystickClose(joystick_array);
+//
+//	}
+}
+
 LIGGAME_EXPORT int
 init_joysticks(SDL_Joystick *joystick_array[])
 {

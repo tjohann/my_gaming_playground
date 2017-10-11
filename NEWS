@@ -2,6 +2,15 @@
 # some news ... see also TODO for hints
 #
 
+
+2017-10-10 -> add first steps for something like joystick fab (similiar to object fab)
+
+2017-10-09 -> add skeleton for object_fab_xml.c which should provide the same parts
+	      via libxml (and xml based config-file) like object_fab.c (uses libconfig)
+
+2017-10-08 -> do some renaming for more consistense function names
+	   -> do some cleanups and locate all functions using libconfig to object_fab
+
 2017-10-05 -> add some new artwork
 	   -> add first multiple joystick handling to object_fab example
 	   -> add skelton for joystick configuration via config file

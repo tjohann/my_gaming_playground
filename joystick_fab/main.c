@@ -77,7 +77,7 @@ init_game(void)
 		exit(EXIT_FAILURE);
 
 	/* load all textures */
-	texture_array = load_texture_via_config(&cfg, renderer);
+	texture_array = alloc_textures_via_config(&cfg, renderer);
 	if (texture_array == NULL)
 		exit(EXIT_FAILURE);
 
@@ -106,14 +106,15 @@ init_game(void)
 
 	config_destroy(&cfg);
 }
-void
+
+/*void
 init_inputs(void)
 {
 	int err = init_joysticks(joystick_array);
 	if (err == -1)
 		exit(EXIT_FAILURE);
 
-}
+		}*/
 
 /*
  * cleanup all create game objects
@@ -242,7 +243,7 @@ main(void)
 	printf("       a collision with the enemies will be shown    \n");
 
 	init_game();
-	init_inputs();
+//	init_inputs();
 
         /* init done */
 	running = true;
@@ -271,7 +272,7 @@ main(void)
 	}
 
 	cleanup_game_object();
-	free_joysticks(joystick_array);
+//	free_joysticks(joystick_array);
 	cleanup_main_window(window, renderer);
 
 	exit(EXIT_SUCCESS);

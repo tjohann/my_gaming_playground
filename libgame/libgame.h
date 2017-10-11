@@ -22,11 +22,17 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
-#include <libconfig.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
+
+/* for libconfig */
+#include <libconfig.h>
+
+/* for libxml2 */
+#include <libxml/xmlmemory.h>
+#include <libxml/parser.h>
 
 #define eprintf(format, ...) fprintf (stderr, format, ##__VA_ARGS__)
 
@@ -89,11 +95,75 @@ typedef struct {
 } game_obj_t;
 
 
-/* a helper struct with all textures */
+/* hold all textures */
 typedef struct {
 	char *name;
 	SDL_Texture *texture;
 } game_texture_t;
+
+/* hold all joysticks and the config */
+typedef struct {
+	char *name;
+	char *player;
+	unsigned char step;
+	SDL_Joystick *joystick;
+} game_joystick_t;
+
+
+/*
+ * --------------------------- object fab related ------------------------------
+ *
+ * use libconfig to generate all relevant objects from a config file
+ */
+
+/*
+ * alloc an array of all player objects
+ */
+game_obj_t **
+alloc_objects_via_config(config_t *cfg, char *section,
+			game_texture_t textures[]);
+
+game_obj_t **
+alloc_player_objects_via_config(config_t *cfg, game_texture_t textures[]);
+
+game_obj_t **
+alloc_static_objects_via_config(config_t *cfg, game_texture_t textures[]);
+
+game_obj_t **
+alloc_enemie_objects_via_config(config_t *cfg, game_texture_t textures[]);
+
+
+/* read config and check if its for this game */
+int
+open_config(char *file, char *name, config_t *cfg);
+
+/* setup main window ... via configuration file */
+SDL_Window *
+setup_main_window_via_config(config_t *cfg, unsigned char flags,
+			int *screen_width, int *screen_height);
+
+/* setup renderer via configuration file */
+SDL_Renderer *
+setup_renderer_via_config(config_t *cfg, SDL_Window *window);
+
+/* create array game_texture_t array based on cofiguration file */
+game_texture_t *
+alloc_textures_via_config(config_t *cfg, SDL_Renderer *renderer);
+
+/* alloc an array with all joysticks */
+game_joystick_t *
+alloc_joystick_objects_via_config(config_t *cfg);
+
+
+/*
+ * --------------------------- object fab related ------------------------------
+ *
+ * use libxml to generate all relevant objects from a xml config file
+ */
+
+/*
+ * TODO: -> do same like object_fab.c with object_fab_xml.c
+ */
 
 
 /*
@@ -114,24 +184,12 @@ show_object_kine_vals(game_obj_data_t *obj);
 void
 show_object_size_vals(game_obj_data_t *obj);
 
-
 /*
  * string stuff
  */
 
 char *
 alloc_string(const char *s);
-
-
-/*
- * config stuff
- */
-
-/*
- * read config and check if its for this game
- */
-int
-open_config(char *file, char *name, config_t *cfg);
 
 
 /*
@@ -144,19 +202,12 @@ open_config(char *file, char *name, config_t *cfg);
 SDL_Window *
 setup_main_window(const char *name, uint32_t size_x, uint32_t size_y,
 		unsigned char flags);
-/* ... via configuration file */
-SDL_Window *
-setup_main_window_via_config(config_t *cfg, unsigned char flags,
-			int *screen_width, int *screen_height);
 
 /*
  * setup renderer
  */
 SDL_Renderer *
 setup_renderer(SDL_Window *window, color_t *b);
-/* ... via configuration file*/
-SDL_Renderer *
-setup_renderer_via_config(config_t *cfg, SDL_Window *window);
 
 /*
  * cleanup window, renderer and SDL_Quit
@@ -174,12 +225,6 @@ cleanup_main_window(SDL_Window *window, SDL_Renderer *renderer);
  */
 SDL_Texture *
 load_texture(char *file_name, SDL_Renderer *renderer);
-
-/*
- * create array game_texture_t array based on cofiguration file
- */
-game_texture_t *
-load_texture_via_config(config_t *cfg, SDL_Renderer *renderer);
 
 /*
  * free/clear all allocated mem of texture array
@@ -327,27 +372,6 @@ calc_object_surface_pos(game_obj_data_t *obj, int *l, int *r, int *t, int *b);
 
 
 /*
- * --------------------------- object fab related ------------------------------
- */
-
-/*
- * alloc an array of all player objects
- */
-game_obj_t **
-alloc_objects_via_config(config_t *cfg, char *section,
-			game_texture_t textures[]);
-
-game_obj_t **
-alloc_player_objects_via_config(config_t *cfg, game_texture_t textures[]);
-
-game_obj_t **
-alloc_static_objects_via_config(config_t *cfg, game_texture_t textures[]);
-
-game_obj_t **
-alloc_enemie_objects_via_config(config_t *cfg, game_texture_t textures[]);
-
-
-/*
  * --------------------------- collision related -------------------------------
  */
 
@@ -421,7 +445,13 @@ clear_vec(vector2d_t *a);
  */
 
 /*
- * init all alvailabel joysticks
+ * free all game_joystick_t array and close all joysticks
+ */
+void
+free_joystick_object_array(game_joystick_t *joystick_array[]);
+
+/*
+ * init all availabel joysticks
  */
 int
 init_joysticks(SDL_Joystick *joystick_array[]);
@@ -450,7 +480,7 @@ handle_joystick_axis_move(SDL_Event *e, vector2d_t *mov_vec,
  */
 void
 tip_joystick_axis_move(SDL_Event *e, vector2d_t *mov_vec,
-			unsigned char step);
+		unsigned char step);
 
 
 /*

@@ -3,11 +3,11 @@
 #
 
 CC = gcc
-CFLAGS = -std=gnu11 -Wall -Wextra `pkg-config --cflags sdl2 SDL2_image libconfig`
+CFLAGS = -std=gnu11 -Wall -Wextra `pkg-config --cflags sdl2 SDL2_image libconfig libxml-2.0`
 LDLIBS =
 
 LIB = libgame.a
-OBJ = helper.o vector_2d.o window.o input.o texture.o objects.o collision.o object_fab.o
+OBJ = helper.o vector_2d.o window.o input.o texture.o objects.o collision.o object_fab.o object_fab_xml.o
 
 %.o: %.c
 	$(CC) -g -c -o $@ $< $(CFLAGS) $(LDLIBS)

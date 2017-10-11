@@ -6,4 +6,5 @@
 /objects.o
 /input.o
 /object_fab.o
+/object_fab_xml.o
 /collision.o
