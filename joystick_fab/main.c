@@ -45,14 +45,11 @@ int screen_width;
 int screen_height;
 
 game_texture_t *texture_array;
+game_joystick_t *joystick_array;
 
 game_obj_t **players;               /* the player parts          */
 game_obj_t **static_objs;           /* the fixed objects         */
 game_obj_t **enemies;               /* the enemies flying around */
-
-/* all joysticks */
-#define MAX_NUM_JOYSTICKS 2
-SDL_Joystick *joystick_array[MAX_NUM_JOYSTICKS + 1];
 
 
 /*
@@ -87,7 +84,7 @@ init_game(void)
 		exit(EXIT_FAILURE);
 
 	for (int i = 0; players[i] != NULL; i++)
-		printf("name %s\n", players[i]->name);
+		printf("name of player %s\n", players[i]->name);
 
 	/* alloc all static objects */
 	static_objs = alloc_static_objects_via_config(&cfg, texture_array);
@@ -95,32 +92,30 @@ init_game(void)
 		exit(EXIT_FAILURE);
 
 	for (int i = 0; static_objs[i] != NULL; i++)
-		printf("name %s\n", static_objs[i]->name);
+		printf("name of static object %s\n", static_objs[i]->name);
 
 	enemies = alloc_enemie_objects_via_config(&cfg, texture_array);
 	if (enemies == NULL)
 		exit(EXIT_FAILURE);
 
 	for (int i = 0; enemies[i] != NULL; i++)
-		printf("name %s\n", enemies[i]->name);
+		printf("name of enemy %s\n", enemies[i]->name);
+
+	joystick_array = alloc_joystick_objects_via_config(&cfg);
+	if (joystick_array == NULL)
+		exit(EXIT_FAILURE);
+
+	for (int i = 0; joystick_array[i].name != NULL; i++)
+		printf("name of joystick %s\n", joystick_array[i].name);
 
 	config_destroy(&cfg);
 }
 
-/*void
-init_inputs(void)
-{
-	int err = init_joysticks(joystick_array);
-	if (err == -1)
-		exit(EXIT_FAILURE);
-
-		}*/
-
 /*
- * cleanup all create game objects
+ * cleanup all create objects
  */
 void
-cleanup_game_object(void)
+cleanup_game(void)
 {
 	for (int i = 0; players[i] != NULL; i++)
 		free_game_object(players[i]);
@@ -130,6 +125,11 @@ cleanup_game_object(void)
 
 	for (int i = 0; enemies[i] != NULL; i++)
 		free_game_object(enemies[i]);
+
+	free_texture_array(texture_array);
+	free_joystick_array(joystick_array);
+
+	cleanup_main_window(window, renderer);
 }
 
 /*
@@ -238,12 +238,11 @@ int
 main(void)
 {
 	printf("usage: ./joystick_fab                                \n");
-	printf("       use the joystick to move the astronaut around \n");
+	printf("       use the joystick to move the astronauts around\n");
 	printf("       the static objects redirect your movement     \n");
 	printf("       a collision with the enemies will be shown    \n");
 
 	init_game();
-//	init_inputs();
 
         /* init done */
 	running = true;
@@ -271,9 +270,7 @@ main(void)
 		}
 	}
 
-	cleanup_game_object();
-//	free_joysticks(joystick_array);
-	cleanup_main_window(window, renderer);
+	cleanup_game();
 
 	exit(EXIT_SUCCESS);
 }

@@ -21,23 +21,11 @@
 #include "libgame_private.h"
 
 
-LIGGAME_EXPORT void
-free_joystick_object_array(game_joystick_t *joystick_array[])
-{
-	int i = 0;
-//	while(joystick_array[i] != NULL) {
-//		SDL_JoystickClose(joystick_array);
-//
-//	}
-}
-
 LIGGAME_EXPORT int
-init_joysticks(SDL_Joystick *joystick_array[])
+get_num_joysticks(void)
 {
 	if (!SDL_WasInit(SDL_INIT_JOYSTICK))
 		SDL_InitSubSystem(SDL_INIT_JOYSTICK);
-	else
-		printf("SDL_INIT_JOYSTICK == true\n");
 
 	unsigned char n = SDL_NumJoysticks();
 	if (!n) {
@@ -46,6 +34,46 @@ init_joysticks(SDL_Joystick *joystick_array[])
 	} else {
 		printf("found %d joysticks\n", n);
 	}
+
+	return n;
+}
+
+LIGGAME_EXPORT void
+clear_joystick_array(game_joystick_t array[])
+{
+	if (array == NULL) {
+		printf("joystick array == NULL\n");
+	} else {
+		for (int i = 0; array[i].name != NULL; i++) {
+			if (array[i].joystick != NULL)
+				SDL_JoystickClose(array[i].joystick);
+			free(array[i].name);
+			free(array[i].player);
+
+			array[i].joystick = NULL;
+			array[i].name = NULL;
+			array[i].player = NULL;
+			array[i].step = 0;
+		}
+	}
+}
+
+LIGGAME_EXPORT void
+free_joystick_array(game_joystick_t array[])
+{
+	if (array == NULL) {
+		printf("joystick array == NULL\n");
+	} else {
+		clear_joystick_array(array);
+		free(array);
+		array = NULL;
+	}
+}
+
+LIGGAME_EXPORT int
+init_joysticks(SDL_Joystick *joystick_array[])
+{
+	unsigned char n = get_num_joysticks();
 
 	for (int i = 0; i < n; i++) {
 		SDL_Joystick *p = SDL_JoystickOpen(i);

@@ -205,6 +205,10 @@ alloc_joystick_objects_via_config(config_t *cfg)
 		err_and_ret("no joysticks entry in configuration", NULL);
 
 	int count = config_setting_length(setting);
+	unsigned char n = get_num_joysticks();
+
+	if (n < count)
+		count = n;
 
 	size_t len = (count + 1) * sizeof(game_joystick_t);
 	game_joystick_t *a = malloc(len);
@@ -236,20 +240,20 @@ alloc_joystick_objects_via_config(config_t *cfg)
 		a[i].player = alloc_string(player);
 		a[i].step = step;
 		a[i].joystick = j[i];
-
 	}
 
 	/* to point out the end of the array */
 	a[count].name = NULL;
 	a[count].player = NULL;
 	a[count].joystick = NULL;
+	a[count].step = 0;
 
 	return a;
 error:
 	eprintf("an error in %s occured\n", __FUNCTION__);
 
 	if (a != NULL)
-		free_joystick_object_array(a);
+		free_joystick_array(a);
 
 	if (j != NULL)
 		free_joysticks(j);

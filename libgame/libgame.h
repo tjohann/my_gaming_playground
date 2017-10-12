@@ -230,9 +230,9 @@ load_texture(char *file_name, SDL_Renderer *renderer);
  * free/clear all allocated mem of texture array
  */
 void
-free_texture_array(game_texture_t *array[]);
+free_texture_array(game_texture_t array[]);
 void
-clear_texture_array(game_texture_t *array[]);
+clear_texture_array(game_texture_t array[]);
 
 
 /*
@@ -281,7 +281,7 @@ void
 free_game_data_object(game_obj_data_t *obj);
 
 /*
- * create a games func object
+ *  a games func object
  */
 game_obj_func_t *
 alloc_game_func_object_simple(void);
@@ -445,20 +445,24 @@ clear_vec(vector2d_t *a);
  */
 
 /*
- * free all game_joystick_t array and close all joysticks
+ * get number of connected joysticks
  */
-void
-free_joystick_object_array(game_joystick_t *joystick_array[]);
+int
+get_num_joysticks(void);
 
 /*
- * init all availabel joysticks
+ * free/clear all game_joystick_t array and close all joysticks
+ */
+void
+free_joystick_array(game_joystick_t array[]);
+void
+free_joystick_array(game_joystick_t array[]);
+
+/*
+ * init/close all availabel joysticks
  */
 int
 init_joysticks(SDL_Joystick *joystick_array[]);
-
-/*
- * close all opened joysticks
- */
 void
 free_joysticks(SDL_Joystick *joystick_array[]);
 

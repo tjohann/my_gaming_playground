@@ -39,7 +39,7 @@ char *progname = "dynamic_config";
 char *config_file = "dynamic_config.conf";
 
 game_obj_t *player;                 /* the player parts   */
-game_obj_t *static_obj_array[3];     /* the fixed objects  */
+game_obj_t *static_obj_array[3];    /* the fixed objects  */
 game_texture_t *texture_array;      /* all textures       */
 
 SDL_Window   *window;
@@ -238,6 +238,7 @@ main(void)
 
 	cleanup_game_object();
 	free_joysticks(joystick_array);
+	free_texture_array(texture_array);
 	cleanup_main_window(window, renderer);
 
 	exit(EXIT_SUCCESS);

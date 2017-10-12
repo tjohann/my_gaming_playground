@@ -43,25 +43,23 @@ load_texture(char *file_name, SDL_Renderer *renderer)
 }
 
 LIGGAME_EXPORT void
-clear_texture_array(game_texture_t *array[])
+clear_texture_array(game_texture_t array[])
 {
 	if (array == NULL) {
 		printf("texture array == NULL\n");
 	} else {
-		for (int i = 0; array[i] != NULL; i++) {
-			if (array[i]->texture != NULL)
-				SDL_DestroyTexture(array[i]->texture);
-			if (array[i]->name != NULL)
-				free(array[i]->name);
+		for (int i = 0; array[i].name != NULL; i++) {
+			SDL_DestroyTexture(array[i].texture);
+			free(array[i].name);
 
-			array[i]->texture = NULL;
-			array[i]->name = NULL;
+			array[i].texture = NULL;
+			array[i].name = NULL;
 		}
 	}
 }
 
 LIGGAME_EXPORT void
-free_texture_array(game_texture_t *array[])
+free_texture_array(game_texture_t array[])
 {
 	if (array == NULL) {
 		printf("texture array == NULL\n");

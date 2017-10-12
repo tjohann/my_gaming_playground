@@ -3,6 +3,9 @@
 #
 
 
+2017-10-11 -> add next steps towards joystick fab
+	   -> fix missing free of joystick array
+
 2017-10-10 -> add first steps for something like joystick fab (similiar to object fab)
 
 2017-10-09 -> add skeleton for object_fab_xml.c which should provide the same parts

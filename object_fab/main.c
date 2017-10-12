@@ -272,6 +272,7 @@ main(void)
 
 	cleanup_game_object();
 	free_joysticks(joystick_array);
+	free_texture_array(texture_array);
 	cleanup_main_window(window, renderer);
 
 	exit(EXIT_SUCCESS);

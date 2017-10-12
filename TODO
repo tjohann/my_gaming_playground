@@ -4,6 +4,5 @@ TODO
 
 libgame:
 
-- add function which gets a array of files (png) and return a game_obj_t *array[]
 - check https://wiki.libsdl.org/SDL_CreateSoftwareRenderer for devices with no hardware renderer
 
