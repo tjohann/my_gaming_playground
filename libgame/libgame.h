@@ -65,7 +65,7 @@ typedef struct {
 	vector2d_t       pos;        /* position                  */
 	vector2d_t       velo;       /* velocity                  */
 	spread_t         size;       /* height and width          */
-	signed char      frame;      /* num frame of spreed sheet */
+	signed char      frame;      /* num frame of sprite sheet */
 	SDL_Texture      *texture;
 	SDL_RendererFlip flip;
 } game_obj_data_t;
@@ -75,8 +75,10 @@ typedef void (*draw_func) (game_obj_data_t *t, SDL_Renderer *renderer);
 typedef void (*update_func) (game_obj_data_t *t, vector2d_t *velo);
 typedef void (*collision_window_func) (game_obj_data_t *t, vector2d_t *velo,
 				const int w, const int h);
-typedef void (*collision_object_func) (game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo);
-typedef bool (*detect_collision_object_func) (game_obj_data_t *a, game_obj_data_t *b);
+typedef void (*collision_object_func) (game_obj_data_t *a, game_obj_data_t *b,
+				vector2d_t *velo);
+typedef bool (*detect_collision_object_func) (game_obj_data_t *a,
+					game_obj_data_t *b);
 
 typedef struct {
 	draw_func draw;
@@ -97,16 +99,18 @@ typedef struct {
 
 /* hold all textures */
 typedef struct {
-	char *name;
+	char        *name;
 	SDL_Texture *texture;
 } game_texture_t;
 
 /* hold all joysticks and the config */
 typedef struct {
-	char *name;
-	char *player;
+	char          *name;
+	char          *player;
 	unsigned char step;
-	SDL_Joystick *joystick;
+	SDL_Joystick  *joystick;
+	vector2d_t    *to_change;   /* pointer to value to change */
+	/* function pointer handle_joystick */
 } game_joystick_t;
 
 

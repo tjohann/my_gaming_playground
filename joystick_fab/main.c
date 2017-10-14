@@ -164,6 +164,7 @@ update_all(void)
 	for (int i = 0; players[i] != NULL; i++) {
 		players[i]->func->update(players[i]->data, &
 					players[i]->new_velo);
+
 		players[i]->func->collision_window(players[i]->data,
 						&players[i]->new_velo,
 						screen_width,
@@ -198,6 +199,12 @@ handle_events(void)
 		case SDL_JOYAXISMOTION:
 			printf("SDL_JOYAXISMOTION\n");
 			unsigned char which = e.jaxis.which;
+                        /*
+			 * something like:
+			 * joystick_array[which]->handle_joystick(
+			 *                     joystick_array[which]->to_change,
+			 *                     joystick_array[which].step);
+			 */
 			if (which == 0 && players[0] != NULL)
 				tip_joystick_axis_move(&e, &players[0]->new_velo, 1);
 			else if (which == 1 && players[1] != NULL)
