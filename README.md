@@ -132,6 +132,10 @@ joystick_fab:
 
 	- similar to object_fab with joystick handling via config file
 
+simple_ai:
+
+	- similiar to the joystick_fab, but with moving ememies
+
 
 Games
 -----
