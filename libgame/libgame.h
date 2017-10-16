@@ -79,13 +79,16 @@ typedef void (*collision_object_func) (game_obj_data_t *a, game_obj_data_t *b,
 				vector2d_t *velo);
 typedef bool (*detect_collision_object_func) (game_obj_data_t *a,
 					game_obj_data_t *b);
+typedef void (*joystick_axis_func) (SDL_Event *e, vector2d_t *mov_vec,
+				unsigned char step);
 
 typedef struct {
-	draw_func draw;
-	update_func update;
-	collision_window_func collision_window;
-	collision_object_func collision_object;
+	draw_func                    draw;
+	update_func                  update;
+	collision_window_func        collision_window;
+	collision_object_func        collision_object;
 	detect_collision_object_func detect_collision_object;
+	joystick_axis_func           handle_axis_joystick;
 } game_obj_func_t;
 
 /* a object within the game ... as a container for data and func */
@@ -105,13 +108,37 @@ typedef struct {
 
 /* hold all joysticks and the config */
 typedef struct {
-	char          *name;
-	char          *player;
-	unsigned char step;
-	SDL_Joystick  *joystick;
-	vector2d_t    *to_change;   /* pointer to value to change */
-	/* function pointer handle_joystick */
+	char               *name;
+	char               *player;
+	unsigned char      step;
+	SDL_Joystick       *joystick;
+	vector2d_t         *to_change;           /* pointer to value to change */
+	joystick_axis_func handle_axis_joystick; /* handle axis move           */
 } game_joystick_t;
+
+
+/* the flags for init_game_via_config */
+#define INIT_PLAYERS 0x01
+#define INIT_STATICS 0x02
+#define INIT_ENIMIES 0x04
+/* simple game struct */
+typedef struct {
+	char *progname;
+	char *config_file;
+
+	SDL_Window   *window;
+	SDL_Renderer *renderer;
+
+	int screen_width;
+	int screen_height;
+
+	game_texture_t  *texture_array;     /* all used textures         */
+	game_joystick_t *joystick_array;    /* all used joysticks        */
+
+	game_obj_t **players;               /* the player parts          */
+	game_obj_t **static_objs;           /* the fixed objects         */
+	game_obj_t **enemies;               /* the enemies flying around */
+} game_t;
 
 
 /*
@@ -119,6 +146,12 @@ typedef struct {
  *
  * use libconfig to generate all relevant objects from a config file
  */
+
+/*
+ * init all parts of the game
+ */
+int
+init_game_via_config(game_t *game, unsigned char flags);
 
 /*
  * alloc an array of all player objects
@@ -461,6 +494,19 @@ void
 free_joystick_array(game_joystick_t array[]);
 void
 free_joystick_array(game_joystick_t array[]);
+
+/*
+ * connect player object with joystick object
+ */
+void
+connect_player_objects(game_joystick_t array[], game_obj_t *players[]);
+
+/*
+ * set a different joystick handler function
+ */
+void
+set_joystick_handler(char *player, game_joystick_t array[],
+		game_obj_t *players[], joystick_axis_func handle_axis_joystick);
 
 /*
  * init/close all availabel joysticks

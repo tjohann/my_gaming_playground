@@ -45,8 +45,10 @@ clear_joystick_array(game_joystick_t array[])
 		printf("joystick array == NULL\n");
 	} else {
 		for (int i = 0; array[i].name != NULL; i++) {
-			if (array[i].joystick != NULL)
-				SDL_JoystickClose(array[i].joystick);
+			if (array[i].joystick != NULL) {
+				printf("TODO -> %p \n", array[i].joystick);
+				//SDL_JoystickClose(array[i].joystick);
+			}
 			free(array[i].name);
 			free(array[i].player);
 
@@ -54,6 +56,8 @@ clear_joystick_array(game_joystick_t array[])
 			array[i].name = NULL;
 			array[i].player = NULL;
 			array[i].step = 0;
+			array[i].to_change = NULL;
+			array[i].handle_axis_joystick = NULL;
 		}
 	}
 }
@@ -67,6 +71,53 @@ free_joystick_array(game_joystick_t array[])
 		clear_joystick_array(array);
 		free(array);
 		array = NULL;
+	}
+}
+
+LIGGAME_EXPORT void
+connect_player_objects(game_joystick_t array[], game_obj_t *players[])
+{
+	for (int i = 0; array[i].name != NULL; i++) {
+		for (int j = 0; players[j] != NULL; j++) {
+			if (strlen(array[i].player) != strlen(players[j]->name))
+				continue;
+			if (strncmp(array[i].player, players[j]->name,
+					strlen(array[i].player)) != 0)
+				continue;
+
+			printf("found joystick[%d].player %s and players.joystick[%d] %s \n",
+				i, array[i].player, j, players[j]->name);
+
+			array[i].to_change = &players[j]->new_velo;
+			array[i].handle_axis_joystick = players[j]->func->handle_axis_joystick;
+		}
+	}
+}
+
+LIGGAME_EXPORT void
+set_joystick_handler(char *player, game_joystick_t array[],
+		game_obj_t *players[], joystick_axis_func handle_axis_joystick)
+{
+	for (int i = 0; array[i].name != NULL; i++) {
+		if (strlen(array[i].player) != strlen(player))
+			continue;
+		if (strncmp(array[i].player, player,
+				strlen(array[i].player)) != 0)
+			continue;
+
+		printf("found player %s in joystick array\n", player);
+		array[i].handle_axis_joystick = handle_axis_joystick;
+	}
+
+	for (int i = 0; players[i] != NULL; i++) {
+		if (strlen(players[i]->name) != strlen(player))
+			continue;
+		if (strncmp(players[i]->name, player,
+				strlen(players[i]->name)) != 0)
+			continue;
+
+		printf("found player %s in players array\n", player);
+		players[i]->func->handle_axis_joystick = handle_axis_joystick;
 	}
 }
 

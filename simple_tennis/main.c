@@ -39,6 +39,7 @@
 						joystick_array[which].to_change, \
 						joystick_array[which].step); \
 	} while (0)
+
 #define HANDLE_QUIT() do {						\
 		printf("quit the example -> bye %s\n", getenv("USER")); \
 		running = false;					\
@@ -48,8 +49,8 @@
 /* the global state -> true still running, false quit */
 bool running = false;
 
-char *progname = "joystick_fab";
-char *config_file = "joystick_fab.conf";
+char *progname = "simple_tennis";
+char *config_file = "simple_tennis.conf";
 
 SDL_Window   *window;
 SDL_Renderer *renderer;
@@ -61,8 +62,7 @@ game_texture_t *texture_array;
 game_joystick_t *joystick_array;
 
 game_obj_t **players;               /* the player parts          */
-game_obj_t **static_objs;           /* the fixed objects         */
-game_obj_t **enemies;               /* the enemies flying around */
+game_obj_t **static_objs;           /* the ball                  */
 
 
 /*
@@ -71,31 +71,52 @@ game_obj_t **enemies;               /* the enemies flying around */
 void
 init_game(void)
 {
-	game_t game;
-
-	game.progname = progname;
-	game.config_file = config_file;
-
-	int err = init_game_via_config(&game,
-				INIT_PLAYERS | INIT_STATICS | INIT_ENIMIES);
+	config_t cfg;
+	int err = open_config(config_file, progname, &cfg);
 	if (err == -1)
 		exit(EXIT_FAILURE);
 
-	window = game.window;
-	renderer = game.renderer;
-	screen_width = game.screen_width;
-	screen_height = game.screen_height;
+	/* setup main window */
+	window = setup_main_window_via_config(&cfg, 0,
+					&screen_width, &screen_height);
+	if (window == NULL)
+		exit(EXIT_FAILURE);
 
-	texture_array = game.texture_array;
-	joystick_array = game.joystick_array;
+	renderer = setup_renderer_via_config(&cfg, window);
+	if (renderer == NULL)
+		exit(EXIT_FAILURE);
 
-	players = game.players;
-	static_objs = game.static_objs;
-	enemies = game.enemies;
+	/* load all textures */
+	texture_array = alloc_textures_via_config(&cfg, renderer);
+	if (texture_array == NULL)
+		exit(EXIT_FAILURE);
 
-	/* set a different joystick axis handler */
-	set_joystick_handler("player_2", joystick_array, players,
-			tip_joystick_axis_move);
+	/* alloc all player objects */
+	players = alloc_player_objects_via_config(&cfg, texture_array);
+	if (players == NULL)
+		exit(EXIT_FAILURE);
+
+	for (int i = 0; players[i] != NULL; i++)
+		printf("name of player %s\n", players[i]->name);
+
+	/* alloc all static objects */
+	static_objs = alloc_static_objects_via_config(&cfg, texture_array);
+	if (static_objs == NULL)
+		exit(EXIT_FAILURE);
+
+	for (int i = 0; static_objs[i] != NULL; i++)
+		printf("name of static object %s\n", static_objs[i]->name);
+
+	joystick_array = alloc_joystick_objects_via_config(&cfg);
+	if (joystick_array == NULL)
+		exit(EXIT_FAILURE);
+
+	for (int i = 0; joystick_array[i].name != NULL; i++)
+		printf("name of joystick %s\n", joystick_array[i].name);
+
+	config_destroy(&cfg);
+
+	connect_player_objects(joystick_array, players);
 }
 
 /*
@@ -104,16 +125,11 @@ init_game(void)
 void
 cleanup_game(void)
 {
-	printf("cleanup the game\n");
-
 	for (int i = 0; players[i] != NULL; i++)
 		free_game_object(players[i]);
 
 	for (int i = 0; static_objs[i] != NULL; i++)
 		free_game_object(static_objs[i]);
-
-	for (int i = 0; enemies[i] != NULL; i++)
-		free_game_object(enemies[i]);
 
 	free_texture_array(texture_array);
 	free_joystick_array(joystick_array);
@@ -138,9 +154,6 @@ render_window(void)
 	for (int i = 0; static_objs[i] != NULL; i++)
 		static_objs[i]->func->draw(static_objs[i]->data, renderer);
 
-	for (int i = 0; enemies[i] != NULL; i++)
-		enemies[i]->func->draw(enemies[i]->data, renderer);
-
 	SDL_RenderPresent(renderer);
 }
 
@@ -163,12 +176,6 @@ update_all(void)
 			players[i]->func->collision_object(players[i]->data,
 							static_objs[j]->data,
 							&players[i]->new_velo);
-
-		for (int j = 0; enemies[j] != NULL; j++)
-			if (players[i]->func->detect_collision_object(
-					players[i]->data,
-					enemies[j]->data))
-				printf("COOOOOLISSION with %s\n", enemies[j]->name);
 	}
 }
 
@@ -220,13 +227,11 @@ handle_events(void)
 int
 main(void)
 {
-	printf("usage: ./joystick_fab                                \n");
-	printf("       use the joystick to move the astronauts around\n");
-	printf("       the static objects redirect your movement     \n");
-	printf("       a collision with the enemies will be shown    \n");
+	printf("usage: ./simple tennis                               \n");
+	printf("       somthing like a pong clone                    \n");
 
-	atexit(cleanup_game);
 	init_game();
+	atexit(cleanup_game);
 
         /* init done */
 	running = true;

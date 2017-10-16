@@ -132,3 +132,10 @@ joystick_fab:
 
 	- similar to object_fab with joystick handling via config file
 
+
+Games
+-----
+
+simple_tennis:
+
+	- something like a pong clone (https://en.wikipedia.org/wiki/Pong)

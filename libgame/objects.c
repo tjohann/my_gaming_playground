@@ -170,6 +170,7 @@ alloc_game_func_object_simple(void)
 	t->collision_window = collision_window;
 	t->collision_object = collision_object;
 	t->detect_collision_object = detect_collision_object;
+	t->handle_axis_joystick = handle_joystick_axis_move;
 
 	return t;
 }

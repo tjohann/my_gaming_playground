@@ -126,6 +126,7 @@ error:
 	return NULL;
 }
 
+
 /*
  * --------------------------- window related ----------------------------------
  */
@@ -193,6 +194,7 @@ setup_renderer_via_config(config_t *cfg, SDL_Window *window)
 	return setup_renderer(window, &t);
 }
 
+
 /*
  * --------------------------- input related -----------------------------------
  */
@@ -240,13 +242,17 @@ alloc_joystick_objects_via_config(config_t *cfg)
 		a[i].player = alloc_string(player);
 		a[i].step = step;
 		a[i].joystick = j[i];
+		a[i].to_change = NULL;
+		a[i].handle_axis_joystick = NULL;
 	}
 
 	/* to point out the end of the array */
 	a[count].name = NULL;
 	a[count].player = NULL;
-	a[count].joystick = NULL;
 	a[count].step = 0;
+	a[count].joystick = NULL;
+	a[count].to_change = NULL;
+	a[count].handle_axis_joystick = NULL;
 
 	return a;
 error:
@@ -261,6 +267,7 @@ error:
 
 	return NULL;
 }
+
 
 /*
  * --------------------------- config stuff ------------------------------------
@@ -347,4 +354,74 @@ alloc_textures_via_config(config_t *cfg, SDL_Renderer *renderer)
 	a[count].texture = NULL;
 
 	return a;
+}
+
+
+/*
+ * --------------------------- game related ------------------------------------
+ */
+
+int
+init_game_via_config(game_t *game, unsigned char flags)
+{
+	config_t cfg;
+	int err = open_config(game->config_file, game->progname, &cfg);
+	if (err == -1)
+		exit(EXIT_FAILURE);
+
+	/* setup main window */
+	game->window = setup_main_window_via_config(&cfg, 0,
+						&game->screen_width, &game->screen_height);
+	if (game->window == NULL)
+		err_and_ret("could not setup main window", -1);
+
+	game->renderer = setup_renderer_via_config(&cfg, game->window);
+	if (game->renderer == NULL)
+		err_and_ret("could not setup renderer", -1);
+
+	/* load all textures */
+	game->texture_array = alloc_textures_via_config(&cfg, game->renderer);
+	if (game->texture_array == NULL)
+		err_and_ret("could not alloc textures", -1);
+
+	if (flags & INIT_PLAYERS) {
+		game->players = alloc_player_objects_via_config(&cfg, game->texture_array);
+		if (game->players == NULL)
+			printf("no player objects allocated!\n");
+		else
+			printf("player objects allocated\n");
+	} else {
+		printf("no player objects\n");
+	}
+
+	if (flags & INIT_STATICS) {
+		game->static_objs = alloc_static_objects_via_config(&cfg, game->texture_array);
+		if (game->static_objs == NULL)
+			printf("no static objects allocated!\n");
+		else
+			printf("static objects allocated\n");
+
+	} else {
+		printf("no static objects\n");
+	}
+
+	if (flags & INIT_ENIMIES) {
+		game->enemies = alloc_enemie_objects_via_config(&cfg, game->texture_array);
+		if (game->enemies == NULL)
+			printf("no enemie objects allocated!\n");
+		else
+			printf("enemy objects allocated\n");
+	} else {
+		printf("no enemy objects\n");
+	}
+
+	game->joystick_array = alloc_joystick_objects_via_config(&cfg);
+	if ((game->joystick_array == NULL) && (flags & INIT_PLAYERS))
+		printf("no joysticks allocated!\n");
+	else
+		connect_player_objects(game->joystick_array, game->players);
+
+	config_destroy(&cfg);
+
+	return 0;
 }

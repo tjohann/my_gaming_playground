@@ -3,6 +3,13 @@
 #
 
 
+2017-10-16 -> some fixes around the joystick fab
+	   -> add skeleton for a fist simple game -> simple_tennis (something
+	      like pong clone)
+
+2017-10-15 -> finalize joystick fab
+	   -> add some functions/macros around the joystick fab
+
 2017-10-14 -> add some minor steps towards joystick fab
 
 2017-10-11 -> add next steps towards joystick fab
