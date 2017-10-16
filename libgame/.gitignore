@@ -8,3 +8,5 @@
 /object_fab.o
 /object_fab_xml.o
 /collision.o
+/ai.o
+/*~

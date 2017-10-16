@@ -47,7 +47,7 @@ clear_joystick_array(game_joystick_t array[])
 		for (int i = 0; array[i].name != NULL; i++) {
 			if (array[i].joystick != NULL) {
 				printf("TODO -> %p \n", array[i].joystick);
-				//SDL_JoystickClose(array[i].joystick);
+				SDL_JoystickClose(array[i].joystick);
 			}
 			free(array[i].name);
 			free(array[i].player);

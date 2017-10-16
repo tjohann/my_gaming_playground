@@ -112,8 +112,8 @@ typedef struct {
 	char               *player;
 	unsigned char      step;
 	SDL_Joystick       *joystick;
-	vector2d_t         *to_change;           /* pointer to value to change */
-	joystick_axis_func handle_axis_joystick; /* handle axis move           */
+	vector2d_t         *to_change;          /* pointer to value to change */
+	joystick_axis_func handle_axis_joystick;/* handle axis move           */
 } game_joystick_t;
 
 
@@ -570,6 +570,11 @@ void
 get_mouse_position_y(SDL_Event *e, int *pos_y);
 void
 get_mouse_position_x_y(SDL_Event *e, int *pos_x, int *pos_y);
+
+
+/*
+ * --------------------------- other topics ------------------------------------
+ */
 
 
 #endif
