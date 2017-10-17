@@ -3,6 +3,9 @@
 #
 
 
+2017-10-17 -> add pixel-objects for simple_tennis example
+	      first implementation of the simple_tennis example
+
 2017-10-16 -> some fixes around the joystick fab
 	   -> add skeleton for a fist simple game -> simple_tennis (something
 	      like pong clone)

@@ -119,7 +119,7 @@ typedef struct {
 
 /* the flags for init_game_via_config */
 #define INIT_PLAYERS 0x01
-#define INIT_STATICS 0x02
+#define INIT_OBJECTS 0x02
 #define INIT_ENIMIES 0x04
 /* simple game struct */
 typedef struct {

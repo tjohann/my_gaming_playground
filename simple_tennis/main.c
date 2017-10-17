@@ -36,8 +36,8 @@
 #define HANDLE_JOYSTICKS() do {						\
 		unsigned char which = e.jaxis.which;			\
 		joystick_array[which].handle_axis_joystick(&e,		\
-						joystick_array[which].to_change, \
-						joystick_array[which].step); \
+							joystick_array[which].to_change, \
+							joystick_array[which].step); \
 	} while (0)
 
 #define HANDLE_QUIT() do {						\
@@ -61,8 +61,8 @@ int screen_height;
 game_texture_t *texture_array;
 game_joystick_t *joystick_array;
 
-game_obj_t **players;               /* the player parts          */
-game_obj_t **static_objs;           /* the ball                  */
+game_obj_t **players;
+game_obj_t **balls;
 
 
 /*
@@ -91,7 +91,7 @@ init_game(void)
 	if (texture_array == NULL)
 		exit(EXIT_FAILURE);
 
-	/* alloc all player objects */
+	/* alloc the two player objects */
 	players = alloc_player_objects_via_config(&cfg, texture_array);
 	if (players == NULL)
 		exit(EXIT_FAILURE);
@@ -99,13 +99,13 @@ init_game(void)
 	for (int i = 0; players[i] != NULL; i++)
 		printf("name of player %s\n", players[i]->name);
 
-	/* alloc all static objects */
-	static_objs = alloc_static_objects_via_config(&cfg, texture_array);
-	if (static_objs == NULL)
+	/* alloc the ball objects */
+	balls = alloc_static_objects_via_config(&cfg, texture_array);
+	if (balls == NULL)
 		exit(EXIT_FAILURE);
 
-	for (int i = 0; static_objs[i] != NULL; i++)
-		printf("name of static object %s\n", static_objs[i]->name);
+	for (int i = 0; balls[i] != NULL; i++)
+		printf("name of static object %s\n", balls[i]->name);
 
 	joystick_array = alloc_joystick_objects_via_config(&cfg);
 	if (joystick_array == NULL)
@@ -120,6 +120,33 @@ init_game(void)
 }
 
 /*
+ * set the position of all objects depending of th screen size
+ */
+void
+set_position_of_objects(void)
+{
+	int space_x = screen_width * 15 / 100;
+	int space_y = get_object_size_h(players[1]->data) / 2;
+
+	/* the left player */
+	vector2d_t tmp = { .x = space_x, .y = (screen_height / 2) - space_y};
+	set_object_pos(players[0]->data, &tmp);
+
+	/* the right player */
+	space_x += get_object_size_w(players[1]->data);
+	tmp.x = screen_width - space_x;
+	tmp.y = (screen_height / 2) - space_y;
+	set_object_pos(players[1]->data, &tmp);
+
+	/* the ball */
+	space_x = space_y = get_object_size_w(balls[0]->data);
+	tmp.x = (screen_width / 2) - space_x;
+	tmp.y = (screen_height / 2) - space_y;
+	set_object_pos(balls[0]->data, &tmp);
+}
+
+
+/*
  * cleanup all create objects
  */
 void
@@ -128,8 +155,8 @@ cleanup_game(void)
 	for (int i = 0; players[i] != NULL; i++)
 		free_game_object(players[i]);
 
-	for (int i = 0; static_objs[i] != NULL; i++)
-		free_game_object(static_objs[i]);
+	for (int i = 0; balls[i] != NULL; i++)
+		free_game_object(balls[i]);
 
 	free_texture_array(texture_array);
 	free_joystick_array(joystick_array);
@@ -151,8 +178,8 @@ render_window(void)
 	for (int i = 0; players[i] != NULL; i++)
 		players[i]->func->draw(players[i]->data, renderer);
 
-	for (int i = 0; static_objs[i] != NULL; i++)
-		static_objs[i]->func->draw(static_objs[i]->data, renderer);
+	for (int i = 0; balls[i] != NULL; i++)
+		balls[i]->func->draw(balls[i]->data, renderer);
 
 	SDL_RenderPresent(renderer);
 }
@@ -172,9 +199,9 @@ update_all(void)
 						screen_width,
 						screen_height);
 
-		for (int j = 0; static_objs[j] != NULL; j++)
+		for (int j = 0; balls[j] != NULL; j++)
 			players[i]->func->collision_object(players[i]->data,
-							static_objs[j]->data,
+							balls[j]->data,
 							&players[i]->new_velo);
 	}
 }
@@ -230,8 +257,10 @@ main(void)
 	printf("usage: ./simple tennis                               \n");
 	printf("       somthing like a pong clone                    \n");
 
-	init_game();
 	atexit(cleanup_game);
+
+	init_game();
+	set_position_of_objects();
 
         /* init done */
 	running = true;

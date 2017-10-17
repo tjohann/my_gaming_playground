@@ -394,7 +394,7 @@ init_game_via_config(game_t *game, unsigned char flags)
 		printf("no player objects\n");
 	}
 
-	if (flags & INIT_STATICS) {
+	if (flags & INIT_OBJECTS) {
 		game->static_objs = alloc_static_objects_via_config(&cfg, game->texture_array);
 		if (game->static_objs == NULL)
 			printf("no static objects allocated!\n");

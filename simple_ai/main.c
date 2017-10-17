@@ -77,7 +77,7 @@ init_game(void)
 	game.config_file = config_file;
 
 	int err = init_game_via_config(&game,
-				INIT_PLAYERS | INIT_STATICS | INIT_ENIMIES);
+				INIT_PLAYERS | INIT_OBJECTS | INIT_ENIMIES);
 	if (err == -1)
 		exit(EXIT_FAILURE);
 
