@@ -48,6 +48,7 @@
 
 /* the global state -> true still running, false quit */
 bool running = false;
+bool gaming = false;
 
 char *progname = "simple_tennis";
 char *config_file = "simple_tennis.conf";
@@ -145,7 +146,6 @@ set_position_of_objects(void)
 	set_object_pos(balls[0]->data, &tmp);
 }
 
-
 /*
  * cleanup all create objects
  */
@@ -185,14 +185,36 @@ render_window(void)
 }
 
 /*
+ * start the ball via space
+ */
+void
+tip_start(vector2d_t *mov_vec)
+{
+	const uint8_t *k = SDL_GetKeyboardState(NULL);
+
+	if (k[SDL_SCANCODE_SPACE]) {
+
+		if (gaming) {
+			gaming = false;
+		} else {
+			mov_vec->x = get_random_value();
+			mov_vec->y = get_random_value();
+
+			gaming = true;
+		}
+	}
+}
+
+
+/*
  *  update all needed stuff
  */
 void
 update_all(void)
 {
 	for (int i = 0; players[i] != NULL; i++) {
-		players[i]->func->update(players[i]->data, &
-					players[i]->new_velo);
+		players[i]->func->update(players[i]->data,
+					&players[i]->new_velo);
 
 		players[i]->func->collision_window(players[i]->data,
 						&players[i]->new_velo,
@@ -203,6 +225,15 @@ update_all(void)
 			players[i]->func->collision_object(players[i]->data,
 							balls[j]->data,
 							&players[i]->new_velo);
+	}
+
+	for (int i = 0; balls[i] != NULL; i++) {
+		balls[i]->func->update(balls[i]->data, &balls[i]->new_velo);
+
+		balls[i]->func->collision_window(balls[i]->data,
+						&balls[i]->new_velo,
+						screen_width,
+						screen_height);
 	}
 }
 
@@ -229,7 +260,8 @@ handle_events(void)
 			/* do something */
 			break;
 		case SDL_KEYDOWN:
-			/* do something */
+			for (int i = 0; balls[i] != NULL; i++)
+				tip_start(&balls[i]->new_velo);
 			break;
 		case SDL_KEYUP:
 			/* do something */
@@ -255,7 +287,7 @@ int
 main(void)
 {
 	printf("usage: ./simple tennis                               \n");
-	printf("       somthing like a pong clone                    \n");
+	printf("       something like a pong clone                   \n");
 
 	atexit(cleanup_game);
 
@@ -273,7 +305,14 @@ main(void)
 		frame_start = SDL_GetTicks();
 
 		HANDLE_EVENTS();
-		UPDATE_ALL();
+
+		if (gaming) {
+			UPDATE_ALL();
+		} else {
+			set_position_of_objects();
+			printf("not im gaming mode\n");
+		}
+
 		RENDER_ALL();
 
 		frame_time = SDL_GetTicks() - frame_start;

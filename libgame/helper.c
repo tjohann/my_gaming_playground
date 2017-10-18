@@ -51,7 +51,7 @@ show_object_vals(game_obj_t *obj)
 }
 
 /*
- * --------------------------- "string" stuff ----------------------------------
+ * --------------------------- "string" topics ---------------------------------
  */
 
 LIGGAME_EXPORT char *
@@ -73,4 +73,15 @@ alloc_string(const char *s)
 	strncat(str, s, len);
 
 	return str;
+}
+
+/*
+ * --------------------------- other stuff -------------------------------------
+ */
+
+LIGGAME_EXPORT int
+get_random_value(void)
+{
+	srand(time(NULL));
+	return (2.0 * (random() / (RAND_MAX + 1.0)));
 }

@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <time.h>
 
 /* for libconfig */
 #include <libconfig.h>
@@ -222,11 +223,16 @@ void
 show_object_size_vals(game_obj_data_t *obj);
 
 /*
- * string stuff
+ * string topics
  */
-
 char *
 alloc_string(const char *s);
+
+/*
+ * other topics
+ */
+int
+get_random_value(void);
 
 
 /*
@@ -310,7 +316,6 @@ alloc_game_data_object_from_file(char *filename, int x, int y, int w, int h,
 game_obj_data_t *
 alloc_game_data_object_from_file_simple(char *filename, int x, int y,
 					SDL_Renderer *renderer);
-
 /*
  * free a games data object
  */
@@ -418,7 +423,6 @@ calc_object_surface_pos(game_obj_data_t *obj, int *l, int *r, int *t, int *b);
 void
 collision_window(game_obj_data_t *obj, vector2d_t *velo,
 		const int w, const int h);
-
 /*
  * check if object a and b collide inv velo values
  */
@@ -525,7 +529,6 @@ free_joysticks(SDL_Joystick *joystick_array[]);
 void
 handle_joystick_axis_move(SDL_Event *e, vector2d_t *mov_vec,
 			unsigned char step);
-
 /*
  * handle joystick axis movement
  *
@@ -535,7 +538,6 @@ handle_joystick_axis_move(SDL_Event *e, vector2d_t *mov_vec,
 void
 tip_joystick_axis_move(SDL_Event *e, vector2d_t *mov_vec,
 		unsigned char step);
-
 
 /*
  * handle cursor keys for movement
@@ -558,7 +560,6 @@ tip_keyboard_cursor_move(vector2d_t *mov_vec, unsigned char step);
 void
 handle_keyboard_calc_keys(vector2d_t *mov_vec, unsigned char step);
 
-
 /*
  * get the actual position of the mouse cursor
  */
@@ -570,11 +571,6 @@ void
 get_mouse_position_y(SDL_Event *e, int *pos_y);
 void
 get_mouse_position_x_y(SDL_Event *e, int *pos_x, int *pos_y);
-
-
-/*
- * --------------------------- other topics ------------------------------------
- */
 
 
 #endif
