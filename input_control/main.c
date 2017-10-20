@@ -51,8 +51,7 @@ vector2d_t velo = {.x = 0, .y = 0};
 SDL_Joystick *joystick_array[MAX_NUM_JOYSTICKS + 1];
 
 /* size of window */
-const int SCREEN_WIDTH = 1280;
-const int SCREEN_HEIGHT = 720;
+spread_t screen = { .w = 1280, .h = 720 };
 
 /*
  * do all init stuff
@@ -60,7 +59,7 @@ const int SCREEN_HEIGHT = 720;
 void
 init_game(void)
 {
-	window = setup_main_window(PROGNAME, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+	window = setup_main_window(PROGNAME, &screen, 0);
 	if (window == NULL)
 		exit(EXIT_FAILURE);
 
@@ -90,7 +89,7 @@ init_game_objects(void)
 		exit(EXIT_FAILURE);
 
 	/* static object */
-	game_obj_data_t *t = alloc_game_data_object(SCREEN_WIDTH/2, SCREEN_HEIGHT/2,
+	game_obj_data_t *t = alloc_game_data_object(screen.w/2, screen.h/2,
 						50, 60, texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
@@ -132,16 +131,16 @@ void
 update_all(void)
 {
 	int x = get_object_pos_x(player);
-	if (x > SCREEN_WIDTH)
+	if (x > screen.w)
 		set_object_pos_x(player, 0);
 	else if (x == 0)
-		set_object_pos_x(player, SCREEN_WIDTH);
+		set_object_pos_x(player, screen.w);
 
 	int y = get_object_pos_y(player);
-	if (y > SCREEN_HEIGHT)
+	if (y > screen.h)
 		set_object_pos_y(player, 0);
 	else if (y == 0)
-		set_object_pos_y(player, SCREEN_HEIGHT);
+		set_object_pos_y(player, screen.h);
 
 	set_object_velo(player, &velo);
 }

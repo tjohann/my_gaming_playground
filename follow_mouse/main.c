@@ -47,8 +47,7 @@ game_obj_data_t *player;
 vector2d_t velo = {.x = 0, .y = 0};
 
 /* size of window */
-const uint32_t SCREEN_WIDTH = 1280;
-const uint32_t SCREEN_HEIGHT = 720;
+spread_t screen = { .w = 1280, .h = 720 };
 
 /*
  * do all init stuff
@@ -56,7 +55,7 @@ const uint32_t SCREEN_HEIGHT = 720;
 void
 init_game(void)
 {
-	window = setup_main_window(PROGNAME, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+	window = setup_main_window(PROGNAME, &screen, 0);
 	if (window == NULL)
 		exit(EXIT_FAILURE);
 
@@ -118,17 +117,17 @@ render_window(void)
 void
 update_all(void)
 {
-	uint32_t x = get_object_pos_x(player);
-	if (x > SCREEN_WIDTH)
+	int x = get_object_pos_x(player);
+	if (x > screen.w)
 		set_object_pos_x(player, 0);
 	else if (x == 0)
-		set_object_pos_x(player, SCREEN_WIDTH);
+		set_object_pos_x(player, screen.w);
 
-	uint32_t y = get_object_pos_y(player);
-	if (y > SCREEN_HEIGHT)
+	int y = get_object_pos_y(player);
+	if (y > screen.h)
 		set_object_pos_y(player, 0);
 	else if (y == 0)
-		set_object_pos_y(player, SCREEN_HEIGHT);
+		set_object_pos_y(player, screen.h);
 
 	set_object_velo(player, &velo);
 }

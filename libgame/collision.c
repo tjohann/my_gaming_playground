@@ -21,18 +21,104 @@
 #include "libgame_private.h"
 
 
+/*
+ * --------------------------- with window -------------------------------------
+ */
+
 LIGGAME_EXPORT void
-collision_window(game_obj_data_t *obj, vector2d_t *velo,
-		const int w, const int h)
+collision_window(game_obj_data_t *obj, vector2d_t *velo, spread_t *size)
 {
 	int x = get_object_pos_x(obj);
-	if (x > (w - get_object_size_w(obj)) || x < 0)
+	if (x > (size->w - get_object_size_w(obj)) || x < 0)
 		inv_vec_x(velo);
 
 	int y = get_object_pos_y(obj);
-	if (y > (h - get_object_size_h(obj)) || y < 0)
+	if (y > (size->h - get_object_size_h(obj)) || y < 0)
 		inv_vec_y(velo);
 }
+
+LIGGAME_EXPORT bool
+detect_collision_window(game_obj_data_t *obj, spread_t *size)
+{
+	int x = get_object_pos_x(obj);
+	if (x > (size->w - get_object_size_w(obj)) || x < 0)
+		return true;
+
+	int y = get_object_pos_y(obj);
+	if (y > (size->h - get_object_size_h(obj)) || y < 0)
+		return true;
+
+	return false;
+}
+
+LIGGAME_EXPORT bool
+detect_collision_window_left_right(game_obj_data_t *obj, spread_t *size)
+{
+	int x = get_object_pos_x(obj);
+	if (x > (size->w - get_object_size_w(obj)) || x < 0)
+		return true;
+
+	return false;
+}
+
+LIGGAME_EXPORT bool
+detect_collision_window_left(game_obj_data_t *obj, spread_t *size)
+{
+	(void) size;
+
+	int x = get_object_pos_x(obj);
+	if (x < 0)
+		return true;
+
+	return false;
+}
+
+LIGGAME_EXPORT bool
+detect_collision_window_right(game_obj_data_t *obj, spread_t *size)
+{
+	int x = get_object_pos_x(obj);
+	if (x > (size->w - get_object_size_w(obj)))
+		return true;
+
+	return false;
+}
+
+LIGGAME_EXPORT bool
+detect_collision_window_top_bottom(game_obj_data_t *obj, spread_t *size)
+{
+	int y = get_object_pos_y(obj);
+	if (y > (size->h - get_object_size_h(obj)) || y < 0)
+		return true;
+
+	return false;
+}
+
+LIGGAME_EXPORT bool
+detect_collision_window_top(game_obj_data_t *obj, spread_t *size)
+{
+	(void) size;
+
+	int y = get_object_pos_y(obj);
+	if (y < 0)
+		return true;
+
+	return false;
+}
+
+LIGGAME_EXPORT bool
+detect_collision_window_bottom(game_obj_data_t *obj, spread_t *size)
+{
+	int y = get_object_pos_y(obj);
+	if (y > (size->h - get_object_size_h(obj)))
+		return true;
+
+	return false;
+}
+
+
+/*
+ * --------------------------- with objects ------------------------------------
+ */
 
 LIGGAME_EXPORT void
 collision_object(game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo)

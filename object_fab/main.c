@@ -41,8 +41,7 @@ char *config_file = "object_fab.conf";
 SDL_Window   *window;
 SDL_Renderer *renderer;
 
-int screen_width;
-int screen_height;
+spread_t screen;
 
 game_texture_t *texture_array;
 
@@ -67,8 +66,7 @@ init_game(void)
 		exit(EXIT_FAILURE);
 
 	/* setup main window */
-	window = setup_main_window_via_config(&cfg, 0,
-					&screen_width, &screen_height);
+	window = setup_main_window_via_config(&cfg, 0, &screen);
 	if (window == NULL)
 		exit(EXIT_FAILURE);
 
@@ -164,9 +162,7 @@ update_all(void)
 		players[i]->func->update(players[i]->data, &
 					players[i]->new_velo);
 		players[i]->func->collision_window(players[i]->data,
-						&players[i]->new_velo,
-						screen_width,
-						screen_height);
+						&players[i]->new_velo, &screen);
 
 		for (int j = 0; static_objs[j] != NULL; j++)
 			players[i]->func->collision_object(players[i]->data,

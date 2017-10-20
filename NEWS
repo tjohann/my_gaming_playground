@@ -3,6 +3,10 @@
 #
 
 
+2017-10-19 -> do some rework around the detection functions
+	      add some more simple detection functions
+	      do some rework regarding setup_main_window
+
 2017-10-18 -> some first step towards simple_tennis
 
 2017-10-17 -> add pixel-objects for simple_tennis example

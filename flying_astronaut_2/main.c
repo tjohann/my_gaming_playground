@@ -59,9 +59,7 @@ game_obj_t *static_obj_array[MAX_NUM_OBJ + 1];
 SDL_Joystick *joystick_array[MAX_NUM_JOYSTICKS + 1];
 
 /* size of window */
-const int SCREEN_WIDTH = 1280;
-const int SCREEN_HEIGHT = 720;
-
+spread_t screen = { .w = 1280, .h = 720 };
 
 /*
  * do all init stuff
@@ -69,7 +67,7 @@ const int SCREEN_HEIGHT = 720;
 void
 init_game(void)
 {
-	window = setup_main_window(PROGNAME, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+	window = setup_main_window(PROGNAME, &screen, 0);
 	if (window == NULL)
 		exit(EXIT_FAILURE);
 
@@ -99,7 +97,7 @@ init_game_objects(void)
 		exit(EXIT_FAILURE);
 
 	/* player object */
-	game_obj_t *t = alloc_game_object_simple("player", 0, SCREEN_HEIGHT/2,
+	game_obj_t *t = alloc_game_object_simple("player", 0, screen.h/2,
 						texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
@@ -112,7 +110,7 @@ init_game_objects(void)
 		exit(EXIT_FAILURE);
 
 	t = alloc_game_object_simple("first-object",
-				SCREEN_WIDTH/6, SCREEN_HEIGHT/6,
+				screen.w/6, screen.h/6,
 				texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
@@ -120,7 +118,7 @@ init_game_objects(void)
 		static_obj_array[0] = t;
 
 	t = alloc_game_object_simple("another-object",
-				SCREEN_WIDTH/2, SCREEN_HEIGHT/3,
+				screen.w/2, screen.h/3,
 				texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
@@ -128,7 +126,7 @@ init_game_objects(void)
 		static_obj_array[1] = t;
 
 	t = alloc_game_object_simple("another-object",
-				SCREEN_WIDTH/5, SCREEN_HEIGHT/2,
+				screen.w/5, screen.h/2,
 				texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
@@ -136,7 +134,7 @@ init_game_objects(void)
 		static_obj_array[2] = t;
 
 	t = alloc_game_object_simple("another-object",
-				SCREEN_WIDTH/3, SCREEN_HEIGHT/4,
+				screen.w/3, screen.h/4,
 				texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
@@ -145,7 +143,7 @@ init_game_objects(void)
 
 	/* the next 2 should still be within the screen size */
 	t = alloc_game_object_simple("another-object",
-				SCREEN_WIDTH - 200, SCREEN_HEIGHT - 100,
+				screen.w - 200, screen.h - 100,
 				texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
@@ -153,7 +151,7 @@ init_game_objects(void)
 		static_obj_array[4] = t;
 
 	t = alloc_game_object_simple("another-object",
-				SCREEN_WIDTH - 100, SCREEN_HEIGHT - 400,
+				screen.w - 100, screen.h - 400,
 				texture);
 	if (t == NULL)
 		exit(EXIT_FAILURE);
@@ -202,8 +200,7 @@ void
 update_all(void)
 {
 	player->func->update(player->data, &velo);
-	player->func->collision_window(player->data, &velo,
-				SCREEN_WIDTH, SCREEN_HEIGHT);
+	player->func->collision_window(player->data, &velo, &screen);
 
 	for (int i = 0; static_obj_array[i] != NULL; i++)
 		player->func->collision_object(player->data,

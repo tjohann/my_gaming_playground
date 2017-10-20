@@ -56,8 +56,7 @@ char *config_file = "simple_tennis.conf";
 SDL_Window   *window;
 SDL_Renderer *renderer;
 
-int screen_width;
-int screen_height;
+spread_t screen;
 
 game_texture_t *texture_array;
 game_joystick_t *joystick_array;
@@ -78,8 +77,7 @@ init_game(void)
 		exit(EXIT_FAILURE);
 
 	/* setup main window */
-	window = setup_main_window_via_config(&cfg, 0,
-					&screen_width, &screen_height);
+	window = setup_main_window_via_config(&cfg, 0, &screen);
 	if (window == NULL)
 		exit(EXIT_FAILURE);
 
@@ -126,23 +124,23 @@ init_game(void)
 void
 set_position_of_objects(void)
 {
-	int space_x = screen_width * 15 / 100;
+	int space_x = screen.w * 15 / 100;
 	int space_y = get_object_size_h(players[1]->data) / 2;
 
 	/* the left player */
-	vector2d_t tmp = { .x = space_x, .y = (screen_height / 2) - space_y};
+	vector2d_t tmp = { .x = space_x, .y = (screen.h / 2) - space_y};
 	set_object_pos(players[0]->data, &tmp);
 
 	/* the right player */
 	space_x += get_object_size_w(players[1]->data);
-	tmp.x = screen_width - space_x;
-	tmp.y = (screen_height / 2) - space_y;
+	tmp.x = screen.w - space_x;
+	tmp.y = (screen.h / 2) - space_y;
 	set_object_pos(players[1]->data, &tmp);
 
 	/* the ball */
 	space_x = space_y = get_object_size_w(balls[0]->data);
-	tmp.x = (screen_width / 2) - space_x;
-	tmp.y = (screen_height / 2) - space_y;
+	tmp.x = (screen.w / 2) - space_x;
+	tmp.y = (screen.h / 2) - space_y;
 	set_object_pos(balls[0]->data, &tmp);
 }
 
@@ -217,9 +215,7 @@ update_all(void)
 					&players[i]->new_velo);
 
 		players[i]->func->collision_window(players[i]->data,
-						&players[i]->new_velo,
-						screen_width,
-						screen_height);
+						&players[i]->new_velo, &screen);
 
 		for (int j = 0; balls[j] != NULL; j++)
 			players[i]->func->collision_object(players[i]->data,
@@ -231,9 +227,7 @@ update_all(void)
 		balls[i]->func->update(balls[i]->data, &balls[i]->new_velo);
 
 		balls[i]->func->collision_window(balls[i]->data,
-						&balls[i]->new_velo,
-						screen_width,
-						screen_height);
+						&balls[i]->new_velo, &screen);
 	}
 }
 

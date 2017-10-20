@@ -22,8 +22,7 @@
 
 
 LIGGAME_EXPORT SDL_Window *
-setup_main_window(const char *name, uint32_t size_x, uint32_t size_y,
-		unsigned char flags)
+setup_main_window(const char *name, spread_t *screen, unsigned char flags)
 {
 	int err = SDL_Init(SDL_INIT_EVERYTHING);
 	if (err < 0)
@@ -39,10 +38,10 @@ setup_main_window(const char *name, uint32_t size_x, uint32_t size_y,
 		flags = SDL_WINDOW_SHOWN;
 	}
 	SDL_Window *window = SDL_CreateWindow(name,
-					      SDL_WINDOWPOS_CENTERED,
-					      SDL_WINDOWPOS_CENTERED,
-					      size_x, size_y,
-					      flags);
+					SDL_WINDOWPOS_CENTERED,
+					SDL_WINDOWPOS_CENTERED,
+					screen->w, screen->h,
+					flags);
 	if (window == NULL)
 		err_sdl_and_ret("could not create main window", NULL);
 

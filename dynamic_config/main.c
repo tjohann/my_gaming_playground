@@ -45,8 +45,7 @@ game_texture_t *texture_array;      /* all textures       */
 SDL_Window   *window;
 SDL_Renderer *renderer;
 
-int screen_width;
-int screen_height;
+spread_t screen;
 
 /* all joysticks */
 #define MAX_NUM_JOYSTICKS 1
@@ -65,8 +64,7 @@ init_game(void)
 		exit(EXIT_FAILURE);
 
 	/* setup main window */
-	window = setup_main_window_via_config(&cfg, 0,
-					&screen_width, &screen_height);
+	window = setup_main_window_via_config(&cfg, 0, &screen);
 	if (window == NULL)
 		exit(EXIT_FAILURE);
 
@@ -146,8 +144,7 @@ void
 update_all(void)
 {
 	player->func->update(player->data, &player->new_velo);
-	player->func->collision_window(player->data, &player->new_velo,
-				screen_width, screen_height);
+	player->func->collision_window(player->data, &player->new_velo, &screen);
 
 	for (int i = 0; static_obj_array[i] != NULL; i++)
 		player->func->collision_object(player->data,

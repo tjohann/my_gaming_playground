@@ -75,7 +75,7 @@ typedef struct {
 typedef void (*draw_func) (game_obj_data_t *t, SDL_Renderer *renderer);
 typedef void (*update_func) (game_obj_data_t *t, vector2d_t *velo);
 typedef void (*collision_window_func) (game_obj_data_t *t, vector2d_t *velo,
-				const int w, const int h);
+				spread_t *size);
 typedef void (*collision_object_func) (game_obj_data_t *a, game_obj_data_t *b,
 				vector2d_t *velo);
 typedef bool (*detect_collision_object_func) (game_obj_data_t *a,
@@ -130,8 +130,7 @@ typedef struct {
 	SDL_Window   *window;
 	SDL_Renderer *renderer;
 
-	int screen_width;
-	int screen_height;
+	spread_t screen;                    /* screen size               */
 
 	game_texture_t  *texture_array;     /* all used textures         */
 	game_joystick_t *joystick_array;    /* all used joysticks        */
@@ -178,7 +177,7 @@ open_config(char *file, char *name, config_t *cfg);
 /* setup main window ... via configuration file */
 SDL_Window *
 setup_main_window_via_config(config_t *cfg, unsigned char flags,
-			int *screen_width, int *screen_height);
+			spread_t *screen);
 
 /* setup renderer via configuration file */
 SDL_Renderer *
@@ -243,8 +242,7 @@ get_random_value(void);
  * setup main window
  */
 SDL_Window *
-setup_main_window(const char *name, uint32_t size_x, uint32_t size_y,
-		unsigned char flags);
+setup_main_window(const char *name, spread_t *screen, unsigned char flags);
 
 /*
  * setup renderer
@@ -418,22 +416,32 @@ calc_object_surface_pos(game_obj_data_t *obj, int *l, int *r, int *t, int *b);
  */
 
 /*
- * check if pos is out of w/h and inv velo values
+ * handle collision with objects/window
  */
 void
-collision_window(game_obj_data_t *obj, vector2d_t *velo,
-		const int w, const int h);
-/*
- * check if object a and b collide inv velo values
- */
+collision_window(game_obj_data_t *obj, vector2d_t *velo, spread_t *size);
 void
 collision_object(game_obj_data_t *a, game_obj_data_t *b, vector2d_t *velo);
 
 /*
- * check if object a and b collide
+ * check collision with objects/window/window_sides
  */
 bool
 detect_collision_object(game_obj_data_t *a, game_obj_data_t *b);
+bool
+detect_collision_window(game_obj_data_t *obj, spread_t *size);
+bool
+detect_collision_window_left_right(game_obj_data_t *obj, spread_t *size);
+bool
+detect_collision_window_left(game_obj_data_t *obj, spread_t *size);
+bool
+detect_collision_window_right(game_obj_data_t *obj, spread_t *size);
+bool
+detect_collision_window_top_bottom(game_obj_data_t *obj, spread_t *size);
+bool
+detect_collision_window_top(game_obj_data_t *obj, spread_t *size);
+bool
+detect_collision_window_bottom(game_obj_data_t *obj, spread_t *size);
 
 
 /*

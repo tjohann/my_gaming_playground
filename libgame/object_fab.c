@@ -133,7 +133,7 @@ error:
 
 LIGGAME_EXPORT SDL_Window *
 setup_main_window_via_config(config_t *cfg, unsigned char flags,
-			int *screen_width, int *screen_height)
+			spread_t *screen)
 {
 	const char *str;
 	int w = 0, h = 0;
@@ -151,12 +151,10 @@ setup_main_window_via_config(config_t *cfg, unsigned char flags,
 		return NULL;
 	}
 
-	if (screen_width != NULL)
-		*screen_width = w;
-	if (screen_height != NULL)
-		*screen_height = h;
+	screen->w = w;
+	screen->h = h;
 
-	return setup_main_window(str, w, h, flags);
+	return setup_main_window(str, screen, flags);
 }
 
 LIGGAME_EXPORT SDL_Renderer *
@@ -370,8 +368,7 @@ init_game_via_config(game_t *game, unsigned char flags)
 		exit(EXIT_FAILURE);
 
 	/* setup main window */
-	game->window = setup_main_window_via_config(&cfg, 0,
-						&game->screen_width, &game->screen_height);
+	game->window = setup_main_window_via_config(&cfg, 0, &game->screen);
 	if (game->window == NULL)
 		err_and_ret("could not setup main window", -1);
 

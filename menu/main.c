@@ -43,8 +43,7 @@ SDL_Renderer *renderer;
 SDL_Joystick *joystick_array[MAX_NUM_JOYSTICKS + 1];
 
 /* size of window */
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
+spread_t screen = { .w = 800, .h = 600 };
 
 /* the global state -> true still running, false quit */
 bool running = false;
@@ -56,7 +55,7 @@ bool running = false;
 void
 init_menu(void)
 {
-	window = setup_main_window(PROGNAME, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+	window = setup_main_window(PROGNAME, &screen, 0);
 	if (window == NULL)
 		exit(EXIT_FAILURE);
 

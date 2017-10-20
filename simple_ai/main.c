@@ -54,8 +54,7 @@ char *config_file = "simple_ai.conf";
 SDL_Window   *window;
 SDL_Renderer *renderer;
 
-int screen_width;
-int screen_height;
+spread_t screen;
 
 game_texture_t *texture_array;
 game_joystick_t *joystick_array;
@@ -83,8 +82,7 @@ init_game(void)
 
 	window = game.window;
 	renderer = game.renderer;
-	screen_width = game.screen_width;
-	screen_height = game.screen_height;
+	screen = game.screen;   /* flat copy */
 
 	texture_array = game.texture_array;
 	joystick_array = game.joystick_array;
@@ -151,9 +149,7 @@ update_all(void)
 					players[i]->new_velo);
 
 		players[i]->func->collision_window(players[i]->data,
-						&players[i]->new_velo,
-						screen_width,
-						screen_height);
+						&players[i]->new_velo, &screen);
 
 		for (int j = 0; static_objs[j] != NULL; j++)
 			players[i]->func->collision_object(players[i]->data,
