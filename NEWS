@@ -2,6 +2,9 @@
 # some news ... see also TODO for hints
 #
 
+2017-11-01 -> add some more pixel-art
+	      - flask for heal and mana
+	      - heart pack
 
 2017-10-19 -> do some rework around the detection functions
 	      add some more simple detection functions
