@@ -17,42 +17,36 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-#include "libgame.h"
-#include "libgame_private.h"
+#ifndef _LIBGAME_PRIVATE_H_
+#define _LIBGAME_PRIVATE_H_
+
+#define LIGGAME_EXPORT __attribute__ ((visibility ("default")))
+#define LIGGAME_LOCAL __attribute__ ((visibility ("hidden")))
+
+#define err_sdl_and_ret(err_txt, ret_val) do {			\
+		fprintf(stderr, err_txt " (%s)\n",		\
+			SDL_GetError());			\
+		return ret_val;					\
+	}							\
+	while(0)
+
+#define err_and_ret(err_txt, ret_val) do {			\
+		fprintf(stderr, err_txt "\n");			\
+		return ret_val;					\
+	}							\
+	while(0)
 
 
 /*
- * --------------------------- "string" topics ---------------------------------
+ * draw a texture
  */
-
-LIGGAME_EXPORT char *
-alloc_string(const char *s)
-{
-	char *str = NULL;
-	size_t len = 0;
-
-	if (s == NULL)
-		return NULL;
-
-	len = strlen(s) + 1;
-
-	str = malloc(len);
-	if (str == NULL)
-		return NULL;
-
-	memset(str, 0, len);
-	strncat(str, s, len);
-
-	return str;
-}
+LIGGAME_LOCAL void
+draw_texture(game_obj_data_t *obj, SDL_Renderer *renderer);
 
 /*
- * --------------------------- other stuff -------------------------------------
+ * draw a frame (sprite sheet)
  */
+LIGGAME_LOCAL void
+draw_frame_texture(game_obj_data_t *obj, SDL_Renderer *renderer);
 
-LIGGAME_EXPORT int
-get_random_value(void)
-{
-	srand(time(NULL));
-	return (2.0 * (random() / (RAND_MAX + 1.0)));
-}
+#endif

@@ -37,16 +37,6 @@
 	while(0)
 
 
-/*
- * draw a texture
- */
-LIGGAME_LOCAL void
-draw_texture(game_obj_data_t *obj, SDL_Renderer *renderer);
 
-/*
- * draw a frame (sprite sheet)
- */
-LIGGAME_LOCAL void
-draw_frame_texture(game_obj_data_t *obj, SDL_Renderer *renderer);
 
 #endif
