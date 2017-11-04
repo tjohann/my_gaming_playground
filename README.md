@@ -132,9 +132,13 @@ joystick_fab:
 
 	- similar to object_fab with joystick handling via config file
 
-simple_ai:
+simple_ai (state: open):
 
 	- similiar to the joystick_fab, but with moving ememies
+
+object_fab_2:
+
+	- allow more configuration of objects
 
 
 Games
