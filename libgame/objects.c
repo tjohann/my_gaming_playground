@@ -22,7 +22,8 @@
 
 
 LIGGAME_EXPORT game_obj_t *
-alloc_game_object_simple(char *name, int x, int y, SDL_Texture *texture)
+alloc_game_object_simple(char *name, int x, int y, SDL_Texture *texture,
+			unsigned char flags)
 {
 	game_obj_t *t = malloc(sizeof(game_obj_t));
 	if (t == NULL)
@@ -33,7 +34,7 @@ alloc_game_object_simple(char *name, int x, int y, SDL_Texture *texture)
 	if (t == NULL)
 		goto error;
 
-	t->func = alloc_game_func_object_simple();
+	t->func = alloc_game_func_object_simple(flags);
 	if (t == NULL)
 		goto error;
 
@@ -49,7 +50,7 @@ error:
 
 LIGGAME_EXPORT game_obj_t *
 alloc_game_object_from_array(char *name, char *texture_name, int x, int y,
-			game_texture_t a[])
+			game_texture_t a[], unsigned char flags)
 {
 	for (int i = 0; a[i].name != NULL; i++) {
 		if (strlen(texture_name) != strlen(a[i].name))
@@ -58,7 +59,7 @@ alloc_game_object_from_array(char *name, char *texture_name, int x, int y,
 			continue;
 
 		printf("found a[%d].name: %s\n", i, a[i].name);
-		return alloc_game_object_simple(name, x, y, a[i].texture);
+		return alloc_game_object_simple(name, x, y, a[i].texture, flags);
 	}
 
 	eprintf("no texture for for %s found\n", name);
@@ -156,7 +157,7 @@ free_game_data_object(game_obj_data_t *obj)
 }
 
 LIGGAME_EXPORT game_obj_func_t *
-alloc_game_func_object_simple(void)
+alloc_game_func_object_simple(unsigned char flags)
 {
 	game_obj_func_t *t = malloc(sizeof(game_obj_func_t));
 	if (t == NULL)

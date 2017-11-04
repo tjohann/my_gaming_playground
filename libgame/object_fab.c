@@ -20,27 +20,13 @@
 #include "libgame.h"
 #include "libgame_private.h"
 
+#define SECTION_PLAYERS "players"
+#define SECTION_ENEMIES "enemies"
+#define SECTION_OBJECTS "objects"
 
 LIGGAME_EXPORT game_obj_t **
-alloc_player_objects_via_config(config_t *cfg, game_texture_t textures[])
-{
-	return alloc_objects_via_config(cfg, "players", textures);
-}
-
-LIGGAME_EXPORT game_obj_t **
-alloc_static_objects_via_config(config_t *cfg, game_texture_t textures[])
-{
-	return alloc_objects_via_config(cfg, "objects", textures);
-}
-
-LIGGAME_EXPORT game_obj_t **
-alloc_enemie_objects_via_config(config_t *cfg, game_texture_t textures[])
-{
-	return alloc_objects_via_config(cfg, "enemies", textures);
-}
-
-LIGGAME_EXPORT game_obj_t **
-alloc_objects_via_config(config_t *cfg, char *section, game_texture_t textures[])
+alloc_objects_via_config(config_t *cfg,  char *section, game_texture_t textures[],
+			unsigned char flags)
 {
 	const char prefix[] = "config.";
 	size_t len = strlen(section) + strlen(prefix) + 1;
@@ -91,7 +77,7 @@ alloc_objects_via_config(config_t *cfg, char *section, game_texture_t textures[]
 			goto error;
 
 		objs[i] = alloc_game_object_from_array(name_, texture_,
-						x, y, textures);
+						x, y, textures, flags);
 
 		free(name_);
 		free(texture_);
@@ -382,7 +368,8 @@ init_game_via_config(game_t *game, unsigned char flags)
 		err_and_ret("could not alloc textures", -1);
 
 	if (flags & INIT_PLAYERS) {
-		game->players = alloc_player_objects_via_config(&cfg, game->texture_array);
+		game->players = alloc_objects_via_config(&cfg, "players",
+							game->texture_array, flags);
 		if (game->players == NULL)
 			printf("no player objects allocated!\n");
 		else
@@ -392,7 +379,8 @@ init_game_via_config(game_t *game, unsigned char flags)
 	}
 
 	if (flags & INIT_OBJECTS) {
-		game->static_objs = alloc_static_objects_via_config(&cfg, game->texture_array);
+		game->static_objs = alloc_objects_via_config(&cfg, "objects",
+							game->texture_array, flags);
 		if (game->static_objs == NULL)
 			printf("no static objects allocated!\n");
 		else
@@ -402,8 +390,9 @@ init_game_via_config(game_t *game, unsigned char flags)
 		printf("no static objects\n");
 	}
 
-	if (flags & INIT_ENIMIES) {
-		game->enemies = alloc_enemie_objects_via_config(&cfg, game->texture_array);
+	if (flags & INIT_ENEMIES) {
+		game->enemies = alloc_objects_via_config(&cfg, "enemies",
+							game->texture_array, flags);
 		if (game->enemies == NULL)
 			printf("no enemie objects allocated!\n");
 		else

@@ -80,7 +80,8 @@ init_game(void)
 		exit(EXIT_FAILURE);
 
 	/* alloc all player objects */
-	players = alloc_player_objects_via_config(&cfg, texture_array);
+	players = alloc_objects_via_config(&cfg, "players",
+					texture_array, INIT_PLAYERS);
 	if (players == NULL)
 		exit(EXIT_FAILURE);
 
@@ -88,14 +89,16 @@ init_game(void)
 		printf("name %s\n", players[i]->name);
 
 	/* alloc all static objects */
-	static_objs = alloc_static_objects_via_config(&cfg, texture_array);
+	static_objs = alloc_objects_via_config(&cfg, "objects",
+					texture_array, INIT_OBJECTS);
 	if (static_objs == NULL)
 		exit(EXIT_FAILURE);
 
 	for (int i = 0; static_objs[i] != NULL; i++)
 		printf("name %s\n", static_objs[i]->name);
 
-	enemies = alloc_enemie_objects_via_config(&cfg, texture_array);
+	enemies = alloc_objects_via_config(&cfg, "enemies",
+					texture_array, INIT_ENEMIES);
 	if (enemies == NULL)
 		exit(EXIT_FAILURE);
 

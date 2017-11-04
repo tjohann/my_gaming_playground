@@ -121,7 +121,7 @@ typedef struct {
 /* the flags for init_game_via_config */
 #define INIT_PLAYERS 0x01
 #define INIT_OBJECTS 0x02
-#define INIT_ENIMIES 0x04
+#define INIT_ENEMIES 0x04
 /* simple game struct */
 typedef struct {
 	char *progname;
@@ -158,17 +158,7 @@ init_game_via_config(game_t *game, unsigned char flags);
  */
 game_obj_t **
 alloc_objects_via_config(config_t *cfg, char *section,
-			game_texture_t textures[]);
-
-game_obj_t **
-alloc_player_objects_via_config(config_t *cfg, game_texture_t textures[]);
-
-game_obj_t **
-alloc_static_objects_via_config(config_t *cfg, game_texture_t textures[]);
-
-game_obj_t **
-alloc_enemie_objects_via_config(config_t *cfg, game_texture_t textures[]);
-
+			game_texture_t textures[], unsigned char flags);
 
 /* read config and check if its for this game */
 int
@@ -286,11 +276,12 @@ clear_texture_array(game_texture_t array[]);
 
 /* ... use texture size */
 game_obj_t *
-alloc_game_object_simple(char *name, int x, int y, SDL_Texture *texture);
+alloc_game_object_simple(char *name, int x, int y, SDL_Texture *texture,
+			unsigned char flags);
 /* ... from texture array */
 game_obj_t *
 alloc_game_object_from_array(char *name, char *texture_name, int x, int y,
-			game_texture_t a[]);
+			game_texture_t a[], unsigned char flags);
 
 /*
  * free a game data object
@@ -324,7 +315,7 @@ free_game_data_object(game_obj_data_t *obj);
  *  a games func object
  */
 game_obj_func_t *
-alloc_game_func_object_simple(void);
+alloc_game_func_object_simple(unsigned char flags);
 
 /*
  * free a games func object

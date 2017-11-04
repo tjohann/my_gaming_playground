@@ -91,7 +91,7 @@ init_game(void)
 		exit(EXIT_FAILURE);
 
 	/* alloc the two player objects */
-	players = alloc_player_objects_via_config(&cfg, texture_array);
+	players = alloc_objects_via_config(&cfg, "players", texture_array, INIT_PLAYERS);
 	if (players == NULL)
 		exit(EXIT_FAILURE);
 
@@ -99,7 +99,7 @@ init_game(void)
 		printf("name of player %s\n", players[i]->name);
 
 	/* alloc the ball objects */
-	balls = alloc_static_objects_via_config(&cfg, texture_array);
+	balls = alloc_objects_via_config(&cfg, "objects", texture_array, INIT_OBJECTS);
 	if (balls == NULL)
 		exit(EXIT_FAILURE);
 

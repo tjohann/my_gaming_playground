@@ -5,6 +5,7 @@
 
 2017-11-04 -> add skeleton for another object fab which shows the new additional
 	      configuration features
+	   -> some cleanups
 
 2017-11-01 -> add some more pixel-art
 	      - flask for heal and mana
