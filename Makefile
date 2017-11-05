@@ -1,7 +1,7 @@
 # only for cleaning
 
 LIB = libgame
-MODULES = $(shell ls -d */ | cut -f1 -d'/')
+MODULES = simple_ai
 
 all:
 	for dir in $(LIB); do (cd $$dir && $(MAKE)); done
