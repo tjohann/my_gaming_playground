@@ -60,10 +60,20 @@ typedef struct {
 
 /* object specific data */
 typedef struct {
-	vector2d_t *pos;   /* pointer to game_obj_t->pos */
-	vector2d_t velo;
-	vector2d_t accel;
+	vector2d_t  pos;
+	spread_t    size;
+
+	vector2d_t  velo;
+
+	signed char frame;      /* num frame of sprite sheet */
+	/* TODO: orientation -> float ... */
 } game_obj_data_t;
+
+/* steering output */
+typedef struct {
+	vector2d_t linear;
+	float      angular;
+} game_obj_steering_t;
 
 /* the member functions */
 typedef void (*draw_func) (game_obj_data_t *t, SDL_Renderer *renderer);
@@ -88,19 +98,17 @@ typedef struct {
 	char                         *name;
 	SDL_Texture                  *texture;
 
-	vector2d_t                   pos;
-	spread_t                     size;
-	signed char                  frame;      /* num frame of sprite sheet */
-	SDL_RendererFlip             flip;
-
 	game_obj_data_t              *act_data;
 	game_obj_data_t              *update_data;
+
+	game_obj_steering_t          *steering;
 
 	game_obj_func_t              *func;  /* only needed for mobile objects */
 	draw_func                    draw;
 	update_func                  update;
 	detect_collision_object_func detect_collision_object;
 	collision_object_func        collision_object;
+
 } game_obj_t;
 
 
