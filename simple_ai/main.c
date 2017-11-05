@@ -19,84 +19,39 @@
 
 #include <libgame.h>
 
-#define RENDER_ALL() do {			\
-		render_window();		\
-	} while (0)
-
-#define HANDLE_EVENTS() do {			\
-		handle_events();		\
-	} while (0)
-
-#define UPDATE_ALL() do {			\
-		update_all();			\
-	} while (0)
-
-
 /* the global state -> true still running, false quit */
 bool running = false;
 
-char *progname = "simple_ai";
-char *config_file = "simple_ai.conf";
+game_t game = {
+	.name = "simple_ai",
+	.config = "simple_ai.conf"
+};
 
-SDL_Window   *window;
-SDL_Renderer *renderer;
-
-spread_t screen;
-
-game_texture_t *texture_array;
-game_joystick_t *joystick_array;
-
-game_obj_t **players;               /* the player parts          */
-game_obj_t **static_objs;           /* the fixed objects         */
-game_obj_t **enemies;               /* the enemies flying around */
-
-
-/*
- * do all init stuff
- */
 void
-init_game(void)
+cleanup_all(void)
 {
-	/* do something */
+	cleanup_game(&game);
 }
 
-/*
- * cleanup all create objects
- */
 void
-cleanup_game(void)
+render_all(void)
 {
-	printf("cleanup the game\n");
-}
-
-/*
- * render all parts
- */
-void
-render_window(void)
-{
-	int err = SDL_RenderClear(renderer);
+	int err = SDL_RenderClear(game.renderer);
 	if (err < 0)
 		fprintf(stderr, "could not set clear rendering target (%s)\n",
 			SDL_GetError());
 
         /* do something */
 
-	SDL_RenderPresent(renderer);
+	SDL_RenderPresent(game.renderer);
 }
 
-/*
- *  update all needed stuff
- */
 void
 update_all(void)
 {
-        /* do something */
+        printf("%s\n", __FUNCTION__);
 }
 
-/*
- *  handle supported events
- */
 void
 handle_events(void)
 {
@@ -142,27 +97,24 @@ handle_events(void)
 int
 main(void)
 {
-	printf("usage: ./handle_ai                                   \n");
-	printf("       use the joystick to move the astronauts around\n");
-	printf("       the static objects redirect your movement     \n");
-	printf("       a collision with the enemies will be shown    \n");
+	if (init_game(&game) == -1)
+		exit(EXIT_FAILURE);
 
-	atexit(cleanup_game);
-	init_game();
+	atexit(cleanup_all);
 
         /* init done */
 	running = true;
 
 	uint32_t frame_start, frame_time;
-	unsigned char local_fps =  FPS + 1; /* the first run never fits */
+	unsigned char local_fps =  FPS + 1;
 	uint32_t delay_time = 1000.0f / local_fps;
 
 	while (running) {
 		frame_start = SDL_GetTicks();
 
-		HANDLE_EVENTS();
-		UPDATE_ALL();
-		RENDER_ALL();
+		handle_events();
+		update_all();
+		render_all();
 
 		frame_time = SDL_GetTicks() - frame_start;
 

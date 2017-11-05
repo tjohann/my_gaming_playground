@@ -21,3 +21,164 @@
 #include "libgame_private.h"
 
 
+LIGGAME_LOCAL SDL_Window *
+setup_window(const char *name, spread_t *screen, unsigned int flags)
+{
+	/*
+	  Taken from SDL documentation of SDL_CreateWindow()
+
+	  flags:
+
+	  SDL_WINDOW_FULLSCREEN         -> fullscreen window
+	  SDL_WINDOW_FULLSCREEN_DESKTOP -> fullscreen window at the current
+	                                   desktop resolution
+	  SDL_WINDOW_OPENGL             -> window usable with OpenGL context
+	  SDL_WINDOW_HIDDEN             -> window is not visible
+	  SDL_WINDOW_BORDERLESS         -> no window decoration
+	  SDL_WINDOW_RESIZABLE          -> window can be resized
+	  SDL_WINDOW_MINIMIZED          -> window is minimized
+	  SDL_WINDOW_MAXIMIZED          -> window is maximized
+	  SDL_WINDOW_INPUT_GRABBED      -> window has grabbed input focus
+	  SDL_WINDOW_ALLOW_HIGHDPI      -> window should be created in high-DPI
+	                                   mode if supported (>= SDL 2.0.1)
+	 */
+	int err = SDL_Init(SDL_INIT_EVERYTHING);
+	if (err < 0)
+		err_sdl_and_ret("could not init SDL", NULL);
+
+	SDL_Window *w = SDL_CreateWindow(name,
+					SDL_WINDOWPOS_CENTERED,
+					SDL_WINDOWPOS_CENTERED,
+					screen->w, screen->h,
+					flags);
+	if (w == NULL)
+		err_sdl_and_ret("could not create main window", NULL);
+
+	return w;
+}
+
+LIGGAME_LOCAL SDL_Renderer *
+setup_renderer(SDL_Window *w, color_t *b, unsigned int flags)
+{
+        /*
+	  Taken from SDL documentation of SDL_CreateRenderer()
+
+	  possible flags:
+
+	  SDL_RENDERER_SOFTWARE      -> the renderer is a software fallback
+	  SDL_RENDERER_ACCELERATED   -> the renderer uses hardware acceleration
+	  SDL_RENDERER_PRESENTVSYNC  -> present is synchronized with the refresh
+	                                rate
+	  SDL_RENDERER_TARGETTEXTURE -> the renderer supports rendering to
+	                                texture
+	 */
+
+	SDL_Renderer *r = SDL_CreateRenderer(w, -1, flags);
+	if (r == NULL)
+		err_sdl_and_ret("could not create renderer", NULL);
+
+	int err = -1;
+	if (b == NULL)
+		err = SDL_SetRenderDrawColor(r, 0, 150, 0, 255);
+	else
+		err = SDL_SetRenderDrawColor(r, b->r, b->g, b->b, b->a);
+
+	if (err < 0)
+		err_sdl_and_ret("could not set color", NULL);
+
+	return r;
+}
+
+LIGGAME_LOCAL void
+cleanup_window(SDL_Window *w, SDL_Renderer *r)
+{
+	printf("cleanup all SDL related stuff\n");
+
+	if (r != NULL)
+		SDL_DestroyRenderer(r);
+	else
+		printf("renderer == NULL\n");
+
+	if (w != NULL)
+		SDL_DestroyWindow(w);
+	else
+		printf("window == NULL\n");
+
+	SDL_Quit();
+}
+
+/*
+ * --------------------------- config related ----------------------------------
+ */
+
+LIGGAME_LOCAL SDL_Window *
+setup_window_via_config(config_t *cfg, spread_t *screen)
+{
+	const char *str;
+	int w = 0, h = 0;
+
+	if (!config_lookup_string(cfg, "config.window.title", &str)) {
+		eprintf("config.window.title not available\n");
+		return NULL;
+	}
+	if (!config_lookup_int(cfg, "config.window.size.w", &w)) {
+		eprintf("config.window.size.w not available\n");
+		return NULL;
+	}
+	if (!config_lookup_int(cfg, "config.window.size.h", &h)) {
+		eprintf("config.window.size.h not available\n");
+		return NULL;
+	}
+
+	screen->w = w;
+	screen->h = h;
+
+	/*
+	 * TODO: handle flags from configuration or set defaults
+	 */
+	unsigned int flags = 0;
+	flags |= SDL_WINDOW_SHOWN;
+
+	return setup_window(str, screen, flags);
+}
+
+LIGGAME_LOCAL SDL_Renderer *
+setup_renderer_via_config(config_t *cfg, SDL_Window *w)
+{
+	color_t b;
+	memset(&b, 0, sizeof(b));
+
+	int tmp = 0;
+
+	if (!config_lookup_int(cfg, "config.window.background.r", &tmp)) {
+		eprintf("config.window.background.r not available\n");
+		return NULL;
+	}
+	b.r = tmp;
+
+	if (!config_lookup_int(cfg, "config.window.background.g", &tmp)) {
+		eprintf("config.window.background.g not available\n");
+		return NULL;
+	}
+	b.g = tmp;
+
+	if (!config_lookup_int(cfg, "config.window.background.b", &tmp)) {
+		eprintf("config.window.background.b not available\n");
+		return NULL;
+	}
+	b.b = tmp;
+
+	if (!config_lookup_int(cfg, "config.window.background.a", &tmp)) {
+		eprintf("config.window.background.a not available\n");
+		return NULL;
+	}
+	b.a = tmp;
+
+	/*
+	 * TODO: handle flags from configuration or set defaults
+	 */
+	unsigned int flags = 0;
+	flags |= SDL_RENDERER_ACCELERATED;
+
+	return setup_renderer(w, &b, flags);
+}

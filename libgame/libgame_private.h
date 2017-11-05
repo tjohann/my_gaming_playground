@@ -36,7 +36,44 @@
 	}							\
 	while(0)
 
+/* deadzone for the joystick */
+#define JOYSTICK_DEADZONE 10000
 
+
+/*
+ * --------------------------- window related ----------------------------------
+ */
+
+SDL_Window *
+setup_window_via_config(config_t *cfg, spread_t *screen);
+
+SDL_Window *
+setup_window(const char *name, spread_t *screen, unsigned int flags);
+
+SDL_Renderer *
+setup_renderer_via_config(config_t *cfg, SDL_Window *w);
+
+SDL_Renderer *
+setup_renderer(SDL_Window *w, color_t *b, unsigned int flags);
+
+void
+cleanup_window(SDL_Window *w, SDL_Renderer *r);
+
+
+/*
+ * --------------------------- config related ----------------------------------
+ */
+
+int
+open_config(char *file, char *name, config_t *cfg);
+
+
+/*
+ * --------------------------- texture related ---------------------------------
+ */
+int
+alloc_textures_via_config(config_t *cfg, SDL_Renderer *r,
+			game_texture_t *t, size_t s);
 
 
 #endif

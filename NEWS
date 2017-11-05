@@ -3,6 +3,9 @@
 #
 
 
+2017-11-05 -> start to implement new libgame based on the stuff i learned from
+	      first_try
+
 2017-11-04 -> add skeleton for another object fab which shows the new additional
 	      configuration features
 	   -> some cleanups

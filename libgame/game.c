@@ -21,45 +21,44 @@
 #include "libgame_private.h"
 
 
-LIGGAME_EXPORT SDL_Texture *
-load_texture(char *file, SDL_Renderer *r)
+LIGGAME_EXPORT int
+init_game(game_t *game)
 {
-	SDL_Surface *tmp = IMG_Load(file);
-	if (tmp == NULL)
-		err_sdl_and_ret("could not load file", NULL);
+	config_t cfg;
+	int err = open_config(game->config, game->name, &cfg);
+	if (err == -1)
+		exit(EXIT_FAILURE);
 
-	SDL_Texture *t = SDL_CreateTextureFromSurface(r, tmp);
-	if (t == NULL)
-		err_sdl_and_ret("could not create texture", NULL);
+        /* setup main window */
+	game->window = setup_window_via_config(&cfg, &game->screen);
+	if (game->window == NULL)
+		err_and_ret("could not setup main window", -1);
 
-	SDL_FreeSurface(tmp);
+	game->renderer = setup_renderer_via_config(&cfg, game->window);
+	if (game->renderer == NULL)
+		err_and_ret("could not setup renderer", -1);
 
-	return t;
+	/* load all textures */
+	err = alloc_textures_via_config(&cfg, game->renderer,
+					game->texture_array,
+					game->size_texture_array);
+	if (err == -1)
+		err_and_ret("could not alloc textures", -1);
+
+
+	config_destroy(&cfg);
+
+	return 0;
 }
 
 LIGGAME_EXPORT void
-destroy_texture(SDL_Texture *t)
+cleanup_game(game_t *game)
 {
-	if (t != NULL)
-		SDL_DestroyTexture(t);
-	else
-		printf("texture == NULL\n");
-}
-
-LIGGAME_LOCAL int
-alloc_textures_via_config(config_t *cfg, SDL_Renderer *r,
-			game_texture_t *t, size_t s)
-{
-	config_setting_t *setting = config_lookup(cfg, "config.textures");
-	if (setting == NULL)
-		err_and_ret("no textures entry in configuration", NULL);
-
-	int count = config_setting_length(setting);
-
 	/*
-	 * TODO: NEXT
+	 * TODO: cleanup the different elements
+	 *
+	 * - textures
 	 */
 
-
-	return -1;
+	cleanup_window(game->window, game->renderer);
 }

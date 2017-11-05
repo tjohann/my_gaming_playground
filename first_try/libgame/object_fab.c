@@ -345,7 +345,7 @@ alloc_textures_via_config(config_t *cfg, SDL_Renderer *renderer)
  * --------------------------- game related ------------------------------------
  */
 
-int
+LIGGAME_EXPORT int
 init_game_via_config(game_t *game, unsigned char flags)
 {
 	config_t cfg;

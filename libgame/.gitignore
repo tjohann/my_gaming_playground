@@ -7,5 +7,6 @@
 /input.o
 /object_fab.o
 /collision.o
+/game.o
 /ai.o
 /*~

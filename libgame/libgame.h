@@ -40,10 +40,6 @@
 /* base frame rate */
 #define FPS 60
 
-/* deadzone for the joystick */
-#define JOYSTICK_DEADZONE 10000
-
-
 typedef struct {
 	uint8_t r;
 	uint8_t g;
@@ -52,8 +48,8 @@ typedef struct {
 } color_t;
 
 typedef struct {
-	int x;
-	int y;
+	float x;
+	float y;
 } vector2d_t;
 
 typedef struct {
@@ -61,14 +57,12 @@ typedef struct {
 	int w;
 } spread_t;
 
-/* a object within the game ... or only the data */
+
+/* object specific data */
 typedef struct {
-	vector2d_t       pos;        /* position                  */
-	vector2d_t       velo;       /* velocity                  */
-	spread_t         size;       /* height and width          */
-	signed char      frame;      /* num frame of sprite sheet */
-	SDL_Texture      *texture;
-	SDL_RendererFlip flip;
+	vector2d_t *pos;   /* pointer to game_obj_t->pos */
+	vector2d_t velo;
+	vector2d_t accel;
 } game_obj_data_t;
 
 /* the member functions */
@@ -83,21 +77,30 @@ typedef bool (*detect_collision_object_func) (game_obj_data_t *a,
 typedef void (*joystick_axis_func) (SDL_Event *e, vector2d_t *mov_vec,
 				unsigned char step);
 
+/* object type specific member functions */
 typedef struct {
-	draw_func                    draw;
-	update_func                  update;
 	collision_window_func        collision_window;
-	collision_object_func        collision_object;
-	detect_collision_object_func detect_collision_object;
 	joystick_axis_func           handle_axis_joystick;
 } game_obj_func_t;
 
-/* a object within the game ... as a container for data and func */
+/* the game object */
 typedef struct {
-	game_obj_data_t *data;
-	game_obj_func_t *func;
-	char            *name;
-	vector2d_t      new_velo;   /* velo to set in next update */
+	char                         *name;
+	SDL_Texture                  *texture;
+
+	vector2d_t                   pos;
+	spread_t                     size;
+	signed char                  frame;      /* num frame of sprite sheet */
+	SDL_RendererFlip             flip;
+
+	game_obj_data_t              *act_data;
+	game_obj_data_t              *update_data;
+
+	game_obj_func_t              *func;  /* only needed for mobile objects */
+	draw_func                    draw;
+	update_func                  update;
+	detect_collision_object_func detect_collision_object;
+	collision_object_func        collision_object;
 } game_obj_t;
 
 
@@ -118,28 +121,30 @@ typedef struct {
 } game_joystick_t;
 
 
+/*
+ * TODO: below
+ */
+
 /* the flags for init_game_via_config */
 #define INIT_PLAYERS 0x01
 #define INIT_OBJECTS 0x02
 #define INIT_ENEMIES 0x04
 /* simple game struct */
 typedef struct {
-	char *progname;
-	char *config_file;
+	char *name;
+	char *config;
 
 	SDL_Window   *window;
 	SDL_Renderer *renderer;
 
-	spread_t screen;                    /* screen size               */
+	spread_t screen;                    /* screen size                    */
 
-	game_texture_t  *texture_array;     /* all used textures         */
-	game_joystick_t *joystick_array;    /* all used joysticks        */
+	game_texture_t  *texture_array;     /* all used textures              */
+	size_t size_texture_array;
 
-	game_obj_t **players;               /* the player parts          */
-	game_obj_t **static_objs;           /* the fixed objects         */
-	game_obj_t **enemies;               /* the enemies flying around */
+	game_joystick_t *joystick_array;    /* all used joysticks             */
+	size_t size_joystick_array;
 } game_t;
-
 
 
 /*
@@ -160,19 +165,29 @@ get_random_value(void);
 
 
 /*
- * --------------------------- object fab related ------------------------------
+ * --------------------------- game related ------------------------------------
  */
 
+int
+init_game(game_t *game);
 
-/*
- * --------------------------- window related ----------------------------------
- */
-
+void
+cleanup_game(game_t *game);
 
 /*
  * --------------------------- texture related ---------------------------------
  */
 
+SDL_Texture *
+load_texture(char *file, SDL_Renderer *r);
+
+void
+destroy_texture(SDL_Texture *t);
+
+
+/*
+ * --------------------------- object fab related ------------------------------
+ */
 
 
 /*
@@ -185,17 +200,14 @@ get_random_value(void);
  */
 
 
-
 /*
  * --------------------------- 2d vector related -------------------------------
  */
 
 
-
 /*
  * --------------------------- input related -----------------------------------
  */
-
 
 
 #endif
