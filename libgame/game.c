@@ -46,6 +46,10 @@ init_game(game_t *game)
 		err_and_ret("could not alloc textures", -1);
 
 
+	/*
+	 * TODO: NEXT -> alloc_objects_via_config
+	 */
+
 	config_destroy(&cfg);
 
 	return 0;

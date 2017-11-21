@@ -50,16 +50,47 @@ LIGGAME_LOCAL int
 alloc_textures_via_config(config_t *cfg, SDL_Renderer *r,
 			game_texture_t *t, size_t s)
 {
+	if (t != NULL || s != 0)
+		err_and_ret("game_texture_t != NULL || size_t s != 0", -1);
+
 	config_setting_t *setting = config_lookup(cfg, "config.textures");
 	if (setting == NULL)
-		err_and_ret("no textures entry in configuration", NULL);
+		err_and_ret("no textures entry in configuration", -1);
 
 	int count = config_setting_length(setting);
 
-	/*
-	 * TODO: NEXT
-	 */
+	size_t len = count * sizeof(game_texture_t);
+	game_texture_t *a = malloc(len);
+	if (a == NULL)
+		err_and_ret("could not alloc memory", -1);
+	memset(a, 0, len);
 
+	for(int i = 0; i < count; i++)
+	{
+		config_setting_t *texture =
+			config_setting_get_elem(setting, i);
 
-	return -1;
+		const char *name, *file;
+		if (!(config_setting_lookup_string(texture, "name",
+								&name)
+				&& config_setting_lookup_string(texture,
+								"file",
+								&file)))
+			continue;
+
+		char *tmp = alloc_string(file); /* to satisfy -Wall/-Wextra */
+		a[i].texture = load_texture(tmp, r);
+		if (a[i].texture == NULL) {
+			free(tmp);
+			err_and_ret("could not create texture", -1);
+		}
+		a[i].name = alloc_string(name);
+
+		free(tmp);
+	}
+
+	t = a;
+	s = count;
+
+	return 0;
 }
