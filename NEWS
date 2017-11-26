@@ -4,6 +4,7 @@
 
 
 2017-11-26 -> some rework of the init parts
+	      add some first parts for new object types
 
 2017-11-05 -> start to implement new libgame based on the stuff i learned from
 	      first_try

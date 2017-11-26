@@ -68,4 +68,9 @@ int
 alloc_textures_via_config(config_t *cfg, game_t *game);
 
 
+/*
+ * --------------------------- game object related -----------------------------
+ */
+
+
 #endif

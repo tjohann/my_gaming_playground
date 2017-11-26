@@ -58,6 +58,14 @@ typedef struct {
 } spread_t;
 
 
+/* object types */
+typedef enum {
+	PLAYER        = 1 << 0,
+	ENEMIE        = 1 << 1,
+	OBJECT        = 1 << 2,
+	STATIC_OBJECT = 1 << 3
+} game_obj_type_t;
+
 /* object specific data */
 typedef struct {
 	vector2d_t  pos;
@@ -66,7 +74,10 @@ typedef struct {
 	vector2d_t  velo;
 
 	signed char frame;      /* num frame of sprite sheet */
-	/* TODO: orientation -> float ... */
+	unsigned char num_frames_x;
+	unsigned char num_frames_y;
+
+	float orient;
 } game_obj_data_t;
 
 /* steering output */
@@ -131,12 +142,6 @@ typedef struct {
 	joystick_axis_func handle_axis_joystick;/* handle axis move           */
 } game_joystick_t;
 
-
-/* config file sections -> supported game object types */
-#define SECTION_PLAYERS "players"
-#define SECTION_ENEMIES "enemies"
-#define SECTION_OBJECTS "objects"
-#define SECTION_STATIC_OBJECTS "static_objects"
 
 /* simple game struct */
 typedef struct {

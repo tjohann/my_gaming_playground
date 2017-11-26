@@ -21,3 +21,60 @@
 #include "libgame_private.h"
 
 
+LIGGAME_EXPORT game_obj_t *
+alloc_game_object(char *name, game_obj_type_t obj_type,
+		int x, int y,
+		SDL_Texture *texture)
+{
+	game_obj_t *obj = malloc(sizeof(game_obj_t));
+	if (obj == NULL)
+		goto error;
+	memset(obj, 0, sizeof(game_obj_t));
+
+	obj->name = alloc_string(name);
+	if (obj->name == NULL)
+		goto error;
+
+	game_obj_data_t *data = malloc(sizeof(game_obj_data_t));
+	if (data == NULL)
+		goto error;
+
+	memset(data, 0, sizeof(game_obj_data_t));
+
+	game_obj_func_t *func = NULL;
+	if (obj_type & STATIC_OBJECT) {
+		printf("%s is a static object\n", obj->name);
+	} else {
+		printf("%s is NOT static object\n", obj->name);
+
+		game_obj_func_t *func = malloc(sizeof(game_obj_func_t));
+		if (func == NULL)
+			goto error;
+
+		memset(func, 0, sizeof(game_obj_func_t));
+	}
+
+	obj->act_data = data;
+	obj->func = func;
+
+
+
+
+
+
+	return obj;
+error:
+	if (func != NULL)
+		free(func);
+
+	if (data != NULL)
+		free(data);
+
+	if (obj != NULL) {
+		if (obj->name != NULL)
+			free(obj->name);
+		free(obj);
+	}
+
+	return NULL;
+}
