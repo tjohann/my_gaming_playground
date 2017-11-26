@@ -91,6 +91,9 @@ typedef void (*joystick_axis_func) (SDL_Event *e, vector2d_t *mov_vec,
 typedef struct {
 	collision_window_func        collision_window;
 	joystick_axis_func           handle_axis_joystick;
+	update_func                  update;
+	detect_collision_object_func detect_collision_object;
+	collision_object_func        collision_object;
 } game_obj_func_t;
 
 /* the game object */
@@ -105,9 +108,9 @@ typedef struct {
 
 	game_obj_func_t              *func;  /* only needed for mobile objects */
 	draw_func                    draw;
-	update_func                  update;
-	detect_collision_object_func detect_collision_object;
-	collision_object_func        collision_object;
+        /*
+	 * TODO: a collision func for all objects
+	 */
 
 } game_obj_t;
 
@@ -129,14 +132,12 @@ typedef struct {
 } game_joystick_t;
 
 
-/*
- * TODO: below
- */
+/* config file sections -> supported game object types */
+#define SECTION_PLAYERS "players"
+#define SECTION_ENEMIES "enemies"
+#define SECTION_OBJECTS "objects"
+#define SECTION_STATIC_OBJECTS "static_objects"
 
-/* the flags for init_game_via_config */
-#define INIT_PLAYERS 0x01
-#define INIT_OBJECTS 0x02
-#define INIT_ENEMIES 0x04
 /* simple game struct */
 typedef struct {
 	char *name;
@@ -152,6 +153,18 @@ typedef struct {
 
 	game_joystick_t *joystick_array;    /* all used joysticks             */
 	size_t size_joystick_array;
+
+	game_obj_t *players;                /* the player objects             */
+	size_t size_players_array;
+
+	game_obj_t *enemies;                /* the enemies objects            */
+	size_t size_enemies_array;
+
+	game_obj_t *objects;                /* the objects with actions       */
+	size_t size_objects_array;
+
+	game_obj_t *static_objects;         /* the static objects             */
+	size_t size_static_objects_array;
 } game_t;
 
 
@@ -182,6 +195,7 @@ init_game(game_t *game);
 void
 cleanup_game(game_t *game);
 
+
 /*
  * --------------------------- texture related ---------------------------------
  */
@@ -191,6 +205,21 @@ load_texture(char *file, SDL_Renderer *r);
 
 void
 destroy_texture(SDL_Texture *t);
+
+
+/*
+ * --------------------------- window related ----------------------------------
+ */
+
+SDL_Window *
+setup_window(const char *name, spread_t *screen, unsigned int flags);
+
+SDL_Renderer *
+setup_renderer(SDL_Window *w, color_t *b, unsigned int flags);
+
+void
+cleanup_window(SDL_Window *w, SDL_Renderer *r);
+
 
 
 /*

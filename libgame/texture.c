@@ -47,12 +47,8 @@ destroy_texture(SDL_Texture *t)
 }
 
 LIGGAME_LOCAL int
-alloc_textures_via_config(config_t *cfg, SDL_Renderer *r,
-			game_texture_t *t, size_t s)
+alloc_textures_via_config(config_t *cfg, game_t *game)
 {
-	if (t != NULL || s != 0)
-		err_and_ret("game_texture_t != NULL || size_t s != 0", -1);
-
 	config_setting_t *setting = config_lookup(cfg, "config.textures");
 	if (setting == NULL)
 		err_and_ret("no textures entry in configuration", -1);
@@ -79,7 +75,7 @@ alloc_textures_via_config(config_t *cfg, SDL_Renderer *r,
 			continue;
 
 		char *tmp = alloc_string(file); /* to satisfy -Wall/-Wextra */
-		a[i].texture = load_texture(tmp, r);
+		a[i].texture = load_texture(tmp, game->renderer);
 		if (a[i].texture == NULL) {
 			free(tmp);
 			err_and_ret("could not create texture", -1);
@@ -89,8 +85,8 @@ alloc_textures_via_config(config_t *cfg, SDL_Renderer *r,
 		free(tmp);
 	}
 
-	t = a;
-	s = count;
+	game->texture_array = a;
+	game->size_texture_array = count;
 
 	return 0;
 }

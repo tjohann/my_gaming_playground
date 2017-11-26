@@ -21,7 +21,7 @@
 #include "libgame_private.h"
 
 
-LIGGAME_LOCAL SDL_Window *
+LIGGAME_EXPORT SDL_Window *
 setup_window(const char *name, spread_t *screen, unsigned int flags)
 {
 	/*
@@ -57,7 +57,7 @@ setup_window(const char *name, spread_t *screen, unsigned int flags)
 	return w;
 }
 
-LIGGAME_LOCAL SDL_Renderer *
+LIGGAME_EXPORT SDL_Renderer *
 setup_renderer(SDL_Window *w, color_t *b, unsigned int flags)
 {
         /*
@@ -89,7 +89,7 @@ setup_renderer(SDL_Window *w, color_t *b, unsigned int flags)
 	return r;
 }
 
-LIGGAME_LOCAL void
+LIGGAME_EXPORT void
 cleanup_window(SDL_Window *w, SDL_Renderer *r)
 {
 	printf("cleanup all SDL related stuff\n");
@@ -111,27 +111,27 @@ cleanup_window(SDL_Window *w, SDL_Renderer *r)
  * --------------------------- config related ----------------------------------
  */
 
-LIGGAME_LOCAL SDL_Window *
-setup_window_via_config(config_t *cfg, spread_t *screen)
+LIGGAME_LOCAL int
+setup_window_via_config(config_t *cfg, game_t *game)
 {
 	const char *str;
 	int w = 0, h = 0;
 
 	if (!config_lookup_string(cfg, "config.window.title", &str)) {
 		eprintf("config.window.title not available\n");
-		return NULL;
+		return -1;
 	}
 	if (!config_lookup_int(cfg, "config.window.size.w", &w)) {
 		eprintf("config.window.size.w not available\n");
-		return NULL;
+		return -1;
 	}
 	if (!config_lookup_int(cfg, "config.window.size.h", &h)) {
 		eprintf("config.window.size.h not available\n");
-		return NULL;
+		return -1;
 	}
 
-	screen->w = w;
-	screen->h = h;
+	game->screen.w = w;
+	game->screen.h = h;
 
 	/*
 	 * TODO: handle flags from configuration or set defaults
@@ -139,11 +139,15 @@ setup_window_via_config(config_t *cfg, spread_t *screen)
 	unsigned int flags = 0;
 	flags |= SDL_WINDOW_SHOWN;
 
-	return setup_window(str, screen, flags);
+	game->window = setup_window(str, &game->screen, flags);
+	if (game->window == NULL)
+		return -1;
+	else
+		return 0;
 }
 
-LIGGAME_LOCAL SDL_Renderer *
-setup_renderer_via_config(config_t *cfg, SDL_Window *w)
+LIGGAME_LOCAL int
+setup_renderer_via_config(config_t *cfg, game_t *game)
 {
 	color_t b;
 	memset(&b, 0, sizeof(b));
@@ -152,25 +156,25 @@ setup_renderer_via_config(config_t *cfg, SDL_Window *w)
 
 	if (!config_lookup_int(cfg, "config.window.background.r", &tmp)) {
 		eprintf("config.window.background.r not available\n");
-		return NULL;
+		return -1;
 	}
 	b.r = tmp;
 
 	if (!config_lookup_int(cfg, "config.window.background.g", &tmp)) {
 		eprintf("config.window.background.g not available\n");
-		return NULL;
+		return -1;
 	}
 	b.g = tmp;
 
 	if (!config_lookup_int(cfg, "config.window.background.b", &tmp)) {
 		eprintf("config.window.background.b not available\n");
-		return NULL;
+		return -1;
 	}
 	b.b = tmp;
 
 	if (!config_lookup_int(cfg, "config.window.background.a", &tmp)) {
 		eprintf("config.window.background.a not available\n");
-		return NULL;
+		return -1;
 	}
 	b.a = tmp;
 
@@ -180,5 +184,9 @@ setup_renderer_via_config(config_t *cfg, SDL_Window *w)
 	unsigned int flags = 0;
 	flags |= SDL_RENDERER_ACCELERATED;
 
-	return setup_renderer(w, &b, flags);
+	game->renderer = setup_renderer(game->window, &b, flags);
+	if (game->renderer == NULL)
+		return -1;
+	else
+		return 0;
 }

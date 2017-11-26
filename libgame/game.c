@@ -30,18 +30,16 @@ init_game(game_t *game)
 		exit(EXIT_FAILURE);
 
         /* setup main window */
-	game->window = setup_window_via_config(&cfg, &game->screen);
-	if (game->window == NULL)
+	err = setup_window_via_config(&cfg, game);
+	if (err == -1)
 		err_and_ret("could not setup main window", -1);
 
-	game->renderer = setup_renderer_via_config(&cfg, game->window);
-	if (game->renderer == NULL)
+	err = setup_renderer_via_config(&cfg, game);
+	if (err == -1)
 		err_and_ret("could not setup renderer", -1);
 
 	/* load all textures */
-	err = alloc_textures_via_config(&cfg, game->renderer,
-					game->texture_array,
-					game->size_texture_array);
+	err = alloc_textures_via_config(&cfg, game);
 	if (err == -1)
 		err_and_ret("could not alloc textures", -1);
 
