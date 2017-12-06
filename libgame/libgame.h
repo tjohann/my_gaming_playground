@@ -100,11 +100,15 @@ typedef void (*joystick_axis_func) (SDL_Event *e, vector2d_t *mov_vec,
 
 /* object type specific member functions */
 typedef struct {
-	collision_window_func        collision_window;
 	joystick_axis_func           handle_axis_joystick;
 	update_func                  update;
 	detect_collision_object_func detect_collision_object;
+
+	/*
+	 * TODO: remove them and add to collision func in game_obj_t
+	 */
 	collision_object_func        collision_object;
+	collision_window_func        collision_window;
 } game_obj_func_t;
 
 /* the game object */
