@@ -117,18 +117,14 @@ setup_window_via_config(config_t *cfg, game_t *game)
 	const char *str;
 	int w = 0, h = 0;
 
-	if (!config_lookup_string(cfg, "config.window.title", &str)) {
-		eprintf("config.window.title not available\n");
-		return -1;
-	}
-	if (!config_lookup_int(cfg, "config.window.size.w", &w)) {
-		eprintf("config.window.size.w not available\n");
-		return -1;
-	}
-	if (!config_lookup_int(cfg, "config.window.size.h", &h)) {
-		eprintf("config.window.size.h not available\n");
-		return -1;
-	}
+	if (!config_lookup_string(cfg, "config.window.title", &str))
+		err_and_ret("config.window.title not available", -1);
+
+	if (!config_lookup_int(cfg, "config.window.size.w", &w))
+		err_and_ret("config.window.size.w not available", -1);
+
+	if (!config_lookup_int(cfg, "config.window.size.h", &h))
+		err_and_ret("config.window.size.h not available", -1);
 
 	game->screen.w = w;
 	game->screen.h = h;

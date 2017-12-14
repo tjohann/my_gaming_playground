@@ -32,25 +32,27 @@ init_game(game_t *game)
         /* setup main window */
 	err = setup_window_via_config(&cfg, game);
 	if (err == -1)
-		err_and_ret("could not setup main window", -1);
+		goto error;
 
 	err = setup_renderer_via_config(&cfg, game);
 	if (err == -1)
-		err_and_ret("could not setup renderer", -1);
+		goto error;
 
 	/* load all textures */
 	err = alloc_textures_via_config(&cfg, game);
 	if (err == -1)
-		err_and_ret("could not alloc textures", -1);
+		goto error;
 
 
 	/*
 	 * TODO: NEXT -> alloc_objects_via_config
 	 */
 
+	return 0;
+error:
 	config_destroy(&cfg);
 
-	return 0;
+	err_and_ret("could not init game", -1);
 }
 
 LIGGAME_EXPORT void

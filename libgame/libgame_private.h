@@ -67,10 +67,15 @@ open_config(char *file, char *name, config_t *cfg);
 int
 alloc_textures_via_config(config_t *cfg, game_t *game);
 
+void
+draw_texture(game_obj_data_t *obj, SDL_Texture *texture, SDL_Renderer *renderer);
+
 
 /*
  * --------------------------- game object related -----------------------------
  */
-
+game_obj_data_t *
+alloc_game_object_data(int x, int y, int w, int h,
+		       int max_frames_x, int max_frames_y);
 
 #endif

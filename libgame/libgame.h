@@ -53,60 +53,75 @@ typedef struct {
 } vector2d_t;
 
 typedef struct {
+	int x;
+	int y;
+} pos2d_t;
+
+typedef struct {
 	int h;
 	int w;
 } spread_t;
 
 
-/* object types */
-typedef enum {
-	PLAYER        = 1 << 0,
-	ENEMIE        = 1 << 1,
-	OBJECT        = 1 << 2,
-	STATIC_OBJECT = 1 << 3
-} game_obj_type_t;
-
 /* object specific data */
 typedef struct {
-	vector2d_t  pos;
-	spread_t    size;
+	pos2d_t          pos;
+	spread_t         size;
 
-	vector2d_t  velo;
+	vector2d_t       velo;
 
-	signed char frame;      /* num frame of sprite sheet */
-	unsigned char num_frames_x;
-	unsigned char num_frames_y;
+	unsigned char    frame_x;
+	unsigned char    max_frames_x;
 
-	float orient;
+	unsigned char    frame_y;
+	unsigned char    max_frames_y;
+
+	unsigned char    orientation;
+	SDL_RendererFlip flip;
 } game_obj_data_t;
 
-/* steering output */
+
+/* object specific update struct */
 typedef struct {
-	vector2d_t linear;
-	float      angular;
-} game_obj_steering_t;
+	vector2d_t    velo;
+
+	unsigned char frame_x;
+	unsigned char frame_y;
+
+	unsigned char orientation;
+} game_obj_event_data_t;
 
 /* the member functions */
-typedef void (*draw_func) (game_obj_data_t *t, SDL_Renderer *renderer);
+typedef void (*draw_func) (game_obj_data_t *t, SDL_Texture *texture,
+			   SDL_Renderer *renderer);
 typedef void (*update_func) (game_obj_data_t *t, vector2d_t *velo);
 typedef void (*collision_window_func) (game_obj_data_t *t, vector2d_t *velo,
-				spread_t *size);
+				       spread_t *size);
 typedef void (*collision_object_func) (game_obj_data_t *a, game_obj_data_t *b,
-				vector2d_t *velo);
+				       vector2d_t *velo);
 typedef bool (*detect_collision_object_func) (game_obj_data_t *a,
-					game_obj_data_t *b);
+					      game_obj_data_t *b);
 typedef void (*joystick_axis_func) (SDL_Event *e, vector2d_t *mov_vec,
-				unsigned char step);
+				    unsigned char step);
 
 /* object type specific member functions */
 typedef struct {
-	joystick_axis_func           handle_axis_joystick;
-	update_func                  update;
-	detect_collision_object_func detect_collision_object;
-
+	joystick_axis_func           handle_joystick_axis;
 	/*
-	 * TODO: remove them and add to collision func in game_obj_t
-	 */
+        joystick_button_func         handle_joystick_button;
+	keyboard_axis_func           handle_keyboard_axis;
+	keyboard_botton_func         handle_keybord_button;
+	*/
+
+	update_func                  update;
+	/* TODO:
+        ai_func                      ai;
+	animate_func                 animate */
+
+	detect_collision_object_func detect_collision_object;
+	/* TODO:
+	detect_collision_window_func detect_collision_window; */
+
 	collision_object_func        collision_object;
 	collision_window_func        collision_window;
 } game_obj_func_t;
@@ -116,24 +131,23 @@ typedef struct {
 	char                         *name;
 	SDL_Texture                  *texture;
 
-	game_obj_data_t              *act_data;
-	game_obj_data_t              *update_data;
-
-	game_obj_steering_t          *steering;
+	game_obj_data_t              *data;            /* filled in update_all */
+	game_obj_event_data_t        *event_data;   /* filled in handle_events */
 
 	game_obj_func_t              *func;  /* only needed for mobile objects */
-	draw_func                    draw;
-        /*
-	 * TODO: a collision func for all objects
-	 */
-
+	draw_func                    draw;             /* use act_data to draw */
 } game_obj_t;
 
 
 /* hold all textures */
 typedef struct {
-	char        *name;
-	SDL_Texture *texture;
+	char          *name;
+	SDL_Texture   *texture;
+
+	/* TODO: add handling of it */
+	spread_t      size;
+	unsigned char max_frames_x;
+	unsigned char max_frames_y;
 } game_texture_t;
 
 /* hold all joysticks and the config */
@@ -143,7 +157,7 @@ typedef struct {
 	unsigned char      step;
 	SDL_Joystick       *joystick;
 	vector2d_t         *to_change;          /* pointer to value to change */
-	joystick_axis_func handle_axis_joystick;/* handle axis move           */
+	joystick_axis_func handle_axis_joystick;          /* handle axis move */
 } game_joystick_t;
 
 
@@ -239,6 +253,15 @@ cleanup_window(SDL_Window *w, SDL_Renderer *r);
 /*
  * --------------------------- game object related -----------------------------
  */
+
+game_obj_t *
+alloc_game_object(char *name, int x, int y, game_texture_t *t);
+
+void
+free_game_object(game_obj_t *t);
+
+void
+draw_game_object(game_obj_t *t, SDL_Renderer *renderer);
 
 
 /*
