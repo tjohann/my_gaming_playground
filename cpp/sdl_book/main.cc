@@ -17,13 +17,71 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-
-#include <iostream>
+#include <SDL.h>
+#include <SDL_log.h>
+#include <SDL_image.h>
 
 int
-main(void)
+main(int argc, char *argv[])
 {
-	std::cout << "Hello World" << std::endl;
+	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+		SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
+		exit(EXIT_FAILURE);
+	} else {
+		SDL_Log("SDL initialised");
+	}
 
-	return 0;
+	SDL_Window *window = SDL_CreateWindow("sdl_game",
+					      SDL_WINDOWPOS_UNDEFINED,
+					      SDL_WINDOWPOS_UNDEFINED,
+					      640, 480,
+					      SDL_WINDOW_SHOWN);
+	if (window == 0) {
+		SDL_Log("Unable to initialize window: %s",  SDL_GetError());
+		exit(EXIT_FAILURE);
+	} else {
+		SDL_Log("Window initialised");
+	}
+
+
+        /*
+         * -1 init the first on supporting
+         * 0 (try first SDL_RENDERER_ACCELERATED)
+         */
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
+	if (renderer == 0) {
+		SDL_Log("Unable to initialize renderer: %s",  SDL_GetError());
+		exit(EXIT_FAILURE);
+	} else {
+		SDL_Log("Renderer initialised");
+	}
+
+        // RGB and alpha -> set to black
+        int ret = SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        if (ret != 0) {
+		SDL_Log("Unable to set background color: %s",  SDL_GetError());
+		exit(EXIT_FAILURE);
+	} else {
+		SDL_Log("Set background color");
+	}
+
+        ret = SDL_RenderClear(renderer);
+        if (ret != 0) {
+		SDL_Log("Unable to clear window: %s",  SDL_GetError());
+		exit(EXIT_FAILURE);
+	} else {
+		SDL_Log("Cleared window");
+	}
+
+        // show everything
+        SDL_RenderPresent(renderer);
+
+        SDL_Delay(5000);
+
+        // cleanup
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+	SDL_Quit();
+
+	exit(EXIT_SUCCESS);
 }
