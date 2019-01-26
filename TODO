@@ -2,7 +2,60 @@ TODO
 ----
 
 
-libgame:
+C releated:
+
+- ...
+
+---------------
+
+
+CPP related:
+
+- ...
+
+
+---------------
+
+SDL related:
 
 - check https://wiki.libsdl.org/SDL_CreateSoftwareRenderer for devices with no hardware renderer
 
+---------------
+
+Physics related:
+
+- ...
+
+---------------
+
+AI related:
+
+- ...
+
+---------------
+
+Math related:
+
+- ...
+
+---------------
+
+Pixel-Art related:
+
+- ...
+
+---------------
+
+
+Sound related:
+
+- ...
+
+---------------
+
+
+Other stuff:
+
+- ...
+
+---------------

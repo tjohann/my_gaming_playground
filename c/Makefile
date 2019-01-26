@@ -1,6 +1,6 @@
 # only for cleaning
 
-MODULES = c cpp assets Documentation
+MODULES = first_try second_try
 
 all:
 	@echo Cheers

@@ -1,6 +1,6 @@
 # only for cleaning
 
-MODULES = c cpp assets Documentation
+MODULES = sdl_book
 
 all:
 	@echo Cheers

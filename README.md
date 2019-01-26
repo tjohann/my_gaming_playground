@@ -25,21 +25,19 @@ SDL stuff
 API-Docu of SDL -> https://wiki.libsdl.org/CategoryAPI
 
 
-Overview of the code
---------------------
-
-To build all type
-
-	make
-
-
-FIRST - TRY
------------
+c/FIRST - TRY
+-------------
 
 Below the folder first_try are my starting examples inclusive lib ([README](first_try/README.md)).
 
 
-Actual stuff
+c/SECOND - TRY
+--------------
+
+Below the folder second_try are some more playground stuff
+
+
+cpp/SDL_book
 ------------
 
-In the root folder you find my actual experiments.
+Some cpp related playground based on the SDL-Book mentioned above.

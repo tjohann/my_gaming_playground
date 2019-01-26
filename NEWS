@@ -3,6 +3,10 @@
 #
 
 
+2019-01-26 -> some reorganisation
+	      add a cpp folder for the next trys
+	      add sdl_book to cpp (playground)
+
 2017-12-10...14 -> do a lot of rework and updates
 
 2017-12-06 -> some smaller adds regarding game_object types
