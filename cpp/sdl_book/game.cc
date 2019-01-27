@@ -69,10 +69,7 @@ void Game::init(const char* title,
 			     "unable to initialize window: %s",
 			     SDL_GetError());
 		exit(EXIT_FAILURE);
-	} else {
-		SDL_Log("window initialised");
 	}
-
 
         /*
          * -1 init the first on supporting
@@ -84,8 +81,6 @@ void Game::init(const char* title,
 			     "unable to initialize renderer: %s",
 			     SDL_GetError());
 		exit(EXIT_FAILURE);
-	} else {
-		SDL_Log("renderer initialised");
 	}
 
         // RGB and alpha -> set to black
@@ -95,9 +90,45 @@ void Game::init(const char* title,
 			     "unable to set background color: %s",
 			     SDL_GetError());
 		exit(EXIT_FAILURE);
-	} else {
-		SDL_Log("set background color");
 	}
+
+	/*
+	 * will be move to texture manager
+	 */
+	SDL_Surface *tmp_surface = SDL_LoadBMP("rider.bmp");
+	if (tmp_surface == NULL) {
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
+			     "unable to bitmap rider.bmp: %s",
+			     SDL_GetError());
+		exit(EXIT_FAILURE);
+	}
+
+	texture = SDL_CreateTextureFromSurface(renderer, tmp_surface);
+	if (texture == NULL){
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
+			     "unable to create texture of bitmap rider.bmp: %s",
+			     SDL_GetError());
+		exit(EXIT_FAILURE);
+	}
+
+	SDL_FreeSurface(tmp_surface);
+
+	ret = SDL_QueryTexture(texture, NULL, NULL, &src_rect.w, &src_rect.h);
+	if (ret != 0) {
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
+			     "unable to query texture: %s",
+			     SDL_GetError());
+		exit(EXIT_FAILURE);
+	} else {
+		SDL_Log("height is: %d ... width is: %d", src_rect.h, src_rect.w);
+	}
+
+	src_rect.x = 0;
+	src_rect.y = 0;
+	dest_rect.x = 50;
+	dest_rect.y = 50;
+	dest_rect.w = src_rect.w;
+	dest_rect.h = src_rect.h;
 
 	SDL_Log("init done");
 
@@ -112,8 +143,12 @@ void Game::render_all()
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
 			     "unable to clear renderer: %s",
 			     SDL_GetError());
-	else
-		SDL_Log("cleared renderer");
+
+	ret = SDL_RenderCopy(renderer, texture, &src_rect, &dest_rect);
+	if (ret != 0)
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
+			     "unable to rendercopy texture: %s",
+			     SDL_GetError());
 
         SDL_RenderPresent(renderer);
 }

@@ -44,6 +44,10 @@ private:
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 
+	SDL_Texture *texture;
+	SDL_Rect src_rect;
+	SDL_Rect dest_rect;
+
 	bool running;
 };
 
