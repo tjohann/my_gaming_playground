@@ -95,10 +95,10 @@ void Game::init(const char* title,
 	/*
 	 * will be move to texture manager
 	 */
-	SDL_Surface *tmp_surface = SDL_LoadBMP("rider.bmp");
+	SDL_Surface *tmp_surface = SDL_LoadBMP("animate.bmp");
 	if (tmp_surface == NULL) {
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
-			     "unable to bitmap rider.bmp: %s",
+			     "unable to load bitmap animate.bmp: %s",
 			     SDL_GetError());
 		exit(EXIT_FAILURE);
 	}
@@ -113,20 +113,25 @@ void Game::init(const char* title,
 
 	SDL_FreeSurface(tmp_surface);
 
-	ret = SDL_QueryTexture(texture, NULL, NULL, &src_rect.w, &src_rect.h);
+	// get the size of the complete sprite
+	int tmp_w = 0, tmp_h = 0;
+	ret = SDL_QueryTexture(texture, NULL, NULL, &tmp_w, &tmp_h);
 	if (ret != 0) {
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
 			     "unable to query texture: %s",
 			     SDL_GetError());
 		exit(EXIT_FAILURE);
 	} else {
-		SDL_Log("height is: %d ... width is: %d", src_rect.h, src_rect.w);
+		SDL_Log("height is: %d ... width is: %d", tmp_h, tmp_w);
 	}
 
 	src_rect.x = 0;
 	src_rect.y = 0;
-	dest_rect.x = 50;
-	dest_rect.y = 50;
+	src_rect.w = 128;
+	src_rect.h = 82;
+
+	dest_rect.x = 0;
+	dest_rect.y = 0;
 	dest_rect.w = src_rect.w;
 	dest_rect.h = src_rect.h;
 
@@ -202,6 +207,6 @@ void Game::handle_events()
 
 void Game::update_all()
 {
-	/* do something */
+	src_rect.x = 128 * int(((SDL_GetTicks() / 100) % 6));
 }
 
