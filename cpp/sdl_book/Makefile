@@ -7,7 +7,7 @@ CFLAGS = -Wall -Wextra `pkg-config --cflags sdl2 SDL2_image`
 LDLIBS = `pkg-config --libs sdl2 SDL2_image `
 
 PROG = sdl_game
-OBJ = main.o game.o
+OBJ = main.o game.o texture_manager.o
 
 %.o: %.cc
 	$(CC) -c -o $@ $< $(CFLAGS) $(LDLIBS)

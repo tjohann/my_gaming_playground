@@ -29,7 +29,7 @@ coding stuff
 ------------
 
 https://www.youtube.com/watch?v=WDIkqP4JbkE
-https://gafferongames.com/ 
+https://gafferongames.com/
 
 
 game design stuff

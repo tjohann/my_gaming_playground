@@ -17,30 +17,27 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-#include "game.h"
-#include "texture_manager.h"
+#ifndef _TEXTURE_MANAGER_H_
+#define _TEXTURE_MANAGER_H
+
+#include <iostream>
+#include <string>
+#include <map>
+
+#include <SDL.h>
 
 
-Game *game = NULL;
-
-int
-main(int argc, char *argv[])
+class Texture_manager
 {
-	game = new Game();
+public:
+	Texture_manager();
+	~Texture_manager();
 
-	/* for testing */
-	game->init("sdl_game", 100, 100, 800, 600, false);
-	//game->init("sdl_game", 0, 0, 800, 600, false);
-	//game->init("sdl_game", 100, 100, 800, 600, true);
 
-	while(game->is_running()) {
-		game->handle_events();
-		game->update_all();
-		game->render_all();
 
-	}
+private:
 
-	game->cleanup_all();
+};
 
-	exit(EXIT_SUCCESS);
-}
+
+#endif
