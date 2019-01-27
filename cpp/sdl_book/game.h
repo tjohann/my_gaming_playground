@@ -17,28 +17,35 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-#include "game.h"
+#ifndef _GAME_H_
+#define _GAME_H
 
-Game *game = NULL;
+#include <SDL.h>
+#include <SDL_log.h>
+#include <SDL_image.h>
 
-int
-main(int argc, char *argv[])
+class Game
 {
-	game = new Game();
+public:
+	Game();
+	~Game();
 
-	/* for testing */
-	game->init("sdl_game", 100, 100, 800, 600, false);
-	//game->init("sdl_game", 0, 0, 800, 600, false);
-	//game->init("sdl_game", 100, 100, 800, 600, true);
+	void init(const char* title, int x, int y, int w, int h,
+		bool fullscreen);
+	void cleanup_all();
 
-	while(game->is_running()) {
-		game->handle_events();
-		game->update_all();
-		game->render_all();
+	void render_all();
+	void update_all();
+	void handle_events();
 
-	}
+	bool is_running() { return running; }
 
-	game->cleanup_all();
+private:
+	SDL_Window *window;
+	SDL_Renderer *renderer;
 
-	exit(EXIT_SUCCESS);
-}
+	bool running;
+};
+
+
+#endif

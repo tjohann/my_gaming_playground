@@ -3,6 +3,9 @@
 #
 
 
+2019-01-27 -> finalize example based on chapter 1
+	      tag "end_of_chapter_01"
+
 2019-01-26 -> some reorganisation
 	      add a cpp folder for the next trys
 	      add sdl_book to cpp (playground)
