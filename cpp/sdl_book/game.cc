@@ -84,7 +84,7 @@ void Game::init(const char* title,
 	}
 
         // RGB and alpha -> set to black
-        int ret = SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        int ret = SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
         if (ret != 0) {
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
 			     "unable to set background color: %s",
@@ -95,7 +95,7 @@ void Game::init(const char* title,
 	/*
 	 * will be move to texture manager
 	 */
-	SDL_Surface *tmp_surface = SDL_LoadBMP("animate.bmp");
+	SDL_Surface *tmp_surface = IMG_Load("animate-alpha.png");
 	if (tmp_surface == NULL) {
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
 			     "unable to load bitmap animate.bmp: %s",
