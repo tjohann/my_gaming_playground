@@ -149,7 +149,8 @@ void Game::render_all()
 			     "unable to clear renderer: %s",
 			     SDL_GetError());
 
-	ret = SDL_RenderCopy(renderer, texture, &src_rect, &dest_rect);
+	ret = SDL_RenderCopyEx(renderer, texture, &src_rect, &dest_rect,
+			       0, 0, SDL_FLIP_HORIZONTAL);
 	if (ret != 0)
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
 			     "unable to rendercopy texture: %s",
