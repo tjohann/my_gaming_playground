@@ -23,6 +23,7 @@
 #include <SDL.h>
 #include <SDL_log.h>
 
+#include "texture_manager.h"
 
 class Game
 {
@@ -43,9 +44,10 @@ public:
 private:
 	SDL_Window *window;
 	SDL_Renderer *renderer;
-  
+
         int current_frame;
-  // Texture_manager texture_manager;
+	Texture_manager texture_manager;
+
 	bool running;
 };
 

@@ -18,7 +18,6 @@
 */
 
 #include "game.h"
-#include "texture_manager.h"
 
 Game::Game()
 {
@@ -84,11 +83,16 @@ void Game::init(const char* title,
 	}
 
         // RGB and alpha -> set to black
-        int ret = SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        int ret = SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
         if (ret != 0) {
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
 			     "unable to set background color: %s",
 			     SDL_GetError());
+		exit(EXIT_FAILURE);
+	}
+
+	if (!texture_manager.load("./animate-alpha.png", "animate", renderer)) {
+		std::cout << "ERROR: could not load image" << std::endl;
 		exit(EXIT_FAILURE);
 	}
 
@@ -106,9 +110,10 @@ void Game::render_all()
 			     "unable to clear renderer: %s",
 			     SDL_GetError());
 
-	texture_manager.draw("animate-alpha.png", 0, 0, 128, 82);
-	texture_manager.draw_frame("animate-alpha.png", 100, 100, 128, 82,
-				   1 , current_frame, renderer);
+	texture_manager.draw("animate", 0, 0, 128, 82,
+			     renderer, SDL_FLIP_NONE);
+	texture_manager.draw_frame("animate", 100, 100, 128, 82,
+				   1, current_frame, renderer, SDL_FLIP_NONE);
 
         SDL_RenderPresent(renderer);
 }

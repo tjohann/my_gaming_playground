@@ -18,8 +18,6 @@
 */
 
 #include "game.h"
-#include "texture_manager.h"
-
 
 Game *game = NULL;
 

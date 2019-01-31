@@ -32,9 +32,6 @@
 class Texture_manager
 {
 public:
-  //Texture_manager();
-  //	~Texture_manager();
-
 	bool load(std::string filename,
 		  std::string id,
 		  SDL_Renderer *renderer);
@@ -42,16 +39,19 @@ public:
 	void draw(std::string id,
 		  int x, int y, int w, int h,
 		  SDL_Renderer *renderer,
-		  SDL_RendererFlip flip = SDL_FLIP_NONE);
+		  SDL_RendererFlip flip);
 
 	void draw_frame(std::string id,
 			int x, int y, int w, int h,
 			int curr_row, int curr_frame,
 			SDL_Renderer *renderer,
-			SDL_RendererFlip flip = SDL_FLIP_NONE);
+			SDL_RendererFlip flip);
 
-        std::map<std::string, SDL_Texture*> texture_map;
+private:
+	//Texture_manager() {}
+	//~Texture_manager() {}
 
+	std::map<std::string, SDL_Texture*> texture_map;
 };
 
 

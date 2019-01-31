@@ -20,47 +20,93 @@
 #include "texture_manager.h"
 
 
-bool load(std::string filename,
-	  std::string id,
-	  SDL_Renderer *renderer)
+bool Texture_manager::load(std::string filename,
+			   std::string id,
+			   SDL_Renderer *renderer)
 {
-	SDL_Surface *tmp_surface = IMG_Load("animate-alpha.png");
-	if (tmp_surface == NULL)
-	  return false;
+	SDL_Surface *tmp_surface = IMG_Load(filename.c_str());
+	if (tmp_surface == NULL) {
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
+			     "could not load image: %s",
+			     SDL_GetError());
+		return false;
+	}
 
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, tmp_surface);
-	if (texture != NULL)
-	  texture_map[id] = texture;
-	else
-	  goto error;
-	  
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer,
+							    tmp_surface);
+        if (texture == NULL) {
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
+			     "could not create texture from surface: %s",
+			     SDL_GetError());
+		return false;
+	} else {
+		texture_map[id] = texture;
+	}
+
 	SDL_FreeSurface(tmp_surface);
+        SDL_Log("texture %s loaded", filename.c_str());
 
-	
- error:
-	SDL_LogError(SDL_LOG_CATEGORY_ERROR,
-		     "an error occured: %s",
-		     SDL_GetError());
-	
-	return false;
+	return true;
 }
 
-void draw(std::string id,
-		  int x, int y, int w, int h,
-		  SDL_Renderer *renderer,
-		  SDL_RendererFlip flip = SDL_FLIP_NONE)
+void Texture_manager::draw(std::string id,
+			   int x, int y, int w, int h,
+			   SDL_Renderer *renderer,
+			   SDL_RendererFlip flip)
 {
 
-  SDL_Rect src_rect;
-  SDL_Rect dest_rect;
-  
+	SDL_Rect src_rect;
+	SDL_Rect dest_rect;
+
+	src_rect.x = 0;
+	src_rect.y = 0;
+	src_rect.w = dest_rect.w = w;
+	src_rect.h = dest_rect.h = h;
+
+	dest_rect.x = x;
+	dest_rect.y = y;
+
+	SDL_Texture *texture = texture_map[id];
+	if (texture == NULL) {
+		std::cout << "no valid texture for " << id
+			  << " available" << std::endl;
+	} else {
+		int ret = SDL_RenderCopyEx(renderer, texture,
+					   &src_rect, &dest_rect, 0, 0, flip);
+		if (ret != 0)
+			SDL_LogError(SDL_LOG_CATEGORY_ERROR,
+				     "unable to draw image %s",
+				     SDL_GetError());
+	}
 }
 
-void draw_frame(std::string id,
-		int x, int y, int w, int h,
-		int curr_row, int curr_frame,
-		SDL_Renderer *renderer,
-		SDL_RendererFlip flip = SDL_FLIP_NONE)
+void Texture_manager::draw_frame(std::string id,
+				 int x, int y, int w, int h,
+				 int curr_row, int curr_frame,
+				 SDL_Renderer *renderer,
+				 SDL_RendererFlip flip)
 {
+	SDL_Rect src_rect;
+	SDL_Rect dest_rect;
 
+	src_rect.x = w * curr_frame;
+	src_rect.y = h * (curr_row -1);
+	src_rect.w = dest_rect.w = w;
+	src_rect.h = dest_rect.h = h;
+
+	dest_rect.x = x;
+	dest_rect.y = y;
+
+	SDL_Texture *texture = texture_map[id];
+	if (texture == NULL) {
+		std::cout << "no valid texture for "
+			  << id << " available" << std::endl;
+	} else {
+		int ret = SDL_RenderCopyEx(renderer, texture,
+					   &src_rect, &dest_rect, 0, 0, flip);
+		if (ret != 0)
+			SDL_LogError(SDL_LOG_CATEGORY_ERROR,
+				     "unable to draw image %s",
+				     SDL_GetError());
+	}
 }
