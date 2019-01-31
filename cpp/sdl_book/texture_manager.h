@@ -33,10 +33,23 @@ public:
 	Texture_manager();
 	~Texture_manager();
 
+	bool load(std::string filename,
+		  std::string id,
+		  SDL_Renderer *renderer);
 
+	void draw(std::string id,
+		  int x, int y, int w, int h,
+		  SDL_Renderer *renderer,
+		  SDL_RendererFlip flip = SDL_FLIP_NONE);
+
+	void draw_frame(std::string id,
+			int x, int y, int w, int h,
+			int curr_row, int curr_frame,
+			SDL_Renderer *renderer,
+			SDL_RendererFlip flip = SDL_FLIP_NONE);
 
 private:
-
+	std::map<std::string, SDL_Texture*> texture_map;
 };
 
 

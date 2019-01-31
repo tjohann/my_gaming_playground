@@ -30,3 +30,21 @@ Texture_manager::~Texture_manager()
 {
 	/* do something */
 }
+
+
+void draw(std::string id,
+		  int x, int y, int w, int h,
+		  SDL_Renderer *renderer,
+		  SDL_RendererFlip flip = SDL_FLIP_NONE)
+{
+
+}
+
+void draw_frame(std::string id,
+		int x, int y, int w, int h,
+		int curr_row, int curr_frame,
+		SDL_Renderer *renderer,
+		SDL_RendererFlip flip = SDL_FLIP_NONE)
+{
+
+}
