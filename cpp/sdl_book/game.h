@@ -28,8 +28,8 @@
 class Game
 {
 public:
-	Game();
-	~Game();
+	Game() {}
+	~Game() {}
 
 	void init(const char* title, int x, int y, int w, int h,
 		bool fullscreen);
@@ -46,7 +46,6 @@ private:
 	SDL_Renderer *renderer;
 
         int current_frame;
-	Texture_manager texture_manager;
 
 	bool running;
 };

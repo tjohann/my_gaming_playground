@@ -19,6 +19,7 @@
 
 #include "texture_manager.h"
 
+Texture_manager* Texture_manager::instance_ = 0;
 
 bool Texture_manager::load(std::string filename,
 			   std::string id,

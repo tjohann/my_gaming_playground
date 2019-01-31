@@ -19,18 +19,6 @@
 
 #include "game.h"
 
-Game::Game()
-{
-	/* do something */
-}
-
-
-Game::~Game()
-{
-	/* do something */
-}
-
-
 void Game::init(const char* title,
 		int x, int y, int w, int h, bool fullscreen)
 {
@@ -91,7 +79,7 @@ void Game::init(const char* title,
 		exit(EXIT_FAILURE);
 	}
 
-	if (!texture_manager.load("./animate-alpha.png", "animate", renderer)) {
+	if (!the_texture_manager::instance()->load("./animate-alpha.png", "animate", renderer)) {
 		std::cout << "ERROR: could not load image" << std::endl;
 		exit(EXIT_FAILURE);
 	}
@@ -110,9 +98,9 @@ void Game::render_all()
 			     "unable to clear renderer: %s",
 			     SDL_GetError());
 
-	texture_manager.draw("animate", 0, 0, 128, 82,
+	the_texture_manager::instance()->draw("animate", 0, 0, 128, 82,
 			     renderer, SDL_FLIP_NONE);
-	texture_manager.draw_frame("animate", 100, 100, 128, 82,
+	the_texture_manager::instance()->draw_frame("animate", 100, 100, 128, 82,
 				   1, current_frame, renderer, SDL_FLIP_NONE);
 
         SDL_RenderPresent(renderer);

@@ -32,6 +32,14 @@
 class Texture_manager
 {
 public:
+	static Texture_manager* instance() {
+		if(instance_ == NULL) {
+			instance_ = new Texture_manager();
+			return instance_;
+		}
+			return instance_;
+	}
+
 	bool load(std::string filename,
 		  std::string id,
 		  SDL_Renderer *renderer);
@@ -48,11 +56,13 @@ public:
 			SDL_RendererFlip flip);
 
 private:
-	//Texture_manager() {}
-	//~Texture_manager() {}
+	Texture_manager() {}
+
+	static Texture_manager* instance_;
 
 	std::map<std::string, SDL_Texture*> texture_map;
 };
 
+typedef Texture_manager the_texture_manager;
 
 #endif
