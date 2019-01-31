@@ -22,7 +22,7 @@
 
 #include <SDL.h>
 #include <SDL_log.h>
-#include <SDL_image.h>
+
 
 class Game
 {
@@ -43,11 +43,9 @@ public:
 private:
 	SDL_Window *window;
 	SDL_Renderer *renderer;
-
-	SDL_Texture *texture;
-	SDL_Rect src_rect;
-	SDL_Rect dest_rect;
-
+  
+        int current_frame;
+  // Texture_manager texture_manager;
 	bool running;
 };
 

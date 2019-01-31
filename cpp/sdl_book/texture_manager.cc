@@ -20,17 +20,30 @@
 #include "texture_manager.h"
 
 
-Texture_manager::Texture_manager()
+bool load(std::string filename,
+	  std::string id,
+	  SDL_Renderer *renderer)
 {
-	/* do something */
+	SDL_Surface *tmp_surface = IMG_Load("animate-alpha.png");
+	if (tmp_surface == NULL)
+	  return false;
+
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, tmp_surface);
+	if (texture != NULL)
+	  texture_map[id] = texture;
+	else
+	  goto error;
+	  
+	SDL_FreeSurface(tmp_surface);
+
+	
+ error:
+	SDL_LogError(SDL_LOG_CATEGORY_ERROR,
+		     "an error occured: %s",
+		     SDL_GetError());
+	
+	return false;
 }
-
-
-Texture_manager::~Texture_manager()
-{
-	/* do something */
-}
-
 
 void draw(std::string id,
 		  int x, int y, int w, int h,
@@ -38,6 +51,9 @@ void draw(std::string id,
 		  SDL_RendererFlip flip = SDL_FLIP_NONE)
 {
 
+  SDL_Rect src_rect;
+  SDL_Rect dest_rect;
+  
 }
 
 void draw_frame(std::string id,

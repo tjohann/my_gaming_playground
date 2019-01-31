@@ -25,13 +25,15 @@
 #include <map>
 
 #include <SDL.h>
+#include <SDL_log.h>
+#include <SDL_image.h>
 
 
 class Texture_manager
 {
 public:
-	Texture_manager();
-	~Texture_manager();
+  //Texture_manager();
+  //	~Texture_manager();
 
 	bool load(std::string filename,
 		  std::string id,
@@ -48,8 +50,8 @@ public:
 			SDL_Renderer *renderer,
 			SDL_RendererFlip flip = SDL_FLIP_NONE);
 
-private:
-	std::map<std::string, SDL_Texture*> texture_map;
+        std::map<std::string, SDL_Texture*> texture_map;
+
 };
 
 

@@ -18,7 +18,7 @@
 */
 
 #include "game.h"
-
+#include "texture_manager.h"
 
 Game::Game()
 {
@@ -92,49 +92,6 @@ void Game::init(const char* title,
 		exit(EXIT_FAILURE);
 	}
 
-	/*
-	 * will be move to texture manager
-	 */
-	SDL_Surface *tmp_surface = IMG_Load("animate-alpha.png");
-	if (tmp_surface == NULL) {
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
-			     "unable to load bitmap animate.bmp: %s",
-			     SDL_GetError());
-		exit(EXIT_FAILURE);
-	}
-
-	texture = SDL_CreateTextureFromSurface(renderer, tmp_surface);
-	if (texture == NULL){
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
-			     "unable to create texture of bitmap rider.bmp: %s",
-			     SDL_GetError());
-		exit(EXIT_FAILURE);
-	}
-
-	SDL_FreeSurface(tmp_surface);
-
-	// get the size of the complete sprite
-	int tmp_w = 0, tmp_h = 0;
-	ret = SDL_QueryTexture(texture, NULL, NULL, &tmp_w, &tmp_h);
-	if (ret != 0) {
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
-			     "unable to query texture: %s",
-			     SDL_GetError());
-		exit(EXIT_FAILURE);
-	} else {
-		SDL_Log("height is: %d ... width is: %d", tmp_h, tmp_w);
-	}
-
-	src_rect.x = 0;
-	src_rect.y = 0;
-	src_rect.w = 128;
-	src_rect.h = 82;
-
-	dest_rect.x = 0;
-	dest_rect.y = 0;
-	dest_rect.w = src_rect.w;
-	dest_rect.h = src_rect.h;
-
 	SDL_Log("init done");
 
 	running = true;
@@ -149,12 +106,9 @@ void Game::render_all()
 			     "unable to clear renderer: %s",
 			     SDL_GetError());
 
-	ret = SDL_RenderCopyEx(renderer, texture, &src_rect, &dest_rect,
-			       0, 0, SDL_FLIP_HORIZONTAL);
-	if (ret != 0)
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
-			     "unable to rendercopy texture: %s",
-			     SDL_GetError());
+	texture_manager.draw("animate-alpha.png", 0, 0, 128, 82);
+	texture_manager.draw_frame("animate-alpha.png", 100, 100, 128, 82,
+				   1 , current_frame, renderer);
 
         SDL_RenderPresent(renderer);
 }
@@ -208,6 +162,6 @@ void Game::handle_events()
 
 void Game::update_all()
 {
-	src_rect.x = 128 * int(((SDL_GetTicks() / 100) % 6));
+	current_frame = int(((SDL_GetTicks() / 100) % 6));
 }
 
