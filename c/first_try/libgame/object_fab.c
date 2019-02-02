@@ -50,7 +50,7 @@ alloc_objects_via_config(config_t *cfg,  char *section, game_texture_t textures[
 	if (objs == NULL)
 		goto error;
 
-	for(int i = 0; i < count; i++)
+	for (int i = 0; i < count; i++)
 	{
 		config_setting_t *elem =
 			config_setting_get_elem(setting, i);
@@ -309,7 +309,7 @@ alloc_textures_via_config(config_t *cfg, SDL_Renderer *renderer)
 		err_and_ret("could not alloc memory", NULL);
 	memset(a, 0, len);
 
-	for(int i = 0; i < count; i++)
+	for (int i = 0; i < count; i++)
 	{
 		config_setting_t *texture =
 			config_setting_get_elem(setting, i);
