@@ -19,26 +19,26 @@
 
 #include "game.h"
 
-Game *game = NULL;
+#include <iostream>
 
 int
 main(int argc, char *argv[])
 {
-	game = new Game();
-
-	/* for testing */
-	game->init("sdl_game", 100, 100, 800, 600, false);
-	//game->init("sdl_game", 0, 0, 800, 600, false);
-	//game->init("sdl_game", 100, 100, 800, 600, true);
-
-	while(game->is_running()) {
-		game->handle_events();
-		game->update_all();
-		game->render_all();
-
+	if (the_game::instance()->init("sdl_game", 100, 100, 800, 600, false))
+	{
+		std::cerr << "could not init game" << std::endl;
+		exit(EXIT_FAILURE);
 	}
 
-	game->cleanup_all();
+	while(the_game::instance()->is_running()) {
+		the_game::instance()->handle_events();
+		the_game::instance()->update_all();
+		the_game::instance()->render_all();
+
+		SDL_Delay(10);
+	}
+
+	the_game::instance()->cleanup_all();
 
 	exit(EXIT_SUCCESS);
 }

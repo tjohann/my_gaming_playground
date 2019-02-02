@@ -17,53 +17,37 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-#ifndef _GAME_H_
-#define _GAME_H
+#ifndef _SDL_GAME_OBJECT_H_
+#define _SDL_GAME_OBJECT_H
 
 #include <vector>
 
 #include <SDL.h>
 #include <SDL_log.h>
 
+#include "loader_params.h"
 #include "game_object.h"
 
-
-class Game
+class SDLGame_object : public Game_object
 {
 public:
-	static Game* instance() {
-		if(instance_ == NULL) {
-			instance_ = new Game();
-			return instance_;
-		}
-			return instance_;
-	}
+	SDLGame_object(const Loader_params* params);
 
-	bool init(const char* title, int x, int y, int w, int h,
-		  bool fullscreen);
-	void cleanup_all();
+	virtual void draw();
+	virtual void update_all();
+	virtual void cleanup_all();
 
-	void render_all();
-	void update_all();
-	void handle_events();
+protected:
+	int x_;
+	int y_;
 
-	bool is_running() { return running; }
+	int w_;
+	int h_;
 
-	SDL_Renderer* get_renderer() const { return renderer; }
+	int current_row_;
+	int current_frame_;
 
-private:
-	Game() {}
-
-	static Game* instance_;
-
-	SDL_Window *window;
-	SDL_Renderer *renderer;
-
-	std::vector<Game_object*> game_objects;
-        int current_frame;
-	bool running;
+	std::string texture_id_;
 };
-
-typedef Game the_game;
 
 #endif

@@ -17,53 +17,34 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-#ifndef _GAME_H_
-#define _GAME_H
+#ifndef _LOADER_PARAMS_H_
+#define _LOADER_PARAMS_H_
 
-#include <vector>
+#include <string>
 
-#include <SDL.h>
-#include <SDL_log.h>
-
-#include "game_object.h"
-
-
-class Game
+class Loader_params
 {
 public:
-	static Game* instance() {
-		if(instance_ == NULL) {
-			instance_ = new Game();
-			return instance_;
-		}
-			return instance_;
-	}
+	Loader_params(int x, int y, int w, int h, std::string texture_id)
+		: x_(x), y_(y), w_(w), h_(h), texture_id_(texture_id)
+		{ }
 
-	bool init(const char* title, int x, int y, int w, int h,
-		  bool fullscreen);
-	void cleanup_all();
+	int get_x() const { return x_;}
+	int get_y() const { return y_;}
+	int get_w() const { return w_;}
+	int get_h() const { return h_;}
 
-	void render_all();
-	void update_all();
-	void handle_events();
-
-	bool is_running() { return running; }
-
-	SDL_Renderer* get_renderer() const { return renderer; }
+	std::string get_texture_id() const { return texture_id_; }
 
 private:
-	Game() {}
+	int x_;
+	int y_;
 
-	static Game* instance_;
+	int w_;
+	int h_;
 
-	SDL_Window *window;
-	SDL_Renderer *renderer;
-
-	std::vector<Game_object*> game_objects;
-        int current_frame;
-	bool running;
+	std::string texture_id_;
 };
 
-typedef Game the_game;
 
 #endif

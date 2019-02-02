@@ -18,15 +18,18 @@
 */
 
 #include "game.h"
+#include "game_object.h"
+#include "player.h"
+#include "loader_params.h"
 
-void Game::init(const char* title,
+bool Game::init(const char* title,
 		int x, int y, int w, int h, bool fullscreen)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
 			     "unable to initialize SDL: %s",
 			     SDL_GetError());
-		exit(EXIT_FAILURE);
+		return false;
 	} else {
 		SDL_Log("SDL initialised");
 	}
@@ -55,7 +58,7 @@ void Game::init(const char* title,
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
 			     "unable to initialize window: %s",
 			     SDL_GetError());
-		exit(EXIT_FAILURE);
+		return false;
 	}
 
         /*
@@ -67,7 +70,7 @@ void Game::init(const char* title,
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
 			     "unable to initialize renderer: %s",
 			     SDL_GetError());
-		exit(EXIT_FAILURE);
+		return false;
 	}
 
         // RGB and alpha -> set to black
@@ -76,17 +79,16 @@ void Game::init(const char* title,
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR,
 			     "unable to set background color: %s",
 			     SDL_GetError());
-		exit(EXIT_FAILURE);
+		return false;
 	}
 
-	if (!the_texture_manager::instance()->load("./animate-alpha.png", "animate", renderer)) {
-		std::cout << "ERROR: could not load image" << std::endl;
-		exit(EXIT_FAILURE);
-	}
+	//game_objects.push_back(new Player(new Load_params(100, 100, 128, 82, "animate")));
+	//game_objects.push_back(new Enemy(new Load_params(300, 300, 128, 82, "animate")));
 
 	SDL_Log("init done");
 
 	running = true;
+	return true;
 }
 
 
@@ -98,10 +100,9 @@ void Game::render_all()
 			     "unable to clear renderer: %s",
 			     SDL_GetError());
 
-	the_texture_manager::instance()->draw("animate", 0, 0, 128, 82,
-			     renderer, SDL_FLIP_NONE);
-	the_texture_manager::instance()->draw_frame("animate", 100, 100, 128, 82,
-				   1, current_frame, renderer, SDL_FLIP_NONE);
+	for (std::vector<Game_object*>::size_type i = 0;
+	     i != game_objects.size(); i++)
+		game_objects[i]->draw();
 
         SDL_RenderPresent(renderer);
 }
@@ -155,6 +156,8 @@ void Game::handle_events()
 
 void Game::update_all()
 {
-	current_frame = int(((SDL_GetTicks() / 100) % 6));
+	for (std::vector<Game_object*>::size_type i = 0;
+	     i != game_objects.size(); i++)
+		game_objects[i]->update_all();
 }
 

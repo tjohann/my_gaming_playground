@@ -17,53 +17,34 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 */
 
-#ifndef _GAME_H_
-#define _GAME_H
+#include "sdl_game_object.h"
+#include "loader_params.h"
+#include "texture_manager.h"
+#include "game.h"
 
-#include <vector>
-
-#include <SDL.h>
-#include <SDL_log.h>
-
-#include "game_object.h"
-
-
-class Game
+SDLGame_object::SDLGame_object(const Loader_params* params)
+	: Game_object(params)
 {
-public:
-	static Game* instance() {
-		if(instance_ == NULL) {
-			instance_ = new Game();
-			return instance_;
-		}
-			return instance_;
-	}
+	x_ = params->get_x();
+	y_ = params->get_y();
 
-	bool init(const char* title, int x, int y, int w, int h,
-		  bool fullscreen);
-	void cleanup_all();
+	w_ = params->get_w();
+	h_ = params->get_h();
 
-	void render_all();
-	void update_all();
-	void handle_events();
+	texture_id_ = params->get_texture_id();
 
-	bool is_running() { return running; }
+	current_row_ = 1;
+	current_frame_ = 1;
 
-	SDL_Renderer* get_renderer() const { return renderer; }
+}
 
-private:
-	Game() {}
+void SDLGame_object::draw()
+{
+	the_texture_manager::instance()->draw_frame("animate",
+						    0, 0,
+						    128, 82,
+						    current_row_, current_frame_,
+						    the_game::instance()->get_renderer(),
+						    SDL_FLIP_NONE);
 
-	static Game* instance_;
-
-	SDL_Window *window;
-	SDL_Renderer *renderer;
-
-	std::vector<Game_object*> game_objects;
-        int current_frame;
-	bool running;
-};
-
-typedef Game the_game;
-
-#endif
+}
