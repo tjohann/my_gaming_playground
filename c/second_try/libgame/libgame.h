@@ -31,10 +31,6 @@
 /* for libconfig */
 #include <libconfig.h>
 
-/* for libxml2 */
-#include <libxml/xmlmemory.h>
-#include <libxml/parser.h>
-
 #define eprintf(format, ...) fprintf (stderr, format, ##__VA_ARGS__)
 
 /* base frame rate */
