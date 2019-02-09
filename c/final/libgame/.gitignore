@@ -1,0 +1,12 @@
+/libgame.a
+/helper.o
+/vector_2d.o
+/window.o
+/texture.o
+/object.o
+/input.o
+/object_fab.o
+/collision.o
+/game.o
+/ai.o
+/*~

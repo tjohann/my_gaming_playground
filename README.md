@@ -37,6 +37,12 @@ c/SECOND - TRY
 Below the folder second_try are some more playground stuff
 
 
+c/FINAL
+-------
+
+Below the folder final are some more playground stuff which should end up in a first version of libgame.
+
+
 cpp/SDL_book
 ------------
 

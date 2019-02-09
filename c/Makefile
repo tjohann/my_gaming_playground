@@ -1,6 +1,6 @@
 # only for cleaning
 
-MODULES = first_try second_try
+MODULES = first_try second_try final
 
 all:
 	@echo Cheers
