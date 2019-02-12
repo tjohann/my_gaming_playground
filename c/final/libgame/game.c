@@ -19,3 +19,50 @@
 
 #include "libgame.h"
 #include "libgame_private.h"
+
+
+LIGGAME_EXPORT int
+init_game(game_t *game)
+{
+	config_t cfg;
+	int err = open_config(game->config, game->name, &cfg);
+	if (err == -1)
+		exit(EXIT_FAILURE);
+
+        /* setup main window */
+	err = setup_window_via_config(&cfg, game);
+	if (err == -1)
+		goto error;
+
+	err = setup_renderer_via_config(&cfg, game);
+	if (err == -1)
+		goto error;
+
+	/* load all textures */
+	err = alloc_textures_via_config(&cfg, game);
+	if (err == -1)
+		goto error;
+
+
+	/*
+	 * TODO: NEXT -> alloc_objects_via_config
+	 */
+
+	return 0;
+error:
+	config_destroy(&cfg);
+
+	err_and_ret("could not init game", -1);
+}
+
+LIGGAME_EXPORT void
+cleanup_game(game_t *game)
+{
+	/*
+	 * TODO: cleanup the different elements
+	 *
+	 * - textures
+	 */
+
+	cleanup_window(game->window, game->renderer);
+}

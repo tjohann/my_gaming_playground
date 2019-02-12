@@ -20,6 +20,11 @@
 #ifndef _LIBGAME_H_
 #define _LIBGAME_H_
 
+#ifndef __USE_GNU
+#define __USE_GNU
+#endif
+#define _GNU_SOURCE
+
 #include <SDL.h>
 #include <SDL_image.h>
 #include <stdio.h>
@@ -53,12 +58,42 @@ typedef struct {
 	int y;
 } pos2d_t;
 
-typedef struct {
+typedef struct spread_t {
 	int h;
 	int w;
 } spread_t;
 
+/* hold all textures */
+typedef struct {
+	char          *name;
+	SDL_Texture   *texture;
 
+	/* TODO: add handling of it */
+	union {
+		struct spread_t;
+		spread_t size;
+	};
+
+	unsigned char max_frames_x;          /* num columns                   */
+	unsigned char max_frames_y;          /* num rows                      */
+} game_texture_t;
+
+/* simple game struct */
+typedef struct {
+	char *name;
+	char *config;
+
+	SDL_Window   *window;
+	SDL_Renderer *renderer;
+
+	union {
+		struct spread_t;            /* screen size                    */
+		spread_t screen;
+	};
+
+	game_texture_t  *texture_array;     /* all used textures              */
+	size_t size_texture_array;
+} game_t;
 
 /*
  * --------------------------- other topics ------------------------------------
@@ -81,15 +116,37 @@ get_random_value(void);
  * --------------------------- game related ------------------------------------
  */
 
+int
+init_game(game_t *game);
+
+void
+cleanup_game(game_t *game);
+
 
 /*
  * --------------------------- texture related ---------------------------------
  */
 
+SDL_Texture *
+load_texture(char *file, SDL_Renderer *r);
+
+void
+destroy_texture(SDL_Texture *t);
+
 
 /*
  * --------------------------- window related ----------------------------------
  */
+
+SDL_Window *
+setup_window(const char *name, spread_t *screen, unsigned int flags);
+
+SDL_Renderer *
+setup_renderer(SDL_Window *w, color_t *b, unsigned int flags);
+
+void
+cleanup_window(SDL_Window *w, SDL_Renderer *r);
+
 
 
 /*

@@ -46,20 +46,26 @@
  * --------------------------- window related ----------------------------------
  */
 
+int
+setup_window_via_config(config_t *cfg, game_t *game);
 
+int
+setup_renderer_via_config(config_t *cfg, game_t *game);
 
 
 /*
  * --------------------------- config related ----------------------------------
  */
 
-
+int
+open_config(char *file, char *name, config_t *cfg);
 
 
 /*
  * --------------------------- texture related ---------------------------------
  */
-
+int
+alloc_textures_via_config(config_t *cfg, game_t *game);
 
 
 /*

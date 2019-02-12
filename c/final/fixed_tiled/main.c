@@ -22,25 +22,23 @@
 /* the global state -> true still running, false quit */
 bool running = false;
 
-/*
+
 game_t game = {
 	.name = "fixed_tiled",
 	.config = "fixed_tiled.conf"
 };
-*/
+
 
 void
 cleanup_all(void)
 {
-	/*
 	cleanup_game(&game);
-	*/
 }
 
 void
 render_all(void)
 {
-	/*
+
 	int err = SDL_RenderClear(game.renderer);
 	if (err < 0)
 		fprintf(stderr, "could not set clear rendering target (%s)\n",
@@ -48,7 +46,7 @@ render_all(void)
 
 
 
-	SDL_RenderPresent(game.renderer); */
+	SDL_RenderPresent(game.renderer);
 }
 
 void
@@ -102,10 +100,9 @@ handle_events(void)
 int
 main(void)
 {
-	/*
+
 	if (init_game(&game) == -1)
 		exit(EXIT_FAILURE);
-	*/
 
 	atexit(cleanup_all);
 

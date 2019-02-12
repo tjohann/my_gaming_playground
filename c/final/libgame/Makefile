@@ -3,7 +3,7 @@
 #
 
 CC = gcc
-CFLAGS = -std=gnu11 -Wall -Wextra `pkg-config --cflags sdl2 SDL2_image libconfig`
+CFLAGS = -std=c11 -fms-extensions -Wall -Wextra `pkg-config --cflags sdl2 SDL2_image libconfig`
 LDLIBS =
 
 LIB = libgame.a
