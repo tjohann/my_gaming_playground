@@ -58,11 +58,12 @@ error:
 LIGGAME_EXPORT void
 cleanup_game(game_t *game)
 {
-	/*
-	 * TODO: cleanup the different elements
-	 *
-	 * - textures
-	 */
+	if (game != NULL) {
+		for (size_t i= 0; i < game->size_textures_array; i++)
+			destroy_texture(game->textures_array[i].texture);
 
-	cleanup_window(game->window, game->renderer);
+		cleanup_window(game->window, game->renderer);
+	} else {
+		eprintf("game == NULL!");
+	}
 }

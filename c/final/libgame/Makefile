@@ -7,7 +7,7 @@ CFLAGS = -std=c11 -fms-extensions -Wall -Wextra `pkg-config --cflags sdl2 SDL2_i
 LDLIBS =
 
 LIB = libgame.a
-OBJ = helper.o vector_2d.o window.o input.o texture.o object.o collision.o ai.o object_fab.o game.o
+OBJ = helper.o vector_2d.o window.o input.o texture.o enemie.o player.o object.o static_object.o tiled.o collision.o ai.o game.o
 
 %.o: %.c
 	$(CC) -g -c -o $@ $< $(CFLAGS) $(LDLIBS)

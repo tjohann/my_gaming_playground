@@ -1,7 +1,7 @@
 # only for cleaning
 
 LIB = libgame
-MODULES = fixed_tiled
+MODULES = fixed_tiled moving_tiled
 
 all:
 	for dir in $(LIB); do (cd $$dir && $(MAKE)); done

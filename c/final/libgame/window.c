@@ -97,12 +97,12 @@ cleanup_window(SDL_Window *w, SDL_Renderer *r)
 	if (r != NULL)
 		SDL_DestroyRenderer(r);
 	else
-		printf("renderer == NULL\n");
+		eprintf("renderer == NULL\n");
 
 	if (w != NULL)
 		SDL_DestroyWindow(w);
 	else
-		printf("window == NULL\n");
+		eprintf("window == NULL\n");
 
 	SDL_Quit();
 }

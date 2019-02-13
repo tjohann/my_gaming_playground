@@ -24,8 +24,8 @@ bool running = false;
 
 
 game_t game = {
-	.name = "fixed_tiled",
-	.config = "fixed_tiled.conf"
+	.name = "moving_tiled",
+	.config = "moving_tiled.conf"
 };
 
 
@@ -104,6 +104,7 @@ main(void)
 {
 	printf("usage: ./%s \n", game.name);
 	printf("       simple demo which renders a tiled set         \n");
+	printf("       use a joystick or keyboard to \"move\" around \n");
 
 	if (init_game(&game) == -1)
 		exit(EXIT_FAILURE);

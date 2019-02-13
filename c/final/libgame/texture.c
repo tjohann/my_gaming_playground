@@ -43,15 +43,25 @@ destroy_texture(SDL_Texture *t)
 	if (t != NULL)
 		SDL_DestroyTexture(t);
 	else
-		printf("texture == NULL\n");
+		eprintf("texture == NULL\n");
 }
 
 LIGGAME_LOCAL int
 alloc_textures_via_config(config_t *cfg, game_t *game)
 {
 	config_setting_t *setting = config_lookup(cfg, "config.textures");
-	if (setting == NULL)
-		err_and_ret("no textures entry in configuration", -1);
+	if (setting == NULL) {
+		/*
+		 * NULL is vaild, if the textures are included
+		 * via config.tilesets
+		 */
+
+		game->textures_array = NULL;
+		game->size_textures_array = 0;
+
+		printf("no textures entry in configuration\n");
+		return 0;
+	}
 
 	int count = config_setting_length(setting);
 
@@ -102,8 +112,8 @@ alloc_textures_via_config(config_t *cfg, game_t *game)
 
 	}
 
-	game->texture_array = a;
-	game->size_texture_array = count;
+	game->textures_array = a;
+	game->size_textures_array = count;
 
 	return 0;
 }
