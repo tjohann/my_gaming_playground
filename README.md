@@ -23,6 +23,7 @@ SDL stuff
 ---------
 
 API-Docu of SDL -> https://wiki.libsdl.org/CategoryAPI
+SDL for go -> https://github.com/veandco/go-sdl2
 
 
 c/FIRST - TRY
@@ -51,4 +52,5 @@ Some cpp related playground based on the SDL-Book mentioned above.
 
 go/SDL_book
 -----------
+
 Try to implement the examples in go.
