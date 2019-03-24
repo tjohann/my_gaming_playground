@@ -47,3 +47,8 @@ cpp/SDL_book
 ------------
 
 Some cpp related playground based on the SDL-Book mentioned above.
+
+
+go/SDL_book
+-----------
+Try to implement the examples in go.
